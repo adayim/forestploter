@@ -10,31 +10,41 @@ forest(
   lower,
   upper,
   sizes = 0.4,
-  null.at = 1,
-  ci.col,
-  ci.width = 1,
+  ref.line = 1,
+  ref.line.gp = grid::gpar(lwd = 1, lty = "dashed", col = "grey20"),
+  ci.column,
+  ci.column.width = 2,
   xlim = NULL,
   tick.breaks = NULL,
+  xaxis.gp = grid::gpar(cex = 0.8, lwd = 0.6),
   arrow.lab = NULL,
+  ci.color = "black",
+  legend = list(name = NULL, position = NULL),
+  nudge_y = 0,
   theme = NULL
 )
 }
 \arguments{
 \item{data}{Data to be displayed in the forest plot}
 
-\item{est}{Point estimation}
+\item{est}{Point estimation. Can be a list for multiple columns
+and/or multiple groups. If the length of the list is larger than
+then length of \code{ci.column}, then the values reused for each column
+and considered as different groups.}
 
-\item{lower}{Lower bound of the confidence interval}
+\item{lower}{Lower bound of the confidence interval, same as \code{est}.}
 
-\item{upper}{Upper bound of the confidence interval}
+\item{upper}{Upper bound of the confidence interval, same as \code{est}.}
 
-\item{sizes}{Size of the point estimation box.}
+\item{sizes}{Size of the point estimation box, can be a unit, vector or a list.}
 
-\item{null.at}{X-axis coordinates of zero line, default is 1.}
+\item{ref.line}{X-axis coordinates of zero line, default is 1.}
 
-\item{ci.col}{Column number of the data the CI will be displayed.}
+\item{ref.line.gp}{Graphical parameters for reference line. See \code{\link[grid]{gpar}}.}
 
-\item{ci.width}{Width of the CI column in the forest plot, default is 1. This
+\item{ci.column}{Column number of the data the CI will be displayed.}
+
+\item{ci.column.width}{Width of the CI column in the forest plot, default is 1. This
 is the ratio of maximum width of the columns in the data.}
 
 \item{xlim}{Limits for the x axis as a vector length 2, i.e. c(low, high). It
@@ -42,10 +52,20 @@ will take the maximum and minimum of the \code{tick.breaks} or CI.}
 
 \item{tick.breaks}{X-axis breaks points, a vector.}
 
+\item{xaxis.gp}{Graphical parameters for reference x-axis. Same parameters will
+be used for arrow, if any. See \code{\link[grid]{gpar}}.}
+
 \item{arrow.lab}{Labels for the arrows, string vector of length two (left and
 right).}
 
-\item{theme}{Theme of the forest plot, see \link\link[gridExtra:tableGrob]{gridExtra::tableGrob} for
+\item{ci.color}{A named vector, name will be used for goup name and color for
+the CI.}
+
+\item{legend}{A list of legend parameters. To be passed to \code{\link{legend_grob}}.}
+
+\item{nudge_y}{Horizontal adjustment to nudge groups by, must be within 0 to 1.}
+
+\item{theme}{Theme of the forest plot, see \code{\link[gridExtra]{tableGrob}} for
 details.}
 }
 \value{

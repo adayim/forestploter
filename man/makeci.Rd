@@ -4,7 +4,15 @@
 \alias{makeci}
 \title{Create confidence interval}
 \usage{
-makeci(est, lower, upper, size = 1, xlim = c(0, 1))
+makeci(
+  est,
+  lower,
+  upper,
+  size = 1,
+  xlim = c(0, 1),
+  nudge_y = 0,
+  color = "black"
+)
 }
 \arguments{
 \item{est}{Point estimates, numeric}
@@ -16,6 +24,10 @@ makeci(est, lower, upper, size = 1, xlim = c(0, 1))
 \item{size}{Size of the point}
 
 \item{xlim}{Limits for the x axis as a vector length 2, i.e. c(low, high)}
+
+\item{nudge_y}{Offset Y coordinates.}
+
+\item{color}{Color of the point and the line}
 }
 \description{
 Create confidence interval

@@ -6,16 +6,17 @@
 #' @param upper Upper bound
 #' @param size Size of the point
 #' @param xlim Limits for the x axis as a vector length 2, i.e. c(low, high)
+#' @param nudge_y Offset Y coordinates.
+#' @param color Color of the point and the line
 #'
-#' @importFrom grid pointsGrob gpar unit linesGrob gList grobTree viewport
 #'
-makeci <- function(est, lower, upper, size = 1, xlim = c(0, 1)){
+makeci <- function(est, lower, upper, size = 1, xlim = c(0, 1), nudge_y = 0, color = "black"){
 
   rec <- pointsGrob(x = unit(est, "native"),
-                    y = 0.5,
+                    y = 0.5 + nudge_y,
                     pch = 15,
                     size = unit(size, "char"),
-                    gp = gpar(fill="black"))
+                    gp = gpar(col= color))
 
   if(upper > max(xlim) | lower < min(xlim)){
     # Both side arrow
@@ -36,12 +37,13 @@ makeci <- function(est, lower, upper, size = 1, xlim = c(0, 1)){
       arrow_side <- "last"
     }
 
-    lng <- linesGrob(x=x_pos, y=.5,
+    lng <- linesGrob(x=x_pos, y = 0.5 + nudge_y,
                      arrow=arrow(length=unit(0.05, "inches"),
-                                 ends = arrow_side))
+                                 ends = arrow_side),
+                     gp=gpar(col= color))
   } else {
-    lng <- linesGrob(x=unit(c(lower, upper), "native"), y=0.5,
-                     gp=gpar(col="black"))
+    lng <- linesGrob(x=unit(c(lower, upper), "native"), y=0.5 + nudge_y,
+                     gp=gpar(col= color))
   }
 
   # No dots if outside

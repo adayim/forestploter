@@ -2,28 +2,35 @@
 #' Forest plot
 #'
 #' @param data Data to be displayed in the forest plot
-#' @param est Point estimation
-#' @param lower Lower bound of the confidence interval
-#' @param upper Upper bound of the confidence interval
-#' @param sizes Size of the point estimation box.
-#' @param null.at X-axis coordinates of zero line, default is 1.
-#' @param ci.col Column number of the data the CI will be displayed.
-#' @param ci.width Width of the CI column in the forest plot, default is 1. This
+#' @param est Point estimation. Can be a list for multiple columns
+#' and/or multiple groups. If the length of the list is larger than
+#' then length of \code{ci.column}, then the values reused for each column
+#' and considered as different groups.
+#' @param lower Lower bound of the confidence interval, same as \code{est}.
+#' @param upper Upper bound of the confidence interval, same as \code{est}.
+#' @param sizes Size of the point estimation box, can be a unit, vector or a list.
+#' @param ref.line X-axis coordinates of zero line, default is 1.
+#' @param ref.line.gp Graphical parameters for reference line. See \code{\link[grid]{gpar}}.
+#' @param ci.column Column number of the data the CI will be displayed.
+#' @param ci.column.width Width of the CI column in the forest plot, default is 1. This
 #' is the ratio of maximum width of the columns in the data.
 #' @param xlim Limits for the x axis as a vector length 2, i.e. c(low, high). It
 #' will take the maximum and minimum of the \code{tick.breaks} or CI.
 #' @param tick.breaks X-axis breaks points, a vector.
+#' @param xaxis.gp Graphical parameters for reference x-axis. Same parameters will
+#' be used for arrow, if any. See \code{\link[grid]{gpar}}.
 #' @param arrow.lab Labels for the arrows, string vector of length two (left and
 #' right).
-#' @param theme Theme of the forest plot, see \link[gridExtra::tableGrob] for
+#' @param ci.color A named vector, name will be used for goup name and color for
+#' the CI.
+#' @param legend A list of legend parameters. To be passed to \code{\link{legend_grob}}.
+#' @param nudge_y Horizontal adjustment to nudge groups by, must be within 0 to 1.
+#' @param theme Theme of the forest plot, see \code{\link[gridExtra]{tableGrob}} for
 #' details.
 #'
 #' @return A gtable object.
 #' @export
 #'
-#' @importFrom gtable gtable_add_grob gtable_add_rows gtable_add_padding
-#' @importFrom gridExtra tableGrob
-#' @importFrom grid grobHeight
 #'
 
 forest <- function(data,
@@ -31,60 +38,120 @@ forest <- function(data,
                    lower,
                    upper,
                    sizes = 0.4,
-                   null.at = 1,
-                   ci.col,
-                   ci.width = 1,
+                   ref.line = 1,
+                   ref.line.gp = grid::gpar(lwd=1, lty="dashed", col="grey20"),
+                   ci.column,
+                   ci.column.width = 2,
                    xlim = NULL,
                    tick.breaks = NULL,
+                   xaxis.gp = grid::gpar(cex=0.8,lwd=0.6),
                    arrow.lab = NULL,
+                   ci.color = "black",
+                   legend = list(name = NULL, position = NULL),
+                   nudge_y = 0,
                    theme = NULL){
+
+  # Point sizes
+  if(length(sizes) == 1 & !inherits(sizes, "list"))
+    sizes <- rep(sizes, nrow(data))
+
+  # Check arrow
+  if(!is.null(arrow.lab) & length(arrow.lab) != 2)
+    stop("Arrow label must of length 2.")
+
   # Check length
-  if(length(unique(c(length(est), length(lower), length(upper), nrow(data)))) != 1)
-    stop("Estimate, lower and upper should be same length as data row number.")
+  if(length(unique(c(length(est), length(lower), length(upper)))) != 1)
+      stop("Estimate, lower and upper should have the same length.")
+
+  if(inherits(est, "list") | inherits(lower, "list") | inherits(upper, "list")){
+
+    if(!inherits(est, "list") | !inherits(lower, "list") | !inherits(upper, "list"))
+      stop("Estimate, lower and upper must be a list if plan to plot CI for multiple columns.")
+
+    # Calculate group number
+    group_num <- length(est)/length(ci.column)
+    ci_col_list <- rep(ci.column, group_num)
+
+    # Replicate sizes to align with est and CIs
+    if(!inherits(sizes, "list"))
+      sizes <- rep(list(sizes), length(ci_col_list))
+
+    # If color is given and not have the same length as group number
+    if(group_num > 1 & length(ci.color) != 1 & group_num != length(ci.color))
+      stop("Color should have the same length as group number.")
+
+    # If only one color is given for multiple groups
+    if(length(ci.color) == 1){
+      color_list <- rep(ci.color, length(ci_col_list))
+    }else{
+      color_list <- rep(ci.color, each = length(ci.column))
+    }
+
+    # Check nudge_y
+    if(nudge_y >= 1 || nudge_y < 0)
+      stop("`nudge_y` must be within 0 to 1.")
+
+    # Check nudge_y
+    if(group_num > 1 & nudge_y == 0)
+      nudge_y <- 0.1
+
+    # Create nudge_y vector
+    if(group_num > 1){
+      if((group_num %% 2) == 0){
+        rep_tm <- cumsum(c(nudge_y/2, rep(nudge_y, group_num)))
+        nudge_y <- c(rep_tm[1:(group_num/2)], -rep_tm[1:(group_num/2)])
+      }else{
+        rep_tm <- cumsum(c(0, rep(nudge_y, group_num)))
+        nudge_y <- c(0, rep_tm[2:(group_num/2)], -rep_tm[2:(group_num/2)])
+      }
+    }
+
+    nudge_y <- rep(nudge_y, each = length(ci.column))
+
+  }else{
+    if(length(unique(c(length(est), length(lower), length(upper), nrow(data)))) != 1)
+      stop("Estimate, lower and upper should be same length as data row number.")
+
+    if(!is.null(sizes) & length(sizes) != 1){
+      sizes <- sqrt(1/sizes)
+      sizes <- sizes/max(sizes, na.rm = TRUE)
+    }
+
+    ci_col_list <- ci.column
+    color_list <- ci.color
+
+    group_num <- 1
+
+    est <- list(est)
+    lower <- list(lower)
+    upper <- list(upper)
+    sizes <- list(sizes)
+
+  }
 
   # Check xlim
-  if(is.null(xlim) & is.null(tick.breaks))
+  if(is.null(xlim) & is.null(tick.breaks)){
     xlim <- range(c(lower, upper), na.rm = TRUE)
+    xlim <- c(floor(xlim[1]), ceiling(xlim[2]))
+  }
+    
 
   if(is.null(xlim) & !is.null(tick.breaks))
     xlim <- range(tick.breaks)
 
-  # Point sizes
-  if(!is.null(sizes) & length(sizes) != 1){
-    sizes <- sqrt(1/sizes)
-    sizes <- sizes/max(sizes, na.rm = TRUE)
-  }
-
-  if(length(sizes) == 1)
-    sizes <- rep(sizes, nrow(data))
-
-
   # X-axis breaks
   if(is.null(tick.breaks))
-    tick.breaks <- c(xlim[1], null.at, xlim[2])
+    tick.breaks <- c(xlim[1], ref.line, xlim[2])
 
   # Set theme
   if(is.null(theme)){
-    theme <- gridExtra:::ttheme_minimal(
-      core=list(
-        fg_params = list(hjust = 0, x = 0.05),   # font
-        bg_params = list(fill=c(rep(c("#eff3f2", "white"),
-                                    length.out=4))), # bands
-        padding = unit(c(4, 2.5), "mm")
-      ),
-      colhead = list(
-        fg_params = list(hjust = 0, x = 0.05, #parse=TRUE,
-                         fontface=2L),
-        bg_params = list(fill = "white"),
-        padding = unit(c(4, 4), "mm")
-      )
-    )
+    theme <- theme_default
   }
 
   # Calculate width of the table and multiple ratio of the CI column
   tmp_tab <- tableGrob(data, theme = theme, rows = NULL)
   col_width <- tmp_tab$widths
-  col_width[ci.col] <- ci.width*col_width[ci.col]
+  col_width[ci.column] <- ci.column.width*col_width[ci.column]
 
   # Convert data to plot
   gt <- tableGrob(data,
@@ -93,44 +160,104 @@ forest <- function(data,
                   width = col_width)
 
   # Draw CI
-  for(i in 1:nrow(data)){
-    if(is.na(est[i]))
-      next
-    ug <- makeci(est = est[i],
-                 lower = lower[i],
-                 upper = upper[i],
-                 size = sizes[i],
-                 xlim = xlim)
+  for(col_num in seq_along(ci_col_list)){
 
-    gt <- gtable_add_grob(gt, ug, t = i+1, l = ci.col,
-                          b = i+1, r = ci.col,
-                          clip = "off")
+    for(i in 1:nrow(data)){
+      if(is.na(est[[col_num]][i]))
+        next
+      draw_ci <- makeci(est = est[[col_num]][i],
+                        lower = lower[[col_num]][i],
+                        upper = upper[[col_num]][i],
+                        size = sizes[[col_num]][i],
+                        xlim = xlim,
+                        nudge_y = nudge_y[col_num],
+                        color = color_list[col_num])
+
+      gt <- gtable_add_grob(gt, draw_ci,
+                            t = i + 1,
+                            l = ci_col_list[col_num],
+                            b = i + 1,
+                            r = ci_col_list[col_num],
+                            clip = "off",
+                            name = paste0("ci.", col_num))
+    }
   }
 
-  # Add vertical line
-  gt <- gtable_add_grob(gt,
-                        vert_line(x = null.at, gp = gpar(lty = "dotted"),
-                                  xlim = xlim),
-                        t = 2,
-                        l = ci.col,
-                        b = nrow(gt), r = ci.col,
-                        clip = "off")
-  # Add X-axis
-  xais <- makexaxis(at = tick.breaks,
-                    x0 = null.at,
-                    arrow.lab = arrow.lab,
-                    xlim = xlim)
+  tot_row <- nrow(gt)
 
-  gt <- gtable_add_rows(gt, heights = grobHeight(xais))
+  # X axis
+  x_axis <- make_xais(at = tick.breaks, gp = xaxis.gp, xlim = xlim)
 
-  gt <- gtable_add_grob(gt, xais,
-                        t = nrow(gt), l = ci.col,
-                        b = nrow(gt), r = ci.col,
-                        clip = "off")
+  gt <- gtable_add_rows(gt, heights = convertHeight(max(grobHeight(x_axis$children)), "mm"))
+
+  # Add arrow
+  if(!is.null(arrow.lab)){
+    arrow_grob <- make_arrow(x0 = ref.line,
+                            arrow.lab = arrow.lab,
+                            gp = xaxis.gp, 
+                            xlim = xlim)
+
+    arrow_lab_height <- sum(convertHeight(stringHeight(arrow.lab), "mm"))
+    
+    gt <- gtable_add_rows(gt, heights = arrow_lab_height + unit(0.4, "inches"))
+
+  }
+
+  for(j in ci.column){
+    # Add reference line
+    gt <- gtable_add_grob(gt,
+                          vert_line(x = ref.line, gp = ref.line.gp,
+                                    xlim = xlim),
+                          t = 2,
+                          l = j,
+                          b = tot_row, r = j,
+                          clip = "off")
+
+    # Add row for the X-axis
+    gt <- gtable_add_grob(gt, x_axis,
+                          t = tot_row + 1,
+                          l = j,
+                          b = tot_row + 1, r = j,
+                          clip = "off",
+                          name = "xaxis")
+    # # Add arrow
+    if(!is.null(arrow.lab))
+      gt <- gtable_add_grob(gt, arrow_grob,
+                            t = nrow(gt), l = j,
+                            b = nrow(gt), r = j,
+                            clip = "off")
+
+  }
+
+  # Add legend
+  if(length(ci.color) > 1){
+
+    by_row <- if(!legend$position %in% c("top", "bottom") || is.null(legend$position)) TRUE else FALSE
+
+    legend$color <- ci.color
+
+    leg_grob <- do.call(legend_grob, legend)
+
+    if(by_row){
+      gt <- gtable_add_cols(gt, widths = grobWidth(leg_grob))
+      gt <- gtable_add_grob(gt, leg_grob,
+                            t = 2, l = ncol(gt),
+                            b = nrow(gt)-1, r = ncol(gt),
+                            clip = "off")
+    }else{
+      add_pos <- ifelse(legend$position == "top", 0, -1)
+      gt <- gtable_add_rows(gt, heights = grobHeight(leg_grob), pos = add_pos)
+      gt <- gtable_add_grob(gt, leg_grob,
+                            t = if(add_pos == 0) 1 else nrow(gt), l = 1,
+                            b = if(add_pos == 0) 1 else nrow(gt), r = ncol(gt),
+                            clip = "off")
+    }
+  }
+
   # Add padding
-  gt <- gtable_add_padding(gt, unit(1, "cm"))
+  gtable_add_padding(gt, unit(1, "cm"))
 
-  return(gt)
+  # return(gt)
 
 }
 

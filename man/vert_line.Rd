@@ -9,7 +9,7 @@ vert_line(x, gp = grid::gpar(), xlim)
 \arguments{
 \item{x}{A numeric unit object specifying x-values.}
 
-\item{gp}{An object of class \code{gpar}, see \link\link[grid:gpar]{grid::gpar}.}
+\item{gp}{An object of class \code{gpar}, see \code{\link[grid]{gpar}}.}
 
 \item{xlim}{Limits for the x axis as a vector length 2, i.e. c(low, high)}
 }
