@@ -33,7 +33,7 @@ devtools::install_github("adayim/forestploter")
 
 This is a basic example which shows you how to create a forestplot:
 
-```{r example,  dpi=300, fig.width  = 7, fig.height = 6}
+```{r example,  dpi=300, fig.width  = 7, fig.height = 7}
 library(forestploter)
 
 dt <- read.csv(system.file("extdata", "example_data.csv", package = "forestploter"))
@@ -64,7 +64,7 @@ p <- forest(dt[,c(1:3, 8:9)],
             ci.col = 4,
             null.at = 1,
             ci.width = 2,
-            arrow.lab = c("Left", "Right"),
+            arrow.lab = c("Placebo Better", "Treatment Better"),
             tick.breaks = c(0.5, 1, 2, 4))
 
 # Draw plot
