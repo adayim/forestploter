@@ -63,4 +63,4 @@ grid::grid.newpage()
 grid::grid.draw(p)
 ```
 
-<img src="man/figures/README-example-1.png" width="100%" />
+<img src="man/figures/README-example-1.png" width="80%" />
