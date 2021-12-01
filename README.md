@@ -39,7 +39,7 @@ dt$Treatment <- ifelse(is.na(dt$Treatment), "", dt$Treatment)
 dt$Placebo <- ifelse(is.na(dt$Placebo), "", dt$Placebo)
 dt$se <- (log(dt$hi) - log(dt$est))/1.96
 
-# Add blank column for the forest plot
+# Add blank column for the forest plot to display CI
 dt$` ` <- paste(rep(" ", 5), collapse = " ")
 
 # Create confidence interval column to display
@@ -57,6 +57,8 @@ p <- forest(dt[,c(1:3, 8:9)],
             ci.width = 2,
             arrow.lab = c("Left", "Right"),
             tick.breaks = c(0.5, 1, 2, 4))
+
+# Draw plot
 grid::grid.newpage()
 grid::grid.draw(p)
 ```
