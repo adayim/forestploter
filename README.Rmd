@@ -33,6 +33,7 @@ devtools::install_github("adayim/forestploter")
 
 This is a basic example which shows you how to create a forestplot:
 
+<<<<<<< HEAD
 ```{r example,  dpi=300, fig.width  = 12, fig.height = 6, out.height = '30%'}
 library(forestploter)
 

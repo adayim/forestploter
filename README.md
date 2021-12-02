@@ -24,6 +24,8 @@ devtools::install_github("adayim/forestploter")
 
 This is a basic example which shows you how to create a forestplot:
 
+\<\<\<\<\<\<\< HEAD
+
 ``` r
 library(forestploter)
 
