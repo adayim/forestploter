@@ -134,7 +134,7 @@ forest <- function(data,
     xlim <- range(c(lower, upper), na.rm = TRUE)
     xlim <- c(floor(xlim[1]), ceiling(xlim[2]))
   }
-    
+
 
   if(is.null(xlim) & !is.null(tick.breaks))
     xlim <- range(tick.breaks)
@@ -194,12 +194,12 @@ forest <- function(data,
   if(!is.null(arrow.lab)){
     arrow_grob <- make_arrow(x0 = ref.line,
                             arrow.lab = arrow.lab,
-                            gp = xaxis.gp, 
+                            gp = xaxis.gp,
                             xlim = xlim)
 
     arrow_lab_height <- sum(convertHeight(stringHeight(arrow.lab), "mm"))
-    
-    gt <- gtable_add_rows(gt, heights = arrow_lab_height + unit(0.4, "inches"))
+
+    gt <- gtable_add_rows(gt, heights = arrow_lab_height)
 
   }
 
@@ -255,9 +255,13 @@ forest <- function(data,
   }
 
   # Add padding
-  gtable_add_padding(gt, unit(1, "cm"))
+  gt <- gtable_add_padding(gt, unit(1, "cm"))
 
-  # return(gt)
+  # Auto fit the page
+  gt$widths <- unit(rep(1/ncol(gt), ncol(gt)), "npc")
+  gt$heights <- unit(rep(1/nrow(gt), nrow(gt)), "npc")
+
+  return(gt)
 
 }
 

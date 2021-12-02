@@ -100,4 +100,4 @@ grid::grid.newpage()
 grid::grid.draw(p)
 ```
 
-<img src="man/figures/README-multiple-1.png" width="100%" />
+<img src="man/figures/README-multiple-1.png" width="100%" height="120%" />

@@ -27,7 +27,7 @@ arrow_text <- function(label, gp, x, direction) {
     ends <- "last"
   }
 
-  t <- textGrob(label, x = x, y = unit(0.4, "npc"), just = just,
+  t <- textGrob(label, x = x, y = unit(0.1, "npc"), just = just,
                 gp = gp, 
                 name="arrow.text")
   t_cord <- getCorners(t)

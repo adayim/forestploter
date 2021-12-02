@@ -78,7 +78,7 @@ grid::grid.draw(p)
 
 This is an example of multiple CI columns and groups:
 
-```{r multiple,  dpi=300, fig.width  = 14, fig.height = 7}
+```{r multiple,  dpi=300, fig.width  = 14, fig.height = 7, out.height = '120%'}
 
 # Add blank column for the second CI column
 dt$`   ` <- paste(rep(" ", 5), collapse = " ")

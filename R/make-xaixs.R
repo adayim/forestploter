@@ -8,7 +8,7 @@ make_xais <- function(at = NULL, labels = NULL, gp = gpar(), xlim){
     labels <- as.character(at)
 
   maj <- linesGrob(x = unit(c(min(xlim), max(xlim)), "native"),
-                   y = unit(c(0.5, 0.5), "npc"),
+                   y = unit(c(0.9, 0.9), "npc"),
                    gp = gp,
                    name="major")
 
