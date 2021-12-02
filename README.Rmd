@@ -33,7 +33,7 @@ devtools::install_github("adayim/forestploter")
 
 This is a basic example which shows you how to create a forestplot:
 
-```{r example,  dpi=300, fig.width  = 7, fig.height = 7, out.height = '80%'}
+```{r example,  dpi=300, fig.width  = 12, fig.height = 6, out.height = '70%'}
 library(forestploter)
 
 dt <- read.csv(system.file("extdata", "example_data.csv", package = "forestploter"))
