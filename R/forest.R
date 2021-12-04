@@ -261,7 +261,7 @@ forest <- function(data,
   gt$widths <- unit(rep(1/ncol(gt), ncol(gt)), "npc")
   gt$heights <- unit(rep(1/nrow(gt), nrow(gt)), "npc")
 
-  class(gt) <- union("forestplot", class(gy))
+  class(gt) <- union("forestplot", class(gt))
 
   return(gt)
 
@@ -272,10 +272,7 @@ forest <- function(data,
 #' @export
 plot.forestplot <- function(x,...){
   grid.newpage()
-  pushViewport(plotViewport(layout.pos.col=1, layout.pos.row=1,
-                            margins = c(1,1,1,1)))
   grid.draw(p)
-  upViewport()
 }
 
 #' @export
