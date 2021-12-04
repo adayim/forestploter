@@ -10,6 +10,8 @@ legend_grob(
   position = c("right", "top", "bottom"),
   hgap = unit(0.1, "lines"),
   vgap = unit(0.5, "lines"),
+  fontsize = 12,
+  fontfamily = "",
   ...
 )
 }

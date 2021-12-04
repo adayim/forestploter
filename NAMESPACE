@@ -3,6 +3,7 @@
 S3method(plot,forestplot)
 S3method(print,forestplot)
 export(forest)
+export(forest_theme)
 export(legend_grob)
 import(grid)
 importFrom(gridExtra,tableGrob)

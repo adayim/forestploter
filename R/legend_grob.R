@@ -21,6 +21,8 @@ legend_grob <- function(name = "",
                         position = c("right", "top", "bottom"),
                         hgap = unit(0.1, "lines"), #horizontal gap
                         vgap = unit(0.5, "lines"), #vertical gap
+                        fontsize = 12,
+                        fontfamily = "",
                         ...
 ){
 
@@ -31,7 +33,8 @@ legend_grob <- function(name = "",
                          just = "left",
                          x = 0,
                          y = 0.5,
-                         gp = gpar(cex = 1,
+                         gp = gpar(fontsize = fontsize,
+                                   fontfamily = fontfamily,
                                    fontface = 'bold',
                                    fill = 'black'))
 
@@ -50,7 +53,10 @@ legend_grob <- function(name = "",
   leg_grob <- legendGrob(leg_labs, pch=15, ncol = ncol,
                          do.lines = TRUE, byrow = by_row,
                          hgap = hgap, vgap = vgap,
-                         gp = gpar(col = color, fill = color))
+                         gp = gpar(col = color,
+                                   fill = color, 
+                                   fontsize = fontsize,
+                                   fontfamily = fontfamily))
 
   u0 <- unit(0, "npc")
   u1 <- unit(0.02, "npc")

@@ -10,22 +10,19 @@
 #' @param upper Upper bound of the confidence interval, same as \code{est}.
 #' @param sizes Size of the point estimation box, can be a unit, vector or a list.
 #' @param ref.line X-axis coordinates of zero line, default is 1.
-#' @param ref.line.gp Graphical parameters for reference line. See \code{\link[grid]{gpar}}.
 #' @param ci.column Column number of the data the CI will be displayed.
 #' @param ci.column.width Width of the CI column in the forest plot, default is 1. This
 #' is the ratio of maximum width of the columns in the data.
 #' @param xlim Limits for the x axis as a vector length 2, i.e. c(low, high). It
 #' will take the maximum and minimum of the \code{tick.breaks} or CI.
 #' @param tick.breaks X-axis breaks points, a vector.
-#' @param xaxis.gp Graphical parameters for reference x-axis. Same parameters will
-#' be used for arrow, if any. See \code{\link[grid]{gpar}}.
 #' @param arrow.lab Labels for the arrows, string vector of length two (left and
 #' right).
 #' @param ci.color A named vector, name will be used for goup name and color for
 #' the CI.
 #' @param legend A list of legend parameters. To be passed to \code{\link{legend_grob}}.
 #' @param nudge_y Horizontal adjustment to nudge groups by, must be within 0 to 1.
-#' @param theme Theme of the forest plot, see \code{\link[gridExtra]{tableGrob}} for
+#' @param theme Theme of the forest plot, see \code{\link{forest_theme}} for
 #' details.
 #'
 #' @return A gtable object.
@@ -39,12 +36,10 @@ forest <- function(data,
                    upper,
                    sizes = 0.4,
                    ref.line = 1,
-                   ref.line.gp = grid::gpar(lwd=1, lty="dashed", col="grey20"),
                    ci.column,
                    ci.column.width = 2,
                    xlim = NULL,
                    tick.breaks = NULL,
-                   xaxis.gp = grid::gpar(cex=0.8,lwd=0.6),
                    arrow.lab = NULL,
                    ci.color = "black",
                    legend = list(name = NULL, position = NULL),
@@ -58,6 +53,11 @@ forest <- function(data,
   # Check arrow
   if(!is.null(arrow.lab) & length(arrow.lab) != 2)
     stop("Arrow label must of length 2.")
+
+  # Set theme
+  if(is.null(theme)){
+    theme <- forest_theme()
+  }
 
   # Check length
   if(length(unique(c(length(est), length(lower), length(upper)))) != 1)
@@ -143,19 +143,15 @@ forest <- function(data,
   if(is.null(tick.breaks))
     tick.breaks <- c(xlim[1], ref.line, xlim[2])
 
-  # Set theme
-  if(is.null(theme)){
-    theme <- theme_default
-  }
 
   # Calculate width of the table and multiple ratio of the CI column
-  tmp_tab <- tableGrob(data, theme = theme, rows = NULL)
+  tmp_tab <- tableGrob(data, theme = theme$tab_theme, rows = NULL)
   col_width <- tmp_tab$widths
   col_width[ci.column] <- ci.column.width*col_width[ci.column]
 
   # Convert data to plot
   gt <- tableGrob(data,
-                  theme = theme,
+                  theme = theme$tab_theme,
                   rows = NULL,
                   width = col_width)
 
@@ -186,7 +182,7 @@ forest <- function(data,
   tot_row <- nrow(gt)
 
   # X axis
-  x_axis <- make_xais(at = tick.breaks, gp = xaxis.gp, xlim = xlim)
+  x_axis <- make_xais(at = tick.breaks, gp = theme$xaxis, xlim = xlim)
 
   gt <- gtable_add_rows(gt, heights = convertHeight(max(grobHeight(x_axis$children)), "mm"))
 
@@ -194,7 +190,7 @@ forest <- function(data,
   if(!is.null(arrow.lab)){
     arrow_grob <- make_arrow(x0 = ref.line,
                             arrow.lab = arrow.lab,
-                            gp = xaxis.gp,
+                            gp = theme$xaxis,
                             xlim = xlim)
 
     arrow_lab_height <- sum(convertHeight(stringHeight(arrow.lab), "mm"))
@@ -206,7 +202,7 @@ forest <- function(data,
   for(j in ci.column){
     # Add reference line
     gt <- gtable_add_grob(gt,
-                          vert_line(x = ref.line, gp = ref.line.gp,
+                          vert_line(x = ref.line, gp = theme$refline,
                                     xlim = xlim),
                           t = 2,
                           l = j,
@@ -235,6 +231,8 @@ forest <- function(data,
     by_row <- if(!legend$position %in% c("top", "bottom") || is.null(legend$position)) TRUE else FALSE
 
     legend$color <- ci.color
+    legend$fontsize <- theme$legend$fontsize
+    legend$fontfamily <- theme$legend$fontfamily
 
     leg_grob <- do.call(legend_grob, legend)
 

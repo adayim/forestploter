@@ -11,12 +11,10 @@ forest(
   upper,
   sizes = 0.4,
   ref.line = 1,
-  ref.line.gp = grid::gpar(lwd = 1, lty = "dashed", col = "grey20"),
   ci.column,
   ci.column.width = 2,
   xlim = NULL,
   tick.breaks = NULL,
-  xaxis.gp = grid::gpar(cex = 0.8, lwd = 0.6),
   arrow.lab = NULL,
   ci.color = "black",
   legend = list(name = NULL, position = NULL),
@@ -40,8 +38,6 @@ and considered as different groups.}
 
 \item{ref.line}{X-axis coordinates of zero line, default is 1.}
 
-\item{ref.line.gp}{Graphical parameters for reference line. See \code{\link[grid]{gpar}}.}
-
 \item{ci.column}{Column number of the data the CI will be displayed.}
 
 \item{ci.column.width}{Width of the CI column in the forest plot, default is 1. This
@@ -51,9 +47,6 @@ is the ratio of maximum width of the columns in the data.}
 will take the maximum and minimum of the \code{tick.breaks} or CI.}
 
 \item{tick.breaks}{X-axis breaks points, a vector.}
-
-\item{xaxis.gp}{Graphical parameters for reference x-axis. Same parameters will
-be used for arrow, if any. See \code{\link[grid]{gpar}}.}
 
 \item{arrow.lab}{Labels for the arrows, string vector of length two (left and
 right).}
@@ -65,7 +58,7 @@ the CI.}
 
 \item{nudge_y}{Horizontal adjustment to nudge groups by, must be within 0 to 1.}
 
-\item{theme}{Theme of the forest plot, see \code{\link[gridExtra]{tableGrob}} for
+\item{theme}{Theme of the forest plot, see \code{\link{forest_theme}} for
 details.}
 }
 \value{
