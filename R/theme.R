@@ -52,7 +52,7 @@ forest_theme <- function(base_size=12,
                                fontfamily = base_family),
               bg_params = list(fill=c(rep(c("#eff3f2", "white"),
                                 length.out=4))),
-              padding = unit(c(4, 2.5), "mm"))
+              padding = unit(c(4, 3), "mm"))
 
     colhead <- list(fg_params = list(hjust = 0, x = 0.05,
                                     fontface=2L,

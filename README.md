@@ -40,8 +40,9 @@ dt$Treatment <- ifelse(is.na(dt$Treatment), "", dt$Treatment)
 dt$Placebo <- ifelse(is.na(dt$Placebo), "", dt$Placebo)
 dt$se <- (log(dt$hi) - log(dt$est))/1.96
 
-# Add blank column for the forest plot to display CI
-dt$` ` <- paste(rep(" ", 5), collapse = " ")
+# Add blank column for the forest plot to display CI.
+# Adjust the column width with space. 
+dt$` ` <- paste(rep(" ", 20), collapse = " ")
 
 # Create confidence interval column to display
 dt$`HR (95% CI)` <- ifelse(is.na(dt$se), "",
@@ -59,7 +60,6 @@ p <- forest(dt[,c(1:3, 20:21)],
             sizes = dt$se,
             ci.column = 4,
             ref.line = 1,
-            ci.column.width = 2,
             arrow.lab = c("Placebo Better", "Treatment Better"),
             tick.breaks = c(0.5, 1, 2, 4),
             theme = tm)
@@ -68,7 +68,7 @@ p <- forest(dt[,c(1:3, 20:21)],
 plot(p)
 ```
 
-<img src="man/figures/README-example-1.png" width="100%" height="30%" />
+<img src="man/figures/README-example-1.png" width="100%" height="40%" />
 
 ## Complex usage
 
@@ -92,7 +92,7 @@ This is an example of multiple CI columns and groups:
 
 ``` r
 # Add blank column for the second CI column
-dt$`   ` <- paste(rep(" ", 5), collapse = " ")
+dt$`   ` <- paste(rep(" ", 20), collapse = " ")
 
 p <- forest(dt[,c(1:2, 20, 3, 22)],
             est = list(dt$est_gp1,
@@ -109,7 +109,6 @@ p <- forest(dt[,c(1:2, 20, 3, 22)],
                          dt$hi_gp4),
             ci.column = c(3, 5),
             ref.line = 1,
-            ci.column.width = 2,
             ci.color = c("Group 1" = "#e41a1c", "Group 2" = "#4daf4a"),
             legend = list(name = "Group",
                           position = "bottom"),
@@ -120,7 +119,7 @@ p <- forest(dt[,c(1:2, 20, 3, 22)],
 plot(p)
 ```
 
-<img src="man/figures/README-multiple-1.png" width="100%" height="120%" />
+<img src="man/figures/README-multiple-1.png" width="100%" height="80%" />
 
 # TODO
 

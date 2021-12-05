@@ -12,7 +12,6 @@ forest(
   sizes = 0.4,
   ref.line = 1,
   ci.column,
-  ci.column.width = 2,
   xlim = NULL,
   tick.breaks = NULL,
   arrow.lab = NULL,
@@ -39,9 +38,6 @@ and considered as different groups.}
 \item{ref.line}{X-axis coordinates of zero line, default is 1.}
 
 \item{ci.column}{Column number of the data the CI will be displayed.}
-
-\item{ci.column.width}{Width of the CI column in the forest plot, default is 1. This
-is the ratio of maximum width of the columns in the data.}
 
 \item{xlim}{Limits for the x axis as a vector length 2, i.e. c(low, high). It
 will take the maximum and minimum of the \code{tick.breaks} or CI.}

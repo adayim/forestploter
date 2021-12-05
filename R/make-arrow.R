@@ -9,38 +9,40 @@
 
 make_arrow <- function(x0 = 1, arrow.lab, gp, xlim){
 
-  rt <- arrow_text(arrow.lab[1], gp = gp, x = unit(x0, "native") + unit(0.05, "inches"), direction = "right")
-  lt <- arrow_text(arrow.lab[2], gp = gp, x = unit(x0, "native") - unit(0.05, "inches"), direction = "left")
+  t_lft <- textGrob(arrow.lab[1],
+                    x = unit(x0, "native") - unit(0.05, "inches"),
+                    y = unit(0.5, "npc"), just = "right",
+                    gp = gp,
+                    name="arrow.text.left")
 
-  grobTree(gList(rt, lt), vp = viewport(xscale = xlim, height = max(grobHeight(rt), grobHeight(lt))))
+  t_rgt <- textGrob(arrow.lab[2],
+                    x = unit(x0, "native") + unit(0.05, "inches"),
+                    y = unit(0.5, "npc"), just = "left",
+                    gp = gp,
+                    name="arrow.text.right")
+
+  t_cord_lft <- getCorners(t_lft)
+  t_cord_rgt <- getCorners(t_rgt)
+
+  s_lft <- segmentsGrob(t_cord_lft$xl,
+                        t_cord_lft$yt + unit(.2, "lines"),
+                        t_cord_lft$xr,
+                        t_cord_lft$yt + unit(.2, "lines"),
+                        gp = gp,
+                        arrow = arrow(length=unit(0.05, "inches"),
+                                      ends = "first"),
+                        name="arrow.left")
+
+  s_rgt <- segmentsGrob(t_cord_rgt$xl,
+                        t_cord_rgt$yt + unit(.2, "lines"),
+                        t_cord_rgt$xr,
+                        t_cord_rgt$yt + unit(.2, "lines"),
+                        gp = gp,
+                        arrow = arrow(length=unit(0.05, "inches"),
+                                      ends = "last"),
+                        name="arrow.right")
+
+  grobTree(gList(t_lft, s_lft, t_rgt, s_rgt),
+           vp = viewport(xscale = xlim))
 
 }
-
-
-arrow_text <- function(label, gp, x, direction) {
-
-  if(direction == "left"){
-    just <- "right"
-    ends <- "first"
-  }else{
-    just <- "left"
-    ends <- "last"
-  }
-
-  t <- textGrob(label, x = x, y = unit(0.1, "npc"), just = just,
-                gp = gp, 
-                name="arrow.text")
-  t_cord <- getCorners(t)
-  s <- segmentsGrob(t_cord$xl,
-                    t_cord$yt + unit(.2, "lines"),
-                    t_cord$xr,
-                    t_cord$yt + unit(.2, "lines"),
-                    gp = gp, 
-                    arrow = arrow(length=unit(0.05, "inches"),
-                                  ends = ends),
-                    name="arrow")
-
-  gTree(children=gList(t, s))
-}
-
-

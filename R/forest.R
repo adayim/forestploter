@@ -11,8 +11,6 @@
 #' @param sizes Size of the point estimation box, can be a unit, vector or a list.
 #' @param ref.line X-axis coordinates of zero line, default is 1.
 #' @param ci.column Column number of the data the CI will be displayed.
-#' @param ci.column.width Width of the CI column in the forest plot, default is 1. This
-#' is the ratio of maximum width of the columns in the data.
 #' @param xlim Limits for the x axis as a vector length 2, i.e. c(low, high). It
 #' will take the maximum and minimum of the \code{tick.breaks} or CI.
 #' @param tick.breaks X-axis breaks points, a vector.
@@ -37,7 +35,6 @@ forest <- function(data,
                    sizes = 0.4,
                    ref.line = 1,
                    ci.column,
-                   ci.column.width = 2,
                    xlim = NULL,
                    tick.breaks = NULL,
                    arrow.lab = NULL,
@@ -144,17 +141,29 @@ forest <- function(data,
     tick.breaks <- c(xlim[1], ref.line, xlim[2])
 
 
-  # Calculate width of the table and multiple ratio of the CI column
-  tmp_tab <- tableGrob(data, theme = theme$tab_theme, rows = NULL)
-  col_width <- tmp_tab$widths
-  col_width[ci.column] <- ci.column.width*col_width[ci.column]
+  # Calculate heights
+  col_height <- apply(data,
+                      1,
+                      function(x){
+                        max(convertHeight(stringHeight(x), "mm",
+                                         valueOnly = TRUE))
+                      })
+  col_height <- unit(col_height, "mm")
 
-  # Convert data to plot
-  gt <- tableGrob(data,
-                  theme = theme$tab_theme,
-                  rows = NULL,
-                  width = col_width,
-                  clip = "off")
+  # Add increase heights for multiple groups
+  if(group_num > 1){
+    heights <- group_num*0.7*col_height + theme$tab_theme$core$padding[2]
+    # Convert data to plot
+    gt <- tableGrob(data,
+                    theme = theme$tab_theme,
+                    heights = heights,
+                    rows = NULL)
+  }else{
+    gt <- tableGrob(data,
+                    theme = theme$tab_theme,
+                    rows = NULL)
+  }
+
 
   # Draw CI
   for(col_num in seq_along(ci_col_list)){
@@ -185,7 +194,7 @@ forest <- function(data,
   # X axis
   x_axis <- make_xais(at = tick.breaks, gp = theme$xaxis, xlim = xlim)
 
-  gt <- gtable_add_rows(gt, heights = convertHeight(max(grobHeight(x_axis$children)), "mm"))
+  gt <- gtable_add_rows(gt, heights = convertHeight(sum(grobHeight(x_axis$children)) + unit(.5, "lines"), "mm"))
 
   # Add arrow
   if(!is.null(arrow.lab)){
@@ -194,9 +203,7 @@ forest <- function(data,
                             gp = theme$xaxis,
                             xlim = xlim)
 
-    arrow_lab_height <- sum(convertHeight(stringHeight(arrow.lab), "mm"))
-
-    gt <- gtable_add_rows(gt, heights = arrow_lab_height)
+    gt <- gtable_add_rows(gt, heights = convertHeight(max(grobHeight(arrow_grob$children)) + unit(.5, "lines"), "mm"))
 
   }
 
@@ -238,14 +245,14 @@ forest <- function(data,
     leg_grob <- do.call(legend_grob, legend)
 
     if(by_row){
-      gt <- gtable_add_cols(gt, widths = grobWidth(leg_grob))
+      gt <- gtable_add_cols(gt, widths = max(grobWidth(leg_grob$children)) + unit(.5, "lines"))
       gt <- gtable_add_grob(gt, leg_grob,
                             t = 2, l = ncol(gt),
                             b = nrow(gt)-1, r = ncol(gt),
                             clip = "off")
     }else{
       add_pos <- ifelse(legend$position == "top", 0, -1)
-      gt <- gtable_add_rows(gt, heights = grobHeight(leg_grob), pos = add_pos)
+      gt <- gtable_add_rows(gt, heights = max(grobHeight(leg_grob$children)) + unit(.5, "lines"), pos = add_pos)
       gt <- gtable_add_grob(gt, leg_grob,
                             t = if(add_pos == 0) 1 else nrow(gt), l = 1,
                             b = if(add_pos == 0) 1 else nrow(gt), r = ncol(gt),
@@ -257,8 +264,8 @@ forest <- function(data,
   gt <- gtable_add_padding(gt, unit(1, "cm"))
 
   # Auto fit the page
-  gt$widths <- unit(rep(1/ncol(gt), ncol(gt)), "npc")
-  gt$heights <- unit(rep(1/nrow(gt), nrow(gt)), "npc")
+  # gt$widths <- unit(rep(1/ncol(gt), ncol(gt)), "npc")
+  # gt$heights <- unit(rep(1/nrow(gt), nrow(gt)), "npc")
 
   class(gt) <- union("forestplot", class(gt))
 
