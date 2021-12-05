@@ -153,7 +153,8 @@ forest <- function(data,
   gt <- tableGrob(data,
                   theme = theme$tab_theme,
                   rows = NULL,
-                  width = col_width)
+                  width = col_width,
+                  clip = "off")
 
   # Draw CI
   for(col_num in seq_along(ci_col_list)){
