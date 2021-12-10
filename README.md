@@ -51,7 +51,8 @@ dt$`HR (95% CI)` <- ifelse(is.na(dt$se), "",
 
 # Define theme
 tm <- forest_theme(base_size = 10,
-                   refline_col = "red")
+                   refline_col = "red",
+                   footnote_col = "blue")
 
 p <- forest(dt[,c(1:3, 20:21)],
             est = dt$est,
@@ -62,6 +63,7 @@ p <- forest(dt[,c(1:3, 20:21)],
             ref.line = 1,
             arrow.lab = c("Placebo Better", "Treatment Better"),
             tick.breaks = c(0.5, 1, 2, 4),
+            footnote = "This is the demo data. Please feel free to change\nanything you want.",
             theme = tm)
 
 # Draw plot

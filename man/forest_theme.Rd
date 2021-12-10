@@ -8,9 +8,13 @@ forest_theme(
   base_size = 12,
   base_family = "",
   xaxis_lwd = 0.6,
+  xaxis_cex = 1,
   refline_lwd = 1,
   refline_lty = "dashed",
   refline_col = "grey20",
+  footnote_cex = 0.6,
+  footnote_fontface = "plain",
+  footnote_col = "black",
   ...
 )
 }
@@ -21,11 +25,19 @@ forest_theme(
 
 \item{xaxis_lwd}{Line width for x-axis.}
 
+\item{xaxis_cex}{Multiplier applied to font size for x-axis.}
+
 \item{refline_lwd}{Line width for reference line.}
 
 \item{refline_lty}{Line type for reference line.}
 
 \item{refline_col}{Line color for the reference line.}
+
+\item{footnote_cex}{Multiplier applied to font size for footnote.}
+
+\item{footnote_fontface}{The font face for footnote.}
+
+\item{footnote_col}{Color of the footnote.}
 
 \item{...}{Other parameters passed to table. See \code{\link[gridExtra]{tableGrob}}
 for details.}
