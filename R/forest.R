@@ -15,10 +15,14 @@
 #' will take the maximum and minimum of the \code{tick.breaks} or CI.
 #' @param tick.breaks X-axis breaks points, a vector.
 #' @param arrow.lab Labels for the arrows, string vector of length two (left and
-#' right).
+#' right). The theme of arrow will inherit from the x-axis.
 #' @param ci.color A named vector, name will be used for goup name and color for
 #' the CI.
-#' @param legend A list of legend parameters. To be passed to \code{\link{legend_grob}}.
+#' @param legend A list of legend parameters, name and position ("right", "top",
+#' "bottom").
+#' @param footnote Footnote for the forest plot, will be aligned at left bottom
+#' of the plot. Please adjust the line length with line break to avoid the overlap
+#' with the arrow and/or x-axis.
 #' @param nudge_y Horizontal adjustment to nudge groups by, must be within 0 to 1.
 #' @param theme Theme of the forest plot, see \code{\link{forest_theme}} for
 #' details.
@@ -40,6 +44,7 @@ forest <- function(data,
                    arrow.lab = NULL,
                    ci.color = "black",
                    legend = list(name = NULL, position = NULL),
+                   footnote = NULL,
                    nudge_y = 0,
                    theme = NULL){
 
@@ -194,7 +199,25 @@ forest <- function(data,
   # X axis
   x_axis <- make_xais(at = tick.breaks, gp = theme$xaxis, xlim = xlim)
 
-  gt <- gtable_add_rows(gt, heights = convertHeight(sum(grobHeight(x_axis$children)) + unit(.5, "lines"), "mm"))
+  x_axht <- sum(grobHeight(x_axis$children)) + unit(.5, "lines")
+  gt <- gtable_add_rows(gt, heights = convertHeight(x_axht, "mm"))
+
+  # Add footnote
+  if(!is.null(footnote)){
+    footnote_grob <- textGrob(label = footnote,
+                              gp = theme$footnote,
+                              x = 0,
+                              just = c("left", "top"),
+                              check.overlap = TRUE,
+                              name = "footnote")
+
+    gt <- gtable_add_grob(gt,
+                          footnote_grob,
+                          t = tot_row + 1,
+                          l = 1,
+                          b = tot_row + 1, r = min(ci.column),
+                          clip = "off")
+  }
 
   # Add arrow
   if(!is.null(arrow.lab)){
@@ -203,7 +226,8 @@ forest <- function(data,
                             gp = theme$xaxis,
                             xlim = xlim)
 
-    gt <- gtable_add_rows(gt, heights = convertHeight(max(grobHeight(arrow_grob$children)) + unit(.5, "lines"), "mm"))
+    lb_ht <- max(grobHeight(arrow_grob$children)) + unit(.5, "lines")
+    gt <- gtable_add_rows(gt, heights = convertHeight(lb_ht, "mm"))
 
   }
 

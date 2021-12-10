@@ -10,6 +10,8 @@
 #' see \code{\link[grid]{legendGrob}} for details.
 #' @param vgap Vertical gap between the legend entries,
 #' see \code{\link[grid]{legendGrob}} for details.
+#' @param fontsize Font size of the legend.
+#' @param fontfamily Font family of the legend.
 #' @param ... Other parameters, not used currently.
 #'
 #' @return A frame grob
@@ -54,7 +56,7 @@ legend_grob <- function(name = "",
                          do.lines = TRUE, byrow = by_row,
                          hgap = hgap, vgap = vgap,
                          gp = gpar(col = color,
-                                   fill = color, 
+                                   fill = color,
                                    fontsize = fontsize,
                                    fontfamily = fontfamily))
 

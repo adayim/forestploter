@@ -29,6 +29,10 @@ see \code{\link[grid]{legendGrob}} for details.}
 \item{vgap}{Vertical gap between the legend entries,
 see \code{\link[grid]{legendGrob}} for details.}
 
+\item{fontsize}{Font size of the legend.}
+
+\item{fontfamily}{Font family of the legend.}
+
 \item{...}{Other parameters, not used currently.}
 }
 \value{
