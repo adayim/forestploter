@@ -2,6 +2,7 @@
 
 S3method(plot,forestplot)
 S3method(print,forestplot)
+export(edit_plot)
 export(forest)
 export(forest_theme)
 export(legend_grob)

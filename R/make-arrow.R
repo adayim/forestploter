@@ -43,6 +43,7 @@ make_arrow <- function(x0 = 1, arrow.lab, gp, xlim){
                         name="arrow.right")
 
   grobTree(gList(t_lft, s_lft, t_rgt, s_rgt),
-           vp = viewport(xscale = xlim))
+           vp = viewport(xscale = xlim),
+           name = "arrow")
 
 }

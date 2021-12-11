@@ -49,10 +49,12 @@ makeci <- function(est, lower, upper, size = 1, xlim = c(0, 1), nudge_y = 0, col
   # No dots if outside
   if(est > max(xlim) | est < min(xlim))
     grobTree(gList(lng),
-             vp = viewport(xscale = xlim))
+             vp = viewport(xscale = xlim),
+             name = "ci")
   else
     grobTree(gList(rec, lng),
-             vp = viewport(xscale = xlim))
+             vp = viewport(xscale = xlim),
+             name = "ci")
 
 }
 

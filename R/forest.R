@@ -190,7 +190,7 @@ forest <- function(data,
                             b = i + 1,
                             r = ci_col_list[col_num],
                             clip = "off",
-                            name = paste0("ci.", col_num))
+                            name = paste0("ci-", i, "-", col_num))
     }
   }
 
@@ -216,7 +216,8 @@ forest <- function(data,
                           t = tot_row + 1,
                           l = 1,
                           b = tot_row + 1, r = min(ci.column),
-                          clip = "off")
+                          clip = "off",
+                          name = "footnote")
   }
 
   # Add arrow
@@ -239,7 +240,8 @@ forest <- function(data,
                           t = 2,
                           l = j,
                           b = tot_row, r = j,
-                          clip = "off")
+                          clip = "off",
+                          name = paste0("reference.line-", j))
 
     # Add row for the X-axis
     gt <- gtable_add_grob(gt, x_axis,
@@ -247,13 +249,14 @@ forest <- function(data,
                           l = j,
                           b = tot_row + 1, r = j,
                           clip = "off",
-                          name = "xaxis")
+                          name = paste0("xaxis-", j))
     # # Add arrow
     if(!is.null(arrow.lab))
       gt <- gtable_add_grob(gt, arrow_grob,
                             t = nrow(gt), l = j,
                             b = nrow(gt), r = j,
-                            clip = "off")
+                            clip = "off",
+                            name = paste0("arrow-", j))
 
   }
 
@@ -273,14 +276,16 @@ forest <- function(data,
       gt <- gtable_add_grob(gt, leg_grob,
                             t = 2, l = ncol(gt),
                             b = nrow(gt)-1, r = ncol(gt),
-                            clip = "off")
+                            clip = "off",
+                            name = "legend")
     }else{
       add_pos <- ifelse(legend$position == "top", 0, -1)
       gt <- gtable_add_rows(gt, heights = max(grobHeight(leg_grob$children)) + unit(.5, "lines"), pos = add_pos)
       gt <- gtable_add_grob(gt, leg_grob,
                             t = if(add_pos == 0) 1 else nrow(gt), l = 1,
                             b = if(add_pos == 0) 1 else nrow(gt), r = ncol(gt),
-                            clip = "off")
+                            clip = "off",
+                            name = "legend")
     }
   }
 
@@ -292,6 +297,8 @@ forest <- function(data,
   # gt$heights <- unit(rep(1/nrow(gt), nrow(gt)), "npc")
 
   class(gt) <- union("forestplot", class(gt))
+
+  attributes(gt)$data.dim <- dim(data)
 
   return(gt)
 

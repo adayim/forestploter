@@ -65,13 +65,13 @@ legend_grob <- function(name = "",
 
   if(position %in% c("top", "bottom")){
 
-    packGrob(frame = packGrob(frameGrob(), title_grob,
+    packGrob(frame = packGrob(frameGrob(name = "legend"), title_grob,
                               border = unit.c(u0, u1, u0, u0)),
              grob = leg_grob,
              side = "right")
 
   }else{
-    packGrob(frame = packGrob(frameGrob(), title_grob,
+    packGrob(frame = packGrob(frameGrob(name = "legend"), title_grob,
                               border = unit.c(u0, u0, u1, u0)),
              grob = leg_grob,
              side = "bottom")
