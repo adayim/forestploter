@@ -16,10 +16,7 @@
 #' @param tick.breaks X-axis breaks points, a vector.
 #' @param arrow.lab Labels for the arrows, string vector of length two (left and
 #' right). The theme of arrow will inherit from the x-axis.
-#' @param ci.color A named vector, name will be used for goup name and color for
-#' the CI.
-#' @param legend A list of legend parameters, name and position ("right", "top",
-#' "bottom").
+#' @param legend A list of legend parameters, see \code{\link{set_legend}}.
 #' @param footnote Footnote for the forest plot, will be aligned at left bottom
 #' of the plot. Please adjust the line length with line break to avoid the overlap
 #' with the arrow and/or x-axis.
@@ -42,8 +39,7 @@ forest <- function(data,
                    xlim = NULL,
                    tick.breaks = NULL,
                    arrow.lab = NULL,
-                   ci.color = "black",
-                   legend = list(name = NULL, position = NULL),
+                   legend = NULL,
                    footnote = NULL,
                    nudge_y = 0,
                    theme = NULL){
@@ -78,16 +74,17 @@ forest <- function(data,
     if(!inherits(sizes, "list"))
       sizes <- rep(list(sizes), length(ci_col_list))
 
-    # If color is given and not have the same length as group number
-    if(group_num > 1 & length(ci.color) != 1 & group_num != length(ci.color))
-      stop("Color should have the same length as group number.")
+    # check legend
+    if(!is.null(legend) & !inherits(legend, "ciset"))
+      stop("Legend must be set with 'set_legend'.")
 
-    # If only one color is given for multiple groups
-    if(length(ci.color) == 1){
-      color_list <- rep(ci.color, length(ci_col_list))
-    }else{
-      color_list <- rep(ci.color, each = length(ci.column))
-    }
+    # If color is given and not have the same length as group number
+    if(group_num > 1 & is.null(legend))
+      legend <- .gen_legend(group_num)
+
+    # Get color and pch
+    color_list <- rep(legend$color, each = length(ci.column))
+    pch_list <- rep(legend$pch, each = length(ci.column))
 
     # Check nudge_y
     if(nudge_y >= 1 || nudge_y < 0)
@@ -120,7 +117,8 @@ forest <- function(data,
     }
 
     ci_col_list <- ci.column
-    color_list <- ci.color
+    color_list <- theme$ci$col
+    pch_list <- theme$ci$pch
 
     group_num <- 1
 
@@ -181,6 +179,7 @@ forest <- function(data,
                         upper = upper[[col_num]][i],
                         size = sizes[[col_num]][i],
                         xlim = xlim,
+                        pch = pch_list[col_num],
                         nudge_y = nudge_y[col_num],
                         color = color_list[col_num])
 
@@ -261,11 +260,10 @@ forest <- function(data,
   }
 
   # Add legend
-  if(length(ci.color) > 1){
+  if(group_num > 1){
 
     by_row <- if(!legend$position %in% c("top", "bottom") || is.null(legend$position)) TRUE else FALSE
 
-    legend$color <- ci.color
     legend$fontsize <- theme$legend$fontsize
     legend$fontfamily <- theme$legend$fontfamily
 
