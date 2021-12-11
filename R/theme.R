@@ -9,6 +9,10 @@
 #'
 #' @param base_size The size of text
 #' @param base_family The font family
+#' @param ci_pch Shape of the point estimation. This will ge ignored for the grouped
+#'  forestplot, set it with \code{\link{set_legend}}.
+#' @param ci_col Color of the CI. This will ge ignored for the grouped forestplot,
+#' set it with \code{\link{set_legend}}.
 #' @param xaxis_lwd Line width for x-axis.
 #' @param xaxis_cex Multiplier applied to font size for x-axis.
 #' @param refline_lwd Line width for reference line.
@@ -26,6 +30,9 @@
 #'
 forest_theme <- function(base_size=12,
                          base_family = "",
+                         # Confidence interval
+                         ci_pch = 15,
+                         ci_col = "black",
                          # X-axis
                          xaxis_lwd = 0.6,
                          xaxis_cex = 1,
@@ -47,6 +54,9 @@ forest_theme <- function(base_size=12,
                        col = refline_col,
                        fontsize = base_size,
                        fontfamily = base_family)
+
+    # Confidence interval
+    ci_gp <- list(pch = ci_pch, col = ci_col)
 
     # X-axis
     xaxis_gp <- gpar(lwd = xaxis_lwd,
@@ -86,6 +96,7 @@ forest_theme <- function(base_size=12,
     tab_theme <- modifyList(ttheme_minimal(), tab_theme)
 
     return(list(legend = legend_gp,
+                ci = ci_gp,
                 xaxis = xaxis_gp,
                 footnote = footnote_gp,
                 refline = refline_gp,

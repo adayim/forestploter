@@ -29,3 +29,11 @@ summary_ci <- function(est, lower, upper, size = 1, gp = gpar(), xlim){
     name = "summary.ci",
     vp = viewport(xscale = xlim))
 }
+
+# Cehck if same length
+same_len <- function(...){
+  lst <- list(...)
+  len <- vapply(lst, length, FUN.VALUE = 1L)
+  length(unique(len)) == 1
+}
+
