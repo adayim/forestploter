@@ -2,10 +2,12 @@
 
 S3method(plot,forestplot)
 S3method(print,forestplot)
+export(add_underline)
 export(edit_plot)
 export(forest)
 export(forest_theme)
-export(legend_grob)
+export(insert_text)
+export(set_legend)
 import(grid)
 importFrom(gridExtra,tableGrob)
 importFrom(gridExtra,ttheme_minimal)

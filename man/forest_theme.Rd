@@ -7,6 +7,8 @@
 forest_theme(
   base_size = 12,
   base_family = "",
+  ci_pch = 15,
+  ci_col = "black",
   xaxis_lwd = 0.6,
   xaxis_cex = 1,
   refline_lwd = 1,
@@ -22,6 +24,12 @@ forest_theme(
 \item{base_size}{The size of text}
 
 \item{base_family}{The font family}
+
+\item{ci_pch}{Shape of the point estimation. This will ge ignored for the grouped
+forestplot, set it with \code{\link{set_legend}}.}
+
+\item{ci_col}{Color of the CI. This will ge ignored for the grouped forestplot,
+set it with \code{\link{set_legend}}.}
 
 \item{xaxis_lwd}{Line width for x-axis.}
 

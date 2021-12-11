@@ -15,8 +15,7 @@ forest(
   xlim = NULL,
   tick.breaks = NULL,
   arrow.lab = NULL,
-  ci.color = "black",
-  legend = list(name = NULL, position = NULL),
+  legend = NULL,
   footnote = NULL,
   nudge_y = 0,
   theme = NULL
@@ -48,11 +47,7 @@ will take the maximum and minimum of the \code{tick.breaks} or CI.}
 \item{arrow.lab}{Labels for the arrows, string vector of length two (left and
 right). The theme of arrow will inherit from the x-axis.}
 
-\item{ci.color}{A named vector, name will be used for goup name and color for
-the CI.}
-
-\item{legend}{A list of legend parameters, name and position ("right", "top",
-"bottom").}
+\item{legend}{A list of legend parameters, see \code{\link{set_legend}}.}
 
 \item{footnote}{Footnote for the forest plot, will be aligned at left bottom
 of the plot. Please adjust the line length with line break to avoid the overlap

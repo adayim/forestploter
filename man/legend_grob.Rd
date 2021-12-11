@@ -6,10 +6,12 @@
 \usage{
 legend_grob(
   name = "",
+  label,
   color,
   position = c("right", "top", "bottom"),
   hgap = unit(0.1, "lines"),
   vgap = unit(0.5, "lines"),
+  pch = 15,
   fontsize = 12,
   fontfamily = "",
   ...
@@ -17,6 +19,8 @@ legend_grob(
 }
 \arguments{
 \item{name}{Character string, Legend name.}
+
+\item{label}{legend labels (expressions).}
 
 \item{color}{Colors for the group}
 
@@ -28,6 +32,8 @@ see \code{\link[grid]{legendGrob}} for details.}
 
 \item{vgap}{Vertical gap between the legend entries,
 see \code{\link[grid]{legendGrob}} for details.}
+
+\item{pch}{Legend symbol.}
 
 \item{fontsize}{Font size of the legend.}
 

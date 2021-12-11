@@ -8,6 +8,7 @@ makeci(
   est,
   lower,
   upper,
+  pch,
   size = 1,
   xlim = c(0, 1),
   nudge_y = 0,
@@ -20,6 +21,9 @@ makeci(
 \item{lower}{Lower bound}
 
 \item{upper}{Upper bound}
+
+\item{pch}{Numeric or character vector indicating what sort of plotting
+symbol to use. See \code{\link[grid]{pointsGrob}}.}
 
 \item{size}{Size of the point}
 
