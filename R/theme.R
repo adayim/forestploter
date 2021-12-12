@@ -9,10 +9,16 @@
 #'
 #' @param base_size The size of text
 #' @param base_family The font family
-#' @param ci_pch Shape of the point estimation. This will ge ignored for the grouped
-#'  forestplot, set it with \code{\link{set_legend}}.
-#' @param ci_col Color of the CI. This will ge ignored for the grouped forestplot,
-#' set it with \code{\link{set_legend}}.
+#' @param ci_pch Shape of the point estimation. It will be reused if the
+#' forest plot is grouped.
+#' @param ci_col Color of the CI. A vector of color should be provided for
+#' the grouped forest plot. An internal color set will be if only not.
+#' @param legend_name Title of the legend.
+#' @param legend_position Position of the legend, \code{"right"}, \code{"top"},
+#' \code{"bottom"}.
+#' @param legend_value Legend labels (expressions). A vector should be provided
+#' for the grouped forest plot. A "Group 1" etc will be created if not a vector
+#' for a grouped forest plot.
 #' @param xaxis_lwd Line width for x-axis.
 #' @param xaxis_cex Multiplier applied to font size for x-axis.
 #' @param refline_lwd Line width for reference line.
@@ -33,6 +39,10 @@ forest_theme <- function(base_size=12,
                          # Confidence interval
                          ci_pch = 15,
                          ci_col = "black",
+                         # Legend
+                         legend_name = "Group",
+                         legend_position = "right",
+                         legend_value = "",
                          # X-axis
                          xaxis_lwd = 0.6,
                          xaxis_cex = 1,
@@ -47,6 +57,26 @@ forest_theme <- function(base_size=12,
                          # Legend
                          # legend_lwd = 0.6,
                          ...){
+    
+    legend_position <- match.arg(legend_position, c("right", "top", "bottom"))  
+
+    # Default color set
+    col_set <- c("#e41a1c","#377eb8","#4daf4a","#984ea3","#ff7f00",
+                "#ffff33","#a65628","#f781bf","#999999")
+
+    # Recycle if one of the values
+    max_len <- list(legend_value, ci_pch, ci_col)
+    max_len <- max(vapply(max_len, length, FUN.VALUE = 1L), na.rm = TRUE) 
+    
+    if(max_len > 1){
+      if(length(legend_value) < max_len)
+        stop("legend_value should be provided for multiple groups.")
+
+      ci_pch <- rep_len(ci_pch, max_len)
+      ci_col <- col_set[1:max_len] 
+
+    }
+                       
 
     # Reference line
     refline_gp <- gpar(lwd = refline_lwd,
@@ -71,8 +101,11 @@ forest_theme <- function(base_size=12,
                         col = footnote_col)
 
     # Legend
-    legend_gp <- gpar(fontsize = base_size,
-                      fontfamily = base_family)
+    legend_gp <- list(fontsize = base_size,
+                      fontfamily = base_family,
+                      name = legend_name,
+                      position = legend_position,
+                      label = legend_value)
 
     core <- list(fg_params = list(hjust = 0,
                                x = 0.05,

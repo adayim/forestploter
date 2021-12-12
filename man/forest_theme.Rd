@@ -9,6 +9,9 @@ forest_theme(
   base_family = "",
   ci_pch = 15,
   ci_col = "black",
+  legend_name = "Group",
+  legend_position = "right",
+  legend_value = "",
   xaxis_lwd = 0.6,
   xaxis_cex = 1,
   refline_lwd = 1,
@@ -25,11 +28,20 @@ forest_theme(
 
 \item{base_family}{The font family}
 
-\item{ci_pch}{Shape of the point estimation. This will ge ignored for the grouped
-forestplot, set it with \code{\link{set_legend}}.}
+\item{ci_pch}{Shape of the point estimation. It will be reused if the
+forest plot is grouped.}
 
-\item{ci_col}{Color of the CI. This will ge ignored for the grouped forestplot,
-set it with \code{\link{set_legend}}.}
+\item{ci_col}{Color of the CI. A vector of color should be provided for
+the grouped forest plot. An internal color set will be if only not.}
+
+\item{legend_name}{Title of the legend.}
+
+\item{legend_position}{Position of the legend, \code{"right"}, \code{"top"},
+\code{"bottom"}.}
+
+\item{legend_value}{Legend labels (expressions). A vector should be provided
+for the grouped forest plot. A "Group 1" etc will be created if not a vector
+for a grouped forest plot.}
 
 \item{xaxis_lwd}{Line width for x-axis.}
 

@@ -143,6 +143,13 @@ This is an example of multiple CI columns and groups:
 # Add blank column for the second CI column
 dt$`   ` <- paste(rep(" ", 20), collapse = " ")
 
+# Set-up theme
+tm <- forest_theme(base_size = 10,
+                   refline_col = "red",
+                   footnote_col = "blue",
+                   legend_name = "GP",
+                   legend_value = c("Trt 1", "Trt 2"))
+
 p <- forest(dt[,c(1:2, 20, 3, 22)],
             est = list(dt$est_gp1,
                        dt$est_gp2,
@@ -158,13 +165,9 @@ p <- forest(dt[,c(1:2, 20, 3, 22)],
                          dt$hi_gp4),
             ci.column = c(3, 5),
             ref.line = 1,
-            legend = set_legend(name = "Group",
-                                position = "bottom",
-                                value = c("Group 1", "Group 2"),
-                                pch = 16,
-                                color = c("#e41a1c", "#4daf4a")),
             arrow.lab = c("Placebo Better", "Treatment Better"),
-            nudge_y = 0.2)
+            nudge_y = 0.2,
+            theme = tm)
 
 plot(p)
 ```
