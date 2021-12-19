@@ -1,6 +1,10 @@
 ---
 title: "Introduction to forestploter"
-output: rmarkdown::html_vignette
+author: "Alimu Dayimu"
+date: "`r Sys.Date()`"
+output: 
+  rmarkdown::html_vignette:
+  toc: true
 vignette: >
   %\VignetteIndexEntry{Introduction to forestploter}
   %\VignetteEngine{knitr::rmarkdown}
@@ -14,6 +18,89 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
+[Forest plots](https://en.wikipedia.org/wiki/Forest_plot) are commonly used in the medical research publications, especially in [meta-analysis](https://en.wikipedia.org/wiki/Meta-analysis). And it can also be used to report the coefficients and confidence intervals (CIs) of the regression models.
+
+There are lots of packages out there can be used to create draw a forest plot. The most popular one is [forestpot](https://cran.r-project.org/web/packages/forestplot/). Packages speciallised for the meta-analysis, like [meta](https://cran.r-project.org/web/packages/meta/), [metafor](https://cran.r-project.org/web/packages/metafor/) and [rmeta](https://cran.r-project.org/web/packages/rmeta/). Some other packages, like [ggforestplot](https://nightingalehealth.github.io/ggforestplot/index.html), tried to use [ggplot2](https://cran.r-project.org/web/packages/ggplot2/) to draw a forest plot, they are not availble on the CRAN yet.
+
+The main differences of the `forestploter` from the other packages are:
+
+* Focus on the forest plot.
+* Treat the forest plot as a table, elements are aligned in rows and columns. User has full control on what and how to display in the forest plot contents.
+* Graphical parameters are controlled with a theme.
+* Allow post plot editing.
+* CIs in multiple columns and by groups.
+
+# Basic forest plot
+
+The layout of the forest plot is determined by the dataset provided. 
+
+## Text in the forest plot
+
+The first step is to provide a `data.frame` will be used in the forest plot. Column names of the data will be drawn as the header and contents inside the data will be displayed in the forest plot. One or multiple blank columns without any content (blanks) should be provided to draw confidence interval. Space to draw the CI is determined by the width of this column. Increase the number of space in the column to give more space to draw CI. 
+
+First we need to get the data ready to plot.
+
+```{r prepare-data}
 library(forestploter)
+
+# Read provided sample example data
+dt <- read.csv(system.file("extdata", "example_data.csv", package = "forestploter"))
+
+# Keep needed columns
+dt <- dt[,1:6]
+
+# indent the subgroup if there is a number in the placebo column
+dt$Subgroup <- ifelse(is.na(dt$Placebo), 
+                      dt$Subgroup,
+                      paste0("   ", dt$Subgroup))
+
+# NA to blank or NA will be transformed to carachter.
+dt$Treatment <- ifelse(is.na(dt$Treatment), "", dt$Treatment)
+dt$Placebo <- ifelse(is.na(dt$Placebo), "", dt$Placebo)
+dt$se <- (log(dt$hi) - log(dt$est))/1.96
+
+# Add blank column for the forest plot to display CI.
+# Adjust the column width with space. 
+dt$` ` <- paste(rep(" ", 20), collapse = " ")
+
+# Create confidence interval column to display
+dt$`HR (95% CI)` <- ifelse(is.na(dt$se), "",
+                             sprintf("%.2f (%.2f to %.2f)",
+                                     dt$est, dt$low, dt$hi))
+head(dt)
 ```
+
+The data we have above will be the basic layout of the forest plot. The example below shows how to draw a simple forest plot by applying a theme. A footnote was added as a demonstration.
+
+```{r simple-plot, fig.width  = 7.5, fig.height = 6}
+# Define theme
+tm <- forest_theme(base_size = 10,
+                   refline_col = "red",
+                   footnote_col = "#636363",
+                   footnote_fontface = "italic")
+
+p <- forest(dt[,c(1:3, 8:9)],
+            est = dt$est,
+            lower = dt$low, 
+            upper = dt$hi,
+            sizes = dt$se,
+            ci_column = 4,
+            ref_line = 1,
+            arrow_lab = c("Placebo Better", "Treatment Better"),
+            xlim = c(0, 4),
+            xaxis = set_xaxis(break_at = c(0.5, 1, 2, 3)),
+            footnote = "This is the demo data. Please feel free to change\nanything you want.",
+            theme = tm)
+
+# Print plot
+plot(p)
+
+```
+
+## Editing forest plot
+
+
+
+
+
+
