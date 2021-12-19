@@ -6,14 +6,17 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of forestploter is to create a publication-ready forest plot
+The goal of `forestploter` is to create a publication-ready forest plot
 with little effort. This package provide some extra displays compared to
 other packages. The dataset will be used as a basic layout for the
-forest plot.
+forest plot. Width of the column to draw the confidence interval can be
+controlled with the string length of the column. Can use space to
+control this. The elements in the plot are put in the row and columns,
+think the plot as a table.
 
 ## Installation
 
-You can install the development version of forestploter from
+You can install the development version of `forestploter` from
 [GitHub](https://github.com/adayim/forestploter) with:
 
 ``` r
@@ -23,8 +26,8 @@ devtools::install_github("adayim/forestploter")
 
 ## Basic usage
 
-The colnames of the provided data will be used as the header. This is a
-basic example which shows you how to create a forestplot:
+The column names of the provided data will be used as the header. This
+is a basic example which shows you how to create a `forestplot`:
 
 ``` r
 library(grid)
@@ -79,8 +82,9 @@ plot(p)
 
 Sometimes one may want to change the color or font face of some columns.
 Or one may want to insert text into certain rows. Or may want an
-underline to separate by group. The function `edit_plot`, `insert_text`
-and `add_underline` can achieve these. Below is how to do this:
+underline to separate by group. The function `edit_plot`, `add_text`,
+`insert_text` and `add_underline` can achieve these. Below is how to do
+this:
 
 ``` r
 # Edit text in row 3

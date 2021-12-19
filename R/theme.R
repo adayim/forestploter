@@ -22,6 +22,11 @@
 #' @param refline_lwd Line width for reference line.
 #' @param refline_lty Line type for reference line.
 #' @param refline_col Line color for the reference line.
+#' @param vertline_lwd Line width for extra vertical line. A vector can be provided
+#' for each vertical line, and the values will be recycled if no enough values are
+#' given.
+#' @param vertline_lty Line type for extra vertical line. Works same as \code{vertline_lwd}.
+#' @param vertline_col Line color for the extra vertical line. Works same as \code{vertline_lwd}.
 #' @param footnote_cex Multiplier applied to font size for footnote.
 #' @param footnote_fontface The font face for footnote.
 #' @param footnote_col Color of the footnote.
@@ -48,6 +53,10 @@ forest_theme <- function(base_size=12,
                          refline_lwd = 1,
                          refline_lty = "dashed",
                          refline_col = "grey20",
+                         # Vertical line
+                         vertline_lwd = 1,
+                         vertline_lty = "dashed",
+                         vertline_col = "grey20",
                          # Footnote
                          footnote_cex = 0.6,
                          footnote_fontface = "plain",
@@ -83,6 +92,13 @@ forest_theme <- function(base_size=12,
                        fontsize = base_size,
                        fontfamily = base_family)
 
+    # Reference line
+    vertline_gp <- gpar(lwd = vertline_lwd,
+                        lty = vertline_lty,
+                        col = vertline_col,
+                        fontsize = base_size,
+                        fontfamily = base_family)
+
     # Confidence interval
     ci_gp <- list(pch = ci_pch, col = ci_col)
 
@@ -105,6 +121,7 @@ forest_theme <- function(base_size=12,
                       position = legend_position,
                       label = legend_value)
 
+    # Table body
     core <- list(fg_params = list(hjust = 0,
                                x = 0.05,
                                fontsize = base_size,
@@ -113,6 +130,7 @@ forest_theme <- function(base_size=12,
                                 length.out=4))),
               padding = unit(c(4, 3), "mm"))
 
+    # Table header
     colhead <- list(fg_params = list(hjust = 0, x = 0.05,
                                     fontface=2L,
                                     fontsize = base_size,
@@ -131,6 +149,7 @@ forest_theme <- function(base_size=12,
                 xaxis = xaxis_gp,
                 footnote = footnote_gp,
                 refline = refline_gp,
+                vertline = vertline_gp,
                 tab_theme  = tab_theme))
 
 }

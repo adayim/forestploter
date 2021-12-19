@@ -17,6 +17,9 @@ forest_theme(
   refline_lwd = 1,
   refline_lty = "dashed",
   refline_col = "grey20",
+  vertline_lwd = 1,
+  vertline_lty = "dashed",
+  vertline_col = "grey20",
   footnote_cex = 0.6,
   footnote_fontface = "plain",
   footnote_col = "black",
@@ -52,6 +55,14 @@ for a grouped forest plot.}
 \item{refline_lty}{Line type for reference line.}
 
 \item{refline_col}{Line color for the reference line.}
+
+\item{vertline_lwd}{Line width for extra vertical line. A vector can be provided
+for each vertical line, and the values will be recycled if no enough values are
+given.}
+
+\item{vertline_lty}{Line type for extra vertical line. Works same as \code{vertline_lwd}.}
+
+\item{vertline_col}{Line color for the extra vertical line. Works same as \code{vertline_lwd}.}
 
 \item{footnote_cex}{Multiplier applied to font size for footnote.}
 

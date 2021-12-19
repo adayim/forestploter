@@ -13,6 +13,7 @@
 #' @param upper Upper bound of the confidence interval, same as \code{est}.
 #' @param sizes Size of the point estimation box, can be a unit, vector or a list.
 #' @param ref_line X-axis coordinates of zero line, default is 1.
+#' @param vert_line Numerical vector, add addtional vertical line at given value.
 #' @param ci_column Column number of the data the CI will be displayed.
 #' @param xlim Limits for the x axis as a vector of length 2, i.e. c(low, high). It
 #' will take the minimum and maximum of the lower and upper value if not provided.
@@ -37,6 +38,7 @@ forest <- function(data,
                    upper,
                    sizes = 0.4,
                    ref_line = 1,
+                   vert_line = NULL,
                    ci_column,
                    xlim = NULL,
                    xaxis = NULL,
@@ -57,6 +59,10 @@ forest <- function(data,
   if(is.null(theme)){
     theme <- forest_theme()
   }
+
+  # Check vertical line
+  if(!is.null(vert_line) && !is.numeric(vert_line))
+    stop("vert_line must be a numeric vector.")
 
   # Check x-axis
   if(!is.null(xaxis) && !inherits(xaxis, "xaxis"))
@@ -166,9 +172,7 @@ forest <- function(data,
   if(is.null(xaxis)){
     tick_breaks <- pretty(c(xlim[1], ref_line, xlim[2]))
     xaxis <- set_xaxis(tick_breaks)
-  }
-
-  
+  }  
 
   # Calculate heights
   col_height <- apply(data,
@@ -279,6 +283,18 @@ forest <- function(data,
                           b = tot_row + 1, r = j,
                           clip = "off",
                           name = paste0("xaxis-", j))
+    
+    # Add vertical line
+    if(!is.null(vert_line))
+      gt <- gtable_add_grob(gt,
+                            vert_line(x = vert_line, gp = theme$vertline,
+                                      xlim = xlim),
+                            t = 2,
+                            l = j,
+                            b = tot_row, r = j,
+                            clip = "off",
+                            name = paste0("vert.line-", j))
+
     # Add arrow
     if(!is.null(arrow_lab))
       gt <- gtable_add_grob(gt, arrow_grob,

@@ -11,6 +11,7 @@ forest(
   upper,
   sizes = 0.4,
   ref_line = 1,
+  vert_line = NULL,
   ci_column,
   xlim = NULL,
   xaxis = NULL,
@@ -35,6 +36,8 @@ and considered as different groups.}
 \item{sizes}{Size of the point estimation box, can be a unit, vector or a list.}
 
 \item{ref_line}{X-axis coordinates of zero line, default is 1.}
+
+\item{vert_line}{Numerical vector, add addtional vertical line at given value.}
 
 \item{ci_column}{Column number of the data the CI will be displayed.}
 
