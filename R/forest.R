@@ -7,17 +7,17 @@
 #' @param data Data to be displayed in the forest plot
 #' @param est Point estimation. Can be a list for multiple columns
 #' and/or multiple groups. If the length of the list is larger than
-#' then length of \code{ci.column}, then the values reused for each column
+#' then length of \code{ci_column}, then the values reused for each column
 #' and considered as different groups.
 #' @param lower Lower bound of the confidence interval, same as \code{est}.
 #' @param upper Upper bound of the confidence interval, same as \code{est}.
 #' @param sizes Size of the point estimation box, can be a unit, vector or a list.
-#' @param ref.line X-axis coordinates of zero line, default is 1.
-#' @param ci.column Column number of the data the CI will be displayed.
-#' @param xlim Limits for the x axis as a vector length 2, i.e. c(low, high). It
-#' will take the maximum and minimum of the \code{tick.breaks} or CI.
-#' @param tick.breaks X-axis breaks points, a vector.
-#' @param arrow.lab Labels for the arrows, string vector of length two (left and
+#' @param ref_line X-axis coordinates of zero line, default is 1.
+#' @param ci_column Column number of the data the CI will be displayed.
+#' @param xlim Limits for the x axis as a vector of length 2, i.e. c(low, high). It
+#' will take the minimum and maximum of the lower and upper value if not provided.
+#' @param xaxis Set X-axis breaks points and labels, should use \code{\link{set_xaxis}}.
+#' @param arrow_lab Labels for the arrows, string vector of length two (left and
 #' right). The theme of arrow will inherit from the x-axis.
 #' @param footnote Footnote for the forest plot, will be aligned at left bottom
 #' of the plot. Please adjust the line length with line break to avoid the overlap
@@ -36,11 +36,11 @@ forest <- function(data,
                    lower,
                    upper,
                    sizes = 0.4,
-                   ref.line = 1,
-                   ci.column,
+                   ref_line = 1,
+                   ci_column,
                    xlim = NULL,
-                   tick.breaks = NULL,
-                   arrow.lab = NULL,
+                   xaxis = NULL,
+                   arrow_lab = NULL,
                    footnote = NULL,
                    nudge_y = 0,
                    theme = NULL){
@@ -50,13 +50,17 @@ forest <- function(data,
     sizes <- rep(sizes, nrow(data))
 
   # Check arrow
-  if(!is.null(arrow.lab) & length(arrow.lab) != 2)
+  if(!is.null(arrow_lab) & length(arrow_lab) != 2)
     stop("Arrow label must of length 2.")
 
   # Set theme
   if(is.null(theme)){
     theme <- forest_theme()
   }
+
+  # Check x-axis
+  if(!inherits(xaxis, "xaxis"))
+    stop("Please set xaxis with function set_xaxis")
 
   # Default color set
   col_set <- c("#e41a1c","#377eb8","#4daf4a","#984ea3","#ff7f00",
@@ -72,8 +76,8 @@ forest <- function(data,
       stop("Estimate, lower and upper must be a list if plan to plot CI for multiple columns.")
 
     # Calculate group number
-    group_num <- length(est)/length(ci.column)
-    ci_col_list <- rep(ci.column, group_num)
+    group_num <- length(est)/length(ci_column)
+    ci_col_list <- rep(ci_column, group_num)
 
     # Replicate sizes to align with est and CIs
     if(!inherits(sizes, "list"))
@@ -100,8 +104,8 @@ forest <- function(data,
       stop("More groups than legend labels.")
 
     # Get color and pch
-    color_list <- rep(theme$ci$col, each = length(ci.column))
-    pch_list <- rep(theme$ci$pch, each = length(ci.column))
+    color_list <- rep(theme$ci$col, each = length(ci_column))
+    pch_list <- rep(theme$ci$pch, each = length(ci_column))
 
     # Check nudge_y
     if(nudge_y >= 1 || nudge_y < 0)
@@ -122,7 +126,7 @@ forest <- function(data,
       }
     }
 
-    nudge_y <- rep(nudge_y, each = length(ci.column))
+    nudge_y <- rep(nudge_y, each = length(ci_column))
 
   }else{
     if(length(unique(c(length(est), length(lower), length(upper), nrow(data)))) != 1)
@@ -133,7 +137,7 @@ forest <- function(data,
       sizes <- sizes/max(sizes, na.rm = TRUE)
     }
 
-    ci_col_list <- ci.column
+    ci_col_list <- ci_column
     color_list <- theme$ci$col
     pch_list <- theme$ci$pch
 
@@ -146,20 +150,25 @@ forest <- function(data,
 
   }
 
-  # Check xlim
-  if(is.null(xlim) & is.null(tick.breaks)){
+  # Set xlim to minimum and maximum value of the CI
+  if(is.null(xlim)){
     xlim <- range(c(lower, upper), na.rm = TRUE)
     xlim <- c(floor(xlim[1]), ceiling(xlim[2]))
   }
 
+  # Check the break
+  if(!is.null(xaxis)){
+    if(max(xaxis$break_at) > max(xlim) || min(xaxis$break_at) < min(xlim))
+      warning("break_at is outside the xlim.")
+  }
 
-  if(is.null(xlim) & !is.null(tick.breaks))
-    xlim <- range(tick.breaks)
+  # Set X-axis breaks if missing
+  if(is.null(xaxis)){
+    tick_breaks <- pretty(c(xlim[1], ref_line, xlim[2]))
+    xaxis <- set_xaxis(tick_breaks)
+  }
 
-  # X-axis breaks
-  if(is.null(tick.breaks))
-    tick.breaks <- c(xlim[1], ref.line, xlim[2])
-
+  
 
   # Calculate heights
   col_height <- apply(data,
@@ -212,8 +221,12 @@ forest <- function(data,
 
   tot_row <- nrow(gt)
 
-  # X axis
-  x_axis <- make_xais(at = tick.breaks, gp = theme$xaxis, xlim = xlim)
+  # Prepare X axis
+  x_axis <- make_xais(at = xaxis$break_at, 
+                      label_at = xaxis$label_at,
+                      labels = xaxis$label_value,
+                      gp = theme$xaxis, 
+                      xlim = xlim)
 
   x_axht <- sum(grobHeight(x_axis$children)) + unit(.5, "lines")
   gt <- gtable_add_rows(gt, heights = convertHeight(x_axht, "mm"))
@@ -231,15 +244,15 @@ forest <- function(data,
                           footnote_grob,
                           t = tot_row + 1,
                           l = 1,
-                          b = tot_row + 1, r = min(ci.column),
+                          b = tot_row + 1, r = min(ci_column),
                           clip = "off",
                           name = "footnote")
   }
 
-  # Add arrow
-  if(!is.null(arrow.lab)){
-    arrow_grob <- make_arrow(x0 = ref.line,
-                            arrow.lab = arrow.lab,
+  # Prepare arrow object and row to put it
+  if(!is.null(arrow_lab)){
+    arrow_grob <- make_arrow(x0 = ref_line,
+                            arrow_lab = arrow_lab,
                             gp = theme$xaxis,
                             xlim = xlim)
 
@@ -248,10 +261,10 @@ forest <- function(data,
 
   }
 
-  for(j in ci.column){
+  for(j in ci_column){
     # Add reference line
     gt <- gtable_add_grob(gt,
-                          vert_line(x = ref.line, gp = theme$refline,
+                          vert_line(x = ref_line, gp = theme$refline,
                                     xlim = xlim),
                           t = 2,
                           l = j,
@@ -259,15 +272,15 @@ forest <- function(data,
                           clip = "off",
                           name = paste0("reference.line-", j))
 
-    # Add row for the X-axis
+    # Add the X-axis
     gt <- gtable_add_grob(gt, x_axis,
                           t = tot_row + 1,
                           l = j,
                           b = tot_row + 1, r = j,
                           clip = "off",
                           name = paste0("xaxis-", j))
-    # # Add arrow
-    if(!is.null(arrow.lab))
+    # Add arrow
+    if(!is.null(arrow_lab))
       gt <- gtable_add_grob(gt, arrow_grob,
                             t = nrow(gt), l = j,
                             b = nrow(gt), r = j,
@@ -307,7 +320,7 @@ forest <- function(data,
   }
 
   # Add padding
-  gt <- gtable_add_padding(gt, unit(1, "cm"))
+  gt <- gtable_add_padding(gt, unit(5, "mm"))
 
   # Auto fit the page
   # gt$widths <- unit(rep(1/ncol(gt), ncol(gt)), "npc")
