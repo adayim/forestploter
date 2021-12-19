@@ -59,7 +59,7 @@ forest <- function(data,
   }
 
   # Check x-axis
-  if(!inherits(xaxis, "xaxis"))
+  if(!is.null(xaxis) && !inherits(xaxis, "xaxis"))
     stop("Please set xaxis with function set_xaxis")
 
   # Default color set

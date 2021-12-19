@@ -8,8 +8,8 @@
 
 The goal of forestploter is to create a publication-ready forest plot
 with little effort. This package provide some extra displays compared to
-other packages. The colnames of the provided data will be used as the
-header.
+other packages. The dataset will be used as a basic layout for the
+forest plot.
 
 ## Installation
 
@@ -61,10 +61,11 @@ p <- forest(dt[,c(1:3, 20:21)],
             lower = dt$low, 
             upper = dt$hi,
             sizes = dt$se,
-            ci.column = 4,
-            ref.line = 1,
-            arrow.lab = c("Placebo Better", "Treatment Better"),
-            tick.breaks = c(0.5, 1, 2, 4),
+            ci_column = 4,
+            ref_line = 1,
+            arrow_lab = c("Placebo Better", "Treatment Better"),
+            xlim = c(0, 4),
+            xaxis = set_xaxis(c(0.5, 1, 2, 3)),
             footnote = "This is the demo data. Please feel free to change\nanything you want.",
             theme = tm)
 
@@ -163,9 +164,9 @@ p <- forest(dt[,c(1:2, 20, 3, 22)],
                          dt$hi_gp2,
                          dt$hi_gp3,
                          dt$hi_gp4),
-            ci.column = c(3, 5),
-            ref.line = 1,
-            arrow.lab = c("Placebo Better", "Treatment Better"),
+            ci_column = c(3, 5),
+            ref_line = 1,
+            arrow_lab = c("Placebo Better", "Treatment Better"),
             nudge_y = 0.2,
             theme = tm)
 
@@ -181,3 +182,4 @@ plot(p)
 -   [ ] More documentation
 -   [ ] Different point estimation symbols allow for different
     estimation type.
+-   [ ] Need some testing.

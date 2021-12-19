@@ -4,12 +4,12 @@
 \alias{make_arrow}
 \title{Make arrow}
 \usage{
-make_arrow(x0 = 1, arrow.lab, gp, xlim)
+make_arrow(x0 = 1, arrow_lab, gp, xlim)
 }
 \arguments{
 \item{x0}{Position of vertical line for 0 or 1.}
 
-\item{arrow.lab}{Label for the arrow, left and right.}
+\item{arrow_lab}{Label for the arrow, left and right.}
 
 \item{gp}{Graphical parameters for arrow.}
 

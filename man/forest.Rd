@@ -10,11 +10,11 @@ forest(
   lower,
   upper,
   sizes = 0.4,
-  ref.line = 1,
-  ci.column,
+  ref_line = 1,
+  ci_column,
   xlim = NULL,
-  tick.breaks = NULL,
-  arrow.lab = NULL,
+  xaxis = NULL,
+  arrow_lab = NULL,
   footnote = NULL,
   nudge_y = 0,
   theme = NULL
@@ -25,7 +25,7 @@ forest(
 
 \item{est}{Point estimation. Can be a list for multiple columns
 and/or multiple groups. If the length of the list is larger than
-then length of \code{ci.column}, then the values reused for each column
+then length of \code{ci_column}, then the values reused for each column
 and considered as different groups.}
 
 \item{lower}{Lower bound of the confidence interval, same as \code{est}.}
@@ -34,16 +34,16 @@ and considered as different groups.}
 
 \item{sizes}{Size of the point estimation box, can be a unit, vector or a list.}
 
-\item{ref.line}{X-axis coordinates of zero line, default is 1.}
+\item{ref_line}{X-axis coordinates of zero line, default is 1.}
 
-\item{ci.column}{Column number of the data the CI will be displayed.}
+\item{ci_column}{Column number of the data the CI will be displayed.}
 
-\item{xlim}{Limits for the x axis as a vector length 2, i.e. c(low, high). It
-will take the maximum and minimum of the \code{tick.breaks} or CI.}
+\item{xlim}{Limits for the x axis as a vector of length 2, i.e. c(low, high). It
+will take the minimum and maximum of the lower and upper value if not provided.}
 
-\item{tick.breaks}{X-axis breaks points, a vector.}
+\item{xaxis}{Set X-axis breaks points and labels, should use \code{\link{set_xaxis}}.}
 
-\item{arrow.lab}{Labels for the arrows, string vector of length two (left and
+\item{arrow_lab}{Labels for the arrows, string vector of length two (left and
 right). The theme of arrow will inherit from the x-axis.}
 
 \item{footnote}{Footnote for the forest plot, will be aligned at left bottom
