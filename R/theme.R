@@ -1,6 +1,4 @@
 
-
-
 #' Forest plot default theme
 #'
 #' Default theme for the forest plot, but can pass other parameters. The
@@ -70,7 +68,7 @@ forest_theme <- function(base_size=12,
     
     if(max_len > 1){
       if(length(legend_value) < max_len)
-        stop("legend_value should be provided for multiple groups.")
+        stop("legend_value should be provided each groups.")
 
       ci_pch <- rep_len(ci_pch, max_len)
       ci_col <- col_set[1:max_len] 

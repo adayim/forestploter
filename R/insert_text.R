@@ -1,8 +1,7 @@
 
-
-#' Insert text into forest plot
+#' Insert text to forest plot
 #'
-#' This function can be used to insert text into forest plot. Remember to adjust
+#' This function can be used to insert text to forest plot. Remember to adjust
 #' for the row number if you have added text before, including header. This is
 #' achieved by inserted new row(s) to the plot and will affect the row number.
 #'
@@ -95,7 +94,7 @@ insert_text <- function(plot,
                          x = tx_x,
                          just = just,
                          check.overlap = TRUE,
-                         name = "cutom-text")
+                         name = "custom-text")
 
     plot <- gtable_add_rows(plot,
                             grobHeight(txt_grob) + 2*padding,
@@ -105,7 +104,8 @@ insert_text <- function(plot,
                             t = row[i] + 1,
                             b = row[i] + 1,
                             l = min(col),
-                            r = max(col))
+                            r = max(col),
+                            clip = "off")
   }
 
   return(plot)

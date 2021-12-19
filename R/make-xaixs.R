@@ -1,5 +1,5 @@
 
-make_xais <- function(at = NULL, labels = NULL, gp = gpar(), xlim){
+make_xais <- function(at = NULL, label_at = NULL, labels = NULL, gp = gpar(), xlim){
 
   if(is.null(at))
     at <- pretty(xlim)
@@ -19,7 +19,7 @@ make_xais <- function(at = NULL, labels = NULL, gp = gpar(), xlim){
                        gp = gp,
                        name = "tick")
 
-  lab <- textGrob(labels, x = unit(at, "native"), y = maj_cord$yb - unit(1, "lines"),
+  lab <- textGrob(labels, x = unit(label_at, "native"), y = maj_cord$yb - unit(1, "lines"),
                   gp = gp,
                   just="centre", rot=0, check.overlap=TRUE,
                   name = "label")

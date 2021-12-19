@@ -3,19 +3,19 @@
 #'
 #' @param x0 Position of vertical line for 0 or 1.
 #' @param xlim Limits for the x axis as a vector length 2, i.e. c(low, high)
-#' @param arrow.lab Label for the arrow, left and right.
+#' @param arrow_lab Label for the arrow, left and right.
 #' @param gp Graphical parameters for arrow.
 #'
 
-make_arrow <- function(x0 = 1, arrow.lab, gp, xlim){
+make_arrow <- function(x0 = 1, arrow_lab, gp, xlim){
 
-  t_lft <- textGrob(arrow.lab[1],
+  t_lft <- textGrob(arrow_lab[1],
                     x = unit(x0, "native") - unit(0.05, "inches"),
                     y = unit(0.5, "npc"), just = "right",
                     gp = gp,
                     name="arrow.text.left")
 
-  t_rgt <- textGrob(arrow.lab[2],
+  t_rgt <- textGrob(arrow_lab[2],
                     x = unit(x0, "native") + unit(0.05, "inches"),
                     y = unit(0.5, "npc"), just = "left",
                     gp = gp,
