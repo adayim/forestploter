@@ -1,10 +1,10 @@
 Package: forestploter
-Title: Create Forest Plot
-Version: 0.0.0.9213
+Title: Create Flexible Forest Plot
+Version: 0.0.0.9214
 Authors@R: 
     person("Alimu", "Dayimu", , "alimdayim@hotmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-9998-7463"))
-Description: This package uses gtable and gridExtra to overlay forest plots.
+Description: Create forest plot based on the layout of the data. Confidence interval in multiple columns by groups can be done easily. Editing plot, inserting/adding text, applying theme to the plot and much more.
 License: MIT + file LICENSE
 URL: https://github.com/adayim/forestploter
 BugReports: https://github.com/adayim/forestploter/issues
@@ -15,3 +15,7 @@ Imports:
     grid,
     gridExtra,
     gtable
+Suggests: 
+    rmarkdown,
+    knitr
+VignetteBuilder: knitr

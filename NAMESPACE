@@ -2,11 +2,13 @@
 
 S3method(plot,forestplot)
 S3method(print,forestplot)
+export(add_text)
 export(add_underline)
 export(edit_plot)
 export(forest)
 export(forest_theme)
 export(insert_text)
+export(set_xaxis)
 import(grid)
 importFrom(gridExtra,tableGrob)
 importFrom(gridExtra,ttheme_minimal)
