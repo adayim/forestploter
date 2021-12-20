@@ -41,6 +41,7 @@ The first step is to provide a `data.frame` will be used in the forest plot. Col
 First we need to get the data ready to plot.
 
 ```{r prepare-data}
+library(grid)
 library(forestploter)
 
 # Read provided sample example data
@@ -72,7 +73,7 @@ head(dt)
 
 The data we have above will be the basic layout of the forest plot. The example below shows how to draw a simple forest plot by applying a theme. A footnote was added as a demonstration.
 
-```{r simple-plot, fig.width  = 7.5, fig.height = 6}
+```{r simple-plot, fig.width  = 7, fig.height = 6}
 # Define theme
 tm <- forest_theme(base_size = 10,
                    refline_col = "red",
@@ -99,8 +100,115 @@ plot(p)
 
 ## Editing forest plot
 
+Sometimes one may want to change the color or font face of some columns. Or may want to add/insert text into certain rows. Or may want to add an underline to the row separate by group. The function `edit_plot`, `add_text`, `insert_text` and `add_underline` can achieve these. To note, the row index will change after inserting text. 
+
+```{r edit-plot, fig.width  = 7, fig.height = 7}
+# Change text color in row 3
+g <- edit_plot(p, row = 3, gp = gpar(col = "red", fontface = "italic"))
+
+# Bold grouping text
+g <- edit_plot(g,
+               row = c(2, 5, 10, 13, 17, 20),
+               gp = gpar(fontface = "bold"))
+
+# Edit background of row 5
+g <- edit_plot(g, row = 5, which = "background",
+               gp = gpar(fill = "darkolivegreen1"))
+
+# Insert text at top
+g <- insert_text(g,
+                 text = "Treatment group",
+                 col = 2:3,
+                 part = "header",
+                 gp = gpar(fontface = "bold"))
+
+# Add underline at the bottom of the header
+g <- add_underline(g, part = "header")
 
 
+# Insert text
+g <- insert_text(g,
+                 text = "This is a long text. Age and gender summarised above.\nBMI is next",
+                 row = 10,
+                 just = "left",
+                 gp = gpar(cex = 0.6, col = "green", fontface = "italic"))
 
+plot(g)
+
+```
+
+The `add_text` simply put the text in the plot without adding any rows to the plot. Adding a blank row to the data before drawing a forest plot and use `add_text` function to add text to the row have the same effect as `insert_text`.
+
+# Multiple CI columns
+
+If drawing CI to multiple columns is desired, one only need to provide a vector of the position of the columns to be drawn in the data. As seen in the example below, the CI will be drawn in the column 3 and 5. The first and second elements in `est`, `lower` and `upper` will be drawn in column 3 and column 5. 
+
+For a more complex example, one may want to draw CI by groups. The solution is simple, just provide all the values sequencely to `est`, `lower` and `upper`. Which means, the first `n` elements in the `est`, `lower` and `upper` are considered as same group, same for next `n` elements. The `n` is determined by the length of `ci_column`. As it is shown in the example below, `est_gp1` and `est_gp2` will be drawn in column 3 and column 5 as normal, considered as group 1. But `est_gp3` and `est_gp4` will be considered as group 2. 
+
+This is an example of multiple CI columns and groups:
+
+```{r multiple-group, fig.width  = 7.5, fig.height = 7.5}
+dt <- read.csv(system.file("extdata", "example_data.csv", package = "forestploter"))
+# indent the subgroup if there is a number in the placebo column
+dt$Subgroup <- ifelse(is.na(dt$Placebo), 
+                      dt$Subgroup,
+                      paste0("   ", dt$Subgroup))
+
+# NA to blank or NA will be transformed to carachter.
+dt$`n` <- ifelse(is.na(dt$Treatment), "", dt$Treatment)
+dt$`n ` <- ifelse(is.na(dt$Placebo), "", dt$Placebo)
+
+# Add two blank column for CI
+dt$`CVD outcome` <- paste(rep(" ", 20), collapse = " ")
+dt$`COPD outcome` <- paste(rep(" ", 20), collapse = " ")
+
+# Set-up theme
+tm <- forest_theme(base_size = 10,
+                   refline_lty = "solid",
+                   ci_pch = c(15, 18),
+                   ci_col = c("#377eb8", "#4daf4a"),
+                   footnote_col = "blue",
+                   legend_name = "Group",
+                   legend_value = c("Trt 1", "Trt 2"),
+                   vertline_lty = c("dashed", "dotted"),
+                   vertline_col = c("#d6604d", "#bababa"))
+
+p <- forest(dt[,c(1, 19, 21, 20, 22)],
+            est = list(dt$est_gp1,
+                       dt$est_gp2,
+                       dt$est_gp3,
+                       dt$est_gp4),
+            lower = list(dt$low_gp1,
+                         dt$low_gp2,
+                         dt$low_gp3,
+                         dt$low_gp4), 
+            upper = list(dt$hi_gp1,
+                         dt$hi_gp2,
+                         dt$hi_gp3,
+                         dt$hi_gp4),
+            ci_column = c(3, 5),
+            ref_line = 1,
+            vert_line = c(0.5, 2),
+            nudge_y = 0.2,
+            theme = tm)
+
+plot(p)
+```
+
+
+# Saving plot
+One can use the base method or use `ggsave` function to save plot. For the `ggsave` function, please don't ignore the `plot` parameter. The width and height should be tuned to get a desired plot.
+
+```{r eval=FALSE}
+# Base method
+png('rplot.png', res = 300, width = 7.5, height = 7.5, units = "in")
+p
+dev.off()
+
+# ggsave function
+ggplot2::ggsave(filename = "rplot.png", plot = p,
+                dpi = 300,
+                width = 7.5, height = 7.5, units = "in")
+```
 
 

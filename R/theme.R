@@ -80,7 +80,8 @@ forest_theme <- function(base_size=12,
         stop("legend_value should be provided each groups.")
 
       ci_pch <- rep_len(ci_pch, max_len)
-      ci_col <- col_set[1:max_len] 
+      if(length(ci_col) == 1)
+        ci_col <- col_set[1:max_len] 
 
     }
                        
