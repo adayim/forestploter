@@ -4,6 +4,8 @@
 # forestploter
 
 <!-- badges: start -->
+
+[![R-CMD-check](https://github.com/adayim/forestploter/workflows/R-CMD-check/badge.svg)](https://github.com/adayim/forestploter/actions)
 <!-- badges: end -->
 
 The goal of `forestploter` is to create a publication-ready forest plot
