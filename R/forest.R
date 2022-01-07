@@ -13,7 +13,7 @@
 #' @param upper Upper bound of the confidence interval, same as \code{est}.
 #' @param sizes Size of the point estimation box, can be a unit, vector or a list.
 #' @param ref_line X-axis coordinates of zero line, default is 1.
-#' @param vert_line Numerical vector, add addtional vertical line at given value.
+#' @param vert_line Numerical vector, add additional vertical line at given value.
 #' @param ci_column Column number of the data the CI will be displayed.
 #' @param xlim Limits for the x axis as a vector of length 2, i.e. c(low, high). It
 #' will take the minimum and maximum of the lower and upper value if not provided.

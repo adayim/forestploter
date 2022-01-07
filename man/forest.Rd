@@ -37,7 +37,7 @@ and considered as different groups.}
 
 \item{ref_line}{X-axis coordinates of zero line, default is 1.}
 
-\item{vert_line}{Numerical vector, add addtional vertical line at given value.}
+\item{vert_line}{Numerical vector, add additional vertical line at given value.}
 
 \item{ci_column}{Column number of the data the CI will be displayed.}
 

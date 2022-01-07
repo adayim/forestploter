@@ -6,6 +6,10 @@
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/adayim/forestploter/workflows/R-CMD-check/badge.svg)](https://github.com/adayim/forestploter/actions)
+[![CRAN
+status](https://www.r-pkg.org/badges/version/forestploter)](https://CRAN.R-project.org/package=forestploter)
+[![CRAN
+download](https://cranlogs.r-pkg.org/badges/grand-total/forestploter)](https://cran.r-project.org/package=forestploter)
 <!-- badges: end -->
 
 The goal of `forestploter` is to create a publication-ready forest plot
@@ -80,7 +84,7 @@ plot(p)
 
 <img src="man/figures/README-example-1.png" width="100%" height="40%" />
 
-## Editting plot
+## Editing plot
 
 Sometimes one may want to change the color or font face of some columns.
 Or one may want to insert text into certain rows. Or may want an

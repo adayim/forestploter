@@ -20,7 +20,7 @@ knitr::opts_chunk$set(
 
 [Forest plots](https://en.wikipedia.org/wiki/Forest_plot) are commonly used in the medical research publications, especially in [meta-analysis](https://en.wikipedia.org/wiki/Meta-analysis). And it can also be used to report the coefficients and confidence intervals (CIs) of the regression models.
 
-There are lots of packages out there can be used to create draw a forest plot. The most popular one is [forestpot](https://cran.r-project.org/web/packages/forestplot/). Packages speciallised for the meta-analysis, like [meta](https://cran.r-project.org/web/packages/meta/), [metafor](https://cran.r-project.org/web/packages/metafor/) and [rmeta](https://cran.r-project.org/web/packages/rmeta/). Some other packages, like [ggforestplot](https://nightingalehealth.github.io/ggforestplot/index.html), tried to use [ggplot2](https://cran.r-project.org/web/packages/ggplot2/) to draw a forest plot, they are not availble on the CRAN yet.
+There are lots of packages out there can be used to create draw a forest plot. The most popular one is [forestpot](https://cran.r-project.org/web/packages/forestplot/). Packages specialised for the meta-analysis, like [meta](https://cran.r-project.org/web/packages/meta/), [metafor](https://cran.r-project.org/web/packages/metafor/) and [rmeta](https://cran.r-project.org/web/packages/rmeta/). Some other packages, like [ggforestplot](https://nightingalehealth.github.io/ggforestplot/index.html), tried to use [ggplot2](https://cran.r-project.org/web/packages/ggplot2/) to draw a forest plot, they are not available on the CRAN yet.
 
 The main differences of the `forestploter` from the other packages are:
 
@@ -100,7 +100,7 @@ plot(p)
 
 ## Editing forest plot
 
-The package has some functionality to modify the foresplot. Below is the functions to edit various aspects of the plot:
+The package has some functionality to modify the forestplot. Below is the functions to edit various aspects of the plot:
 
 * The `edit_plot` function can be used to change the color or font face of some columns or rows. 
 * The `add_underline` function can be used to add a border to a specific row.
@@ -148,7 +148,7 @@ The `add_text` simply put the text in the plot without adding any rows to the pl
 
 If drawing CI to multiple columns is desired, one only need to provide a vector of the position of the columns to be drawn in the data. As seen in the example below, the CI will be drawn in the column 3 and 5. The first and second elements in `est`, `lower` and `upper` will be drawn in column 3 and column 5. 
 
-For a more complex example, one may want to draw CI by groups. The solution is simple, just provide all the values sequencely to `est`, `lower` and `upper`. Which means, the first `n` elements in the `est`, `lower` and `upper` are considered as same group, same for next `n` elements. The `n` is determined by the length of `ci_column`. As it is shown in the example below, `est_gp1` and `est_gp2` will be drawn in column 3 and column 5 as normal, considered as group 1. But `est_gp3` and `est_gp4` will be considered as group 2. 
+For a more complex example, one may want to draw CI by groups. The solution is simple, just provide all the values sequently to `est`, `lower` and `upper`. Which means, the first `n` elements in the `est`, `lower` and `upper` are considered as same group, same for next `n` elements. The `n` is determined by the length of `ci_column`. As it is shown in the example below, `est_gp1` and `est_gp2` will be drawn in column 3 and column 5 as normal, considered as group 1. But `est_gp3` and `est_gp4` will be considered as group 2. 
 
 This is an example of multiple CI columns and groups:
 
