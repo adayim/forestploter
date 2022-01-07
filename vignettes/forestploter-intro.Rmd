@@ -100,7 +100,12 @@ plot(p)
 
 ## Editing forest plot
 
-Sometimes one may want to change the color or font face of some columns. Or may want to add/insert text into certain rows. Or may want to add an underline to the row separate by group. The function `edit_plot`, `add_text`, `insert_text` and `add_underline` can achieve these. To note, the row index will change after inserting text. 
+The package has some functionality to modify the foresplot. Below is the functions to edit various aspects of the plot:
+
+* The `edit_plot` function can be used to change the color or font face of some columns or rows. 
+* The `add_underline` function can be used to add a border to a specific row.
+* The `add_text` function can be used to add text to certain rows/columns. 
+* The `insert_text` function can be used to insert a row before or after a certain row and add text.
 
 ```{r edit-plot, fig.width  = 7, fig.height = 7}
 # Change text color in row 3

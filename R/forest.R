@@ -1,6 +1,6 @@
 
 #' Forest plot
-#' 
+#'
 #' A data frame will be used for the basic layout of the forest plot.
 #' Graphical parameters can be set using the \code{\link{forest_theme}} function.
 #'
@@ -28,6 +28,7 @@
 #' details.
 #'
 #' @return A gtable object.
+#' @example inst/examples/forestplot-example.R
 #' @export
 #'
 #'
@@ -96,7 +97,7 @@ forest <- function(data,
     # Make legend multiple
     if(group_num > 1 & length(theme$ci$pch) == 1)
       theme$ci$pch <- rep_len(theme$ci$pch, group_num)
-    
+
     if(group_num > 1 && length(theme$legend$label) == 1 && theme$legend$label == ""){
       theme$legend$label <- paste("Group", 1:group_num)
     }
@@ -172,7 +173,7 @@ forest <- function(data,
   if(is.null(xaxis)){
     tick_breaks <- pretty(c(xlim[1], ref_line, xlim[2]))
     xaxis <- set_xaxis(tick_breaks)
-  }  
+  }
 
   # Calculate heights
   col_height <- apply(data,
@@ -226,10 +227,10 @@ forest <- function(data,
   tot_row <- nrow(gt)
 
   # Prepare X axis
-  x_axis <- make_xais(at = xaxis$break_at, 
+  x_axis <- make_xais(at = xaxis$break_at,
                       label_at = xaxis$label_at,
                       labels = xaxis$label_value,
-                      gp = theme$xaxis, 
+                      gp = theme$xaxis,
                       xlim = xlim)
 
   x_axht <- sum(grobHeight(x_axis$children)) + unit(.5, "lines")
@@ -283,7 +284,7 @@ forest <- function(data,
                           b = tot_row + 1, r = j,
                           clip = "off",
                           name = paste0("xaxis-", j))
-    
+
     # Add vertical line
     if(!is.null(vert_line))
       gt <- gtable_add_grob(gt,
