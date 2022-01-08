@@ -1,9 +1,11 @@
 Package: forestploter
 Title: Create Flexible Forest Plot
 Version: 0.0.1
-Authors@R: 
-    person("Alimu", "Dayimu", , "ad938@cam.ac.uk", role = c("aut", "cre"),
-           comment = c(ORCID = "0000-0001-9998-7463"))
+Authors@R:person(given="Alimu", 
+                 family = "Dayimu",
+                 email = "ad938@cam.ac.uk",
+                 role = c("aut", "cre"),
+                 comment = c(ORCID = "0000-0001-9998-7463"))
 Description: Create forest plot based on the layout of the data. Confidence interval in multiple columns by groups can be done easily. Editing plot, inserting/adding text, applying theme to the plot and much more.
 License: MIT + file LICENSE
 URL: https://github.com/adayim/forestploter

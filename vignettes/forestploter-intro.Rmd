@@ -5,6 +5,7 @@ date: "`r Sys.Date()`"
 output: 
   rmarkdown::html_vignette:
   toc: true
+  keep_md: true
 vignette: >
   %\VignetteIndexEntry{Introduction to forestploter}
   %\VignetteEngine{knitr::rmarkdown}
@@ -20,7 +21,7 @@ knitr::opts_chunk$set(
 
 [Forest plots](https://en.wikipedia.org/wiki/Forest_plot) are commonly used in the medical research publications, especially in [meta-analysis](https://en.wikipedia.org/wiki/Meta-analysis). And it can also be used to report the coefficients and confidence intervals (CIs) of the regression models.
 
-There are lots of packages out there can be used to create draw a forest plot. The most popular one is [forestpot](https://cran.r-project.org/web/packages/forestplot/). Packages specialised for the meta-analysis, like [meta](https://cran.r-project.org/web/packages/meta/), [metafor](https://cran.r-project.org/web/packages/metafor/) and [rmeta](https://cran.r-project.org/web/packages/rmeta/). Some other packages, like [ggforestplot](https://nightingalehealth.github.io/ggforestplot/index.html), tried to use [ggplot2](https://cran.r-project.org/web/packages/ggplot2/) to draw a forest plot, they are not available on the CRAN yet.
+There are lots of packages out there can be used to create draw a forest plot. The most popular one is [forestpot](https://CRAN.R-project.org/package=forestplot). Packages specialised for the meta-analysis, like [meta](https://CRAN.R-project.org/package=meta), [metafor](https://CRAN.R-project.org/package=metafor) and [rmeta](https://CRAN.R-project.org/package=rmeta). Some other packages, like [ggforestplot](https://nightingalehealth.github.io/ggforestplot/index.html), tried to use [ggplot2](https://CRAN.R-project.org/package=ggplot2) to draw a forest plot, they are not available on the CRAN yet.
 
 The main differences of the `forestploter` from the other packages are:
 
