@@ -34,6 +34,8 @@
 #'  for details.
 #'
 #' @importFrom utils modifyList
+#' 
+#' @return A list.
 #'
 #' @export
 #'

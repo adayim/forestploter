@@ -13,6 +13,8 @@
 #' @param which Which element to edit, text or background of the cell.
 #' @param gp Pass \code{gpar} parameters, see \code{\link[grid]{gpar}}. It should
 #' be passed as \code{gpar(col = "red")}.
+#' 
+#' @return A \code{\link[gtable]{gtable}} object.
 #'
 #' @export
 #'

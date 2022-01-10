@@ -59,7 +59,7 @@ with the arrow and/or x-axis.}
 details.}
 }
 \value{
-A gtable object.
+A \code{\link[gtable]{gtable}} object.
 }
 \description{
 A data frame will be used for the basic layout of the forest plot.

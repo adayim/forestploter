@@ -36,6 +36,9 @@ settings of the text. See \code{\link[grid]{gpar}}.}
 
 \item{padding}{Padding of the text, default is \code{unit(1, "mm")}}
 }
+\value{
+A \code{\link[gtable]{gtable}} object.
+}
 \description{
 This function can be used to add text to forest plot. The text can be span to
 multiple rows and columns. The height of the row will be changed accordingly

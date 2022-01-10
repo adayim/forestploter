@@ -27,7 +27,7 @@
 #' @param theme Theme of the forest plot, see \code{\link{forest_theme}} for
 #' details.
 #'
-#' @return A gtable object.
+#' @return A \code{\link[gtable]{gtable}} object.
 #' @example inst/examples/forestplot-example.R
 #' @export
 #'

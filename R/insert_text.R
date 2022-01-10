@@ -18,6 +18,8 @@
 #' @param gp An object of class \code{"gpar"}, this is the graphical parameter
 #'  settings of the text. See \code{\link[grid]{gpar}}.
 #' @param padding Padding of the text, default is \code{unit(1, "mm")}
+#' 
+#' @return A \code{\link[gtable]{gtable}} object.
 #'
 #' @export
 #'

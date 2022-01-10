@@ -30,6 +30,9 @@ Will edit the whole column if left blank.}
 \item{gp}{Pass \code{gpar} parameters, see \code{\link[grid]{gpar}}. It should
 be passed as \code{gpar(col = "red")}.}
 }
+\value{
+A \code{\link[gtable]{gtable}} object.
+}
 \description{
 This function is used to edit the graphical parameter of the forest plot.
 }

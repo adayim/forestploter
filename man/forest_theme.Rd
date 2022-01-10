@@ -73,6 +73,9 @@ given.}
 \item{...}{Other parameters passed to table. See \code{\link[gridExtra]{tableGrob}}
 for details.}
 }
+\value{
+A list.
+}
 \description{
 Default theme for the forest plot, but can pass other parameters. The
 parameters will be passed to corresponding elements of the forest plot.

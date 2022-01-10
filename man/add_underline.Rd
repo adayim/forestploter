@@ -28,6 +28,9 @@ underline will be drawn under the header column.}
 \item{gp}{An object of class \code{"gpar"}, graphical parameter to be passed
 to \code{\link[grid]{segmentsGrob}}.}
 }
+\value{
+A \code{\link[gtable]{gtable}} object.
+}
 \description{
 This function can be used to add underline to cells.
 }

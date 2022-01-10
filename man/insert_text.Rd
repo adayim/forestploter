@@ -39,6 +39,9 @@ settings of the text. See \code{\link[grid]{gpar}}.}
 
 \item{padding}{Padding of the text, default is \code{unit(1, "mm")}}
 }
+\value{
+A \code{\link[gtable]{gtable}} object.
+}
 \description{
 This function can be used to insert text to forest plot. Remember to adjust
 for the row number if you have added text before, including header. This is

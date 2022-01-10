@@ -15,6 +15,8 @@
 #' @param gp An object of class \code{"gpar"}, graphical parameter to be passed
 #' to \code{\link[grid]{segmentsGrob}}.
 #'
+#' @return A \code{\link[gtable]{gtable}} object.
+#' 
 #' @export
 #'
 add_underline <- function(plot,
