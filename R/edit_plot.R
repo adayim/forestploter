@@ -38,7 +38,7 @@ edit_plot <- function(plot,
 
   part <- switch(part,
                  body = "core",
-                 jeader = "colhead")
+                 header = "colhead")
   which <- switch(which,
                   text = "fg",
                   background = "bg")
