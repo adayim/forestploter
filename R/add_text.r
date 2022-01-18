@@ -56,11 +56,14 @@ add_text <- function(plot,
   l <- plot$layout
 
   # Header
-  if(part == "header")
-    row <- 2
-  else
+  if(part == "header"){
+    if(is.null(row))
+      row <- 2
+    else
+      row <- row + 1
+  }else{
     row <- max(l$b[which(l$name == "colhead-fg")]) + row
-
+  }
 
   # Row must be provided for the body
   if(part == "body"){
