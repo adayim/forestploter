@@ -345,8 +345,6 @@ forest <- function(data,
 
   class(gt) <- union("forestplot", class(gt))
 
-  attributes(gt)$data.dim <- dim(data)
-
   return(gt)
 
 }
@@ -354,7 +352,14 @@ forest <- function(data,
 
 # plot
 #' @export
-plot.forestplot <- function(x,...){
+plot.forestplot <- function(x, autofit = FALSE, ...){
+  
+  if(autofit){
+    # Auto fit the page
+    x$widths <- unit(rep(1/ncol(x), ncol(x)), "npc")
+    x$heights <- unit(rep(1/nrow(x), nrow(x)), "npc")
+  }
+
   grid.newpage()
   grid.draw(x)
 }
