@@ -4,6 +4,7 @@
 #' This function can be used to insert text to forest plot. Remember to adjust
 #' for the row number if you have added text before, including header. This is
 #' achieved by inserted new row(s) to the plot and will affect the row number.
+#' A text vector can be inserted to multiple columns or rows.
 #'
 #' @param plot A forest plot object.
 #' @param text A character or expression vector, see \code{\link[grid]{textGrob}}.
@@ -42,10 +43,16 @@ insert_text <- function(plot,
   if(!is.unit(padding))
     padding <- unit(padding, "mm")
 
-  data_dim <- attr(plot, "data.dim")
-
   part <- match.arg(part)
   just <- match.arg(just)
+
+  # Row must be provided for the body
+  if(part == "body" & is.null(row))
+    stop("Row must be defined if the text is interting to body.")
+
+  # Check text length 
+  if(length(text) > 1 && length(row) != length(text) && length(col) != length(text))
+    stop("text must have same legnth with row or col.")
 
   # Align text
   tx_x <- switch(just,
@@ -57,23 +64,13 @@ insert_text <- function(plot,
 
   # Header
   if(part == "header"){
-    if(is.null(row))
-      row <- 2
+    if(!is.null(row))
+      row <- row + min(l$b[which(l$name == "colhead-fg")]) - 1
     else
-      row <- row + 1
+      row <- max(l$b[which(l$name == "colhead-fg")])
   }else{
     row <- max(l$b[which(l$name == "colhead-fg")]) + row
   }
-
-  # Row must be provided for the body
-  if(part == "body"){
-    if(is.null(row))
-      stop("Row must be defined if the text is interting to body.")
-  }
-
-  # Check text length 
-  if(length(text) > 1 && length(row) != length(text) && length(col) != length(text))
-    stop("text must have same legnth with row or col.")
 
   # If the text will be put in columns
   if(!is.null(col) && length(text) == length(col) && length(row) == 1)
@@ -94,9 +91,11 @@ insert_text <- function(plot,
     row <- row[od_rw]
   }
 
+  nam_text <- paste(ifelse(part == "header", "colhead", "core"), "fg", sep = "-")
+
   for(i in seq_along(row)){
     if(before)
-      row[i] <- row[i] - 1 # Add 2 to account for padding of the plot and header
+      row[i] <- row[i] - 1 # Account for padding of the plot and header
 
     if(i != 1)
       row[1] <- row[i] + i - 1 # The row number will change after adding one row
@@ -112,14 +111,15 @@ insert_text <- function(plot,
                              x = tx_x,
                              just = just,
                              check.overlap = TRUE,
-                             name = "custom-text")
+                             name = "custom-text.insert")
 
         plot <- gtable_add_grob(plot, txt_grob,
                                 t = row[i] + 1,
                                 b = row[i] + 1,
                                 l = col[j],
                                 r = col[j],
-                                clip = "off")
+                                clip = "off",
+                                name = nam_text)
       }
 
     }else{
@@ -128,7 +128,7 @@ insert_text <- function(plot,
                            x = tx_x,
                            just = just,
                            check.overlap = TRUE,
-                           name = "custom-text")
+                           name = "custom-text.insert")
 
       plot <- gtable_add_rows(plot,
                               grobHeight(txt_grob) + 2*padding,
@@ -139,7 +139,8 @@ insert_text <- function(plot,
                               b = row[i] + 1,
                               l = min(col),
                               r = max(col),
-                              clip = "off")
+                              clip = "off",
+                              name = nam_text)
     }
 
   }

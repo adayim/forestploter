@@ -31,8 +31,6 @@ edit_plot <- function(plot,
   if(!inherits(gp, "gpar"))
     stop("gp must be a gpar object.")
 
-  data_dim <- attr(plot, "data.dim")
-
   part <- match.arg(part)
   which <- match.arg(which)
 
@@ -47,31 +45,26 @@ edit_plot <- function(plot,
 
   l <- plot$layout
 
-  if(!is.null(row)){
-    if(max(row) > data_dim[1])
-      stop("row exceeds total data row number.")
-
-    row <- row + max(l$b[which(l$name == "colhead-fg")])
+  # If body
+  if(part == "core"){
+    # Add number of header to the row
+    if(!is.null(row))
+      row <- row + max(l$b[which(l$name == "colhead-fg")])
+    # Apply to whole body if missing row
+    else
+      row <- unique(l$b[which(l$name == "core-fg")])
+  }else {
+    # If header, add header part
+    if(!is.null(row))
+      row <- row + min(l$b[which(l$name == "colhead-fg")]) - 1
+    else
+      row <- min(l$b[which(l$name == "colhead-fg")])
   }
 
-
-  if(!is.null(col)){
-    if(col > data_dim[2])
-      stop("col exceeds total data column number.")
-
+  if(!is.null(col))
     col <- col + 1
-  }
-
-
-  if(is.null(row))
-    row <- 3:(data_dim[1]+2)
-
-  if(is.null(col))
-    col <- 2:(data_dim[2]+1)
-
-  if(part == "header"){
-    row <- 2
-  }
+  else
+    col <- 2:max(l$r)
 
   edit_cell(plot = plot, row = row, col = col, name = name_to_edit, gp = gp)
 

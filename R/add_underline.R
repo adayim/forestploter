@@ -31,21 +31,26 @@ add_underline <- function(plot,
   if(!inherits(gp, "gpar"))
     stop("gp must be a gpar object.")
 
-  data_dim <- attr(plot, "data.dim")
-
   part <- match.arg(part)
+
+  if(part == "body" & is.null(row))
+    stop("row must be provided for the body.")
 
   l <- plot$layout
 
   # Header
-  if(part == "header")
-    row <- max(l$b[which(l$name == "colhead-fg")])
-  else
+  if(part == "header"){
+    if(is.null(row))
+      row <- max(l$b[which(l$name == "colhead-fg")])
+    else
+      row <- row + min(l$b[which(l$name == "colhead-fg")]) - 1
+  }else{
     row <- max(l$b[which(l$name == "colhead-fg")]) + row
+  }
 
   # Span to whole plot if col is missing
   if(is.null(col))
-    col <- 2:(ncol(plot) - 1)
+    col <- 2:max(l$r)
   else
     col <- 1 + col # Add 1 to account for padding of the plot
 
@@ -62,7 +67,8 @@ add_underline <- function(plot,
                             t = row[i],
                             b = row[i],
                             l = min(col),
-                            r = max(col))
+                            r = max(col),
+                            name = "underline")
   }
 
   return(plot)
