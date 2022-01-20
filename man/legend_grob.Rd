@@ -12,6 +12,7 @@ legend_grob(
   hgap = unit(0.1, "lines"),
   vgap = unit(0.5, "lines"),
   pch = 15,
+  lty = 1,
   fontsize = 12,
   fontfamily = "",
   ...
@@ -35,6 +36,8 @@ see \code{\link[grid]{legendGrob}} for details.}
 
 \item{pch}{Legend symbol.}
 
+\item{lty}{Line type.}
+
 \item{fontsize}{Font size of the legend.}
 
 \item{fontfamily}{Font family of the legend.}
@@ -47,3 +50,4 @@ A frame grob
 \description{
 This function used to create legends for the forest plot.
 }
+\keyword{internal}

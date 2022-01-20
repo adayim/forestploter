@@ -6,7 +6,7 @@
 #' @param arrow_lab Label for the arrow, left and right.
 #' @param gp Graphical parameters for arrow.
 #'
-
+#' @keywords internal
 make_arrow <- function(x0 = 1, arrow_lab, gp, xlim){
 
   t_lft <- textGrob(arrow_lab[1],

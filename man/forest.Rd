@@ -13,6 +13,7 @@ forest(
   ref_line = 1,
   vert_line = NULL,
   ci_column,
+  is_summary = NULL,
   xlim = NULL,
   xaxis = NULL,
   arrow_lab = NULL,
@@ -40,6 +41,10 @@ and considered as different groups.}
 \item{vert_line}{Numerical vector, add additional vertical line at given value.}
 
 \item{ci_column}{Column number of the data the CI will be displayed.}
+
+\item{is_summary}{A logical vector indicating if the value is a summary value,
+which will have a diamond shape for the estimate. Can not be used with multiple
+group forestplot.}
 
 \item{xlim}{Limits for the x axis as a vector of length 2, i.e. c(low, high). It
 will take the minimum and maximum of the lower and upper value if not provided.}

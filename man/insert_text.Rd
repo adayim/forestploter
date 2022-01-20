@@ -46,4 +46,5 @@ A \code{\link[gtable]{gtable}} object.
 This function can be used to insert text to forest plot. Remember to adjust
 for the row number if you have added text before, including header. This is
 achieved by inserted new row(s) to the plot and will affect the row number.
+A text vector can be inserted to multiple columns or rows.
 }

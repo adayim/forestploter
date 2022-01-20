@@ -18,3 +18,4 @@ make_arrow(x0 = 1, arrow_lab, gp, xlim)
 \description{
 Make arrow
 }
+\keyword{internal}

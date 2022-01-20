@@ -19,7 +19,7 @@
 #'
 #' @return A frame grob
 #'
-#'
+#' @keywords internal
 legend_grob <- function(name = "",
                         label,
                         color,

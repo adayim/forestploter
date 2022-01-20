@@ -12,7 +12,7 @@
 #' @param nudge_y Offset Y coordinates.
 #' @param color Color of the point and the line
 #'
-#'
+#' @keywords internal
 makeci <- function(est, lower, upper, pch, lty = 1, size = 1, xlim = c(0, 1), nudge_y = 0, color = "black"){
 
   rec <- pointsGrob(x = unit(est, "native"),
@@ -61,7 +61,7 @@ makeci <- function(est, lower, upper, pch, lty = 1, size = 1, xlim = c(0, 1), nu
 
 }
 
-#' Create pooled summary diamond
+# Create pooled summary diamond shape
 make_summary <- function(est, lower, upper, size = 1, gp, xlim){
   polygonGrob(x = unit(c(lower, est, upper, est), "native"),
               y = unit(0.5 + c(0, 0.5 * size, 0, -0.5*size), "npc"),

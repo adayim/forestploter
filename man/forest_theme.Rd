@@ -9,6 +9,7 @@ forest_theme(
   base_family = "",
   ci_pch = 15,
   ci_col = "black",
+  ci_lty = 1,
   legend_name = "Group",
   legend_position = "right",
   legend_value = "",
@@ -20,6 +21,8 @@ forest_theme(
   vertline_lwd = 1,
   vertline_lty = "dashed",
   vertline_col = "grey20",
+  summary_fill = "#4575b4",
+  summary_col = "#4575b4",
   footnote_cex = 0.6,
   footnote_fontface = "plain",
   footnote_col = "black",
@@ -36,6 +39,9 @@ forest plot is grouped.}
 
 \item{ci_col}{Color of the CI. A vector of color should be provided for
 the grouped forest plot. An internal color set will be if only not.}
+
+\item{ci_lty}{Line type of the CI. A vector of line type should be provided
+for the grouped forest plot.}
 
 \item{legend_name}{Title of the legend.}
 
@@ -63,6 +69,10 @@ given.}
 \item{vertline_lty}{Line type for extra vertical line. Works same as \code{vertline_lwd}.}
 
 \item{vertline_col}{Line color for the extra vertical line. Works same as \code{vertline_lwd}.}
+
+\item{summary_fill}{Colour for filling the summary diamond shape.}
+
+\item{summary_col}{Colour for borders of the summary diamond shape.}
 
 \item{footnote_cex}{Multiplier applied to font size for footnote.}
 

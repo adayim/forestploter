@@ -1,5 +1,5 @@
-
-make_xais <- function(at = NULL, label_at = NULL, labels = NULL, gp = gpar(), xlim){
+# Make xaxis
+make_xaxis <- function(at = NULL, label_at = NULL, labels = NULL, gp = gpar(), xlim){
 
   if(is.null(at))
     at <- pretty(xlim)

@@ -256,7 +256,7 @@ forest <- function(data,
   tot_row <- nrow(gt)
 
   # Prepare X axis
-  x_axis <- make_xais(at = xaxis$break_at,
+  x_axis <- make_xaxis(at = xaxis$break_at,
                       label_at = xaxis$label_at,
                       labels = xaxis$label_value,
                       gp = theme$xaxis,

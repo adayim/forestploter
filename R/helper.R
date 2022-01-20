@@ -1,9 +1,4 @@
-#' Add vertical line
-#'
-#' @param x A numeric unit object specifying x-values.
-#' @param gp An object of class \code{gpar}, see \code{\link[grid]{gpar}}.
-#' @param xlim Limits for the x axis as a vector length 2, i.e. c(low, high)
-#'
+# Add vertical line
 vert_line <- function(x, gp = grid::gpar(), xlim){
   segmentsGrob(x0 = unit(x,"native"),
                x1 = unit(x,"native"),
