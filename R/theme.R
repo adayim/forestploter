@@ -29,6 +29,8 @@
 #' given.
 #' @param vertline_lty Line type for extra vertical line. Works same as \code{vertline_lwd}.
 #' @param vertline_col Line color for the extra vertical line. Works same as \code{vertline_lwd}.
+#' @param summary_fill Colour for filling the summary diamond shape. 
+#' @param summary_col Colour for borders of the summary diamond shape. 
 #' @param footnote_cex Multiplier applied to font size for footnote.
 #' @param footnote_fontface The font face for footnote.
 #' @param footnote_col Color of the footnote.
@@ -62,6 +64,9 @@ forest_theme <- function(base_size=12,
                          vertline_lwd = 1,
                          vertline_lty = "dashed",
                          vertline_col = "grey20",
+                         # summary
+                         summary_fill = "#4575b4",
+                         summary_col = "#4575b4",
                          # Footnote
                          footnote_cex = 0.6,
                          footnote_fontface = "plain",
@@ -115,6 +120,10 @@ forest_theme <- function(base_size=12,
                      fontsize = base_size,
                      fontfamily = base_family)
 
+    # Summary
+    sum_gp <- gpar(col = summary_col,
+                   fill = summary_fill)
+
     # Footnote
     footnote_gp <- gpar(fontsize = base_size,
                         fontfamily = base_family,
@@ -158,6 +167,7 @@ forest_theme <- function(base_size=12,
                 footnote = footnote_gp,
                 refline = refline_gp,
                 vertline = vertline_gp,
+                summary = sum_gp,
                 tab_theme  = tab_theme))
 
 }

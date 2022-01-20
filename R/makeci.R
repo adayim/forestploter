@@ -61,3 +61,13 @@ makeci <- function(est, lower, upper, pch, lty = 1, size = 1, xlim = c(0, 1), nu
 
 }
 
+#' Create pooled summary diamond
+make_summary <- function(est, lower, upper, size = 1, gp, xlim){
+  polygonGrob(x = unit(c(lower, est, upper, est), "native"),
+              y = unit(0.5 + c(0, 0.5 * size, 0, -0.5*size), "npc"),
+              gp = gp,
+              vp = viewport(xscale = xlim),
+              name = "pooled.diamond")
+}
+
+

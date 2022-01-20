@@ -15,6 +15,9 @@
 #' @param ref_line X-axis coordinates of zero line, default is 1.
 #' @param vert_line Numerical vector, add additional vertical line at given value.
 #' @param ci_column Column number of the data the CI will be displayed.
+#' @param is_summary A logical vector indicating if the value is a summary value,
+#' which will have a diamond shape for the estimate. Can not be used with multiple
+#' group forestplot.
 #' @param xlim Limits for the x axis as a vector of length 2, i.e. c(low, high). It
 #' will take the minimum and maximum of the lower and upper value if not provided.
 #' @param xaxis Set X-axis breaks points and labels, should use \code{\link{set_xaxis}}.
@@ -41,6 +44,7 @@ forest <- function(data,
                    ref_line = 1,
                    vert_line = NULL,
                    ci_column,
+                   is_summary = NULL,
                    xlim = NULL,
                    xaxis = NULL,
                    arrow_lab = NULL,
@@ -77,6 +81,10 @@ forest <- function(data,
   if(length(unique(c(length(est), length(lower), length(upper)))) != 1)
       stop("Estimate, lower and upper should have the same length.")
 
+  # Check length for the summary
+  if(!is.null(is_summary) && length(is_summary) != nrow(data))
+    stop("is_summary should have same legnth as data rownumber.")
+
   if(inherits(est, "list") | inherits(lower, "list") | inherits(upper, "list")){
 
     if(!inherits(est, "list") | !inherits(lower, "list") | !inherits(upper, "list"))
@@ -93,6 +101,10 @@ forest <- function(data,
     # If color is given and not have the same length as group number
     if(group_num > 1 & length(theme$ci$col) == 1)
       theme$ci$col <- col_set[1:group_num]
+
+    # If line type is given and not have the same length as group number
+    if(group_num > 1 & length(theme$ci$lty) == 1)
+      theme$ci$lty <- rep_len(theme$ci$lty, group_num)
 
     # Make legend multiple
     if(group_num > 1 & length(theme$ci$pch) == 1)
@@ -159,6 +171,9 @@ forest <- function(data,
 
   }
 
+  if(group_num > 1 || is.null(is_summary))
+    is_summary <- rep(FALSE, nrow(data))
+
   # Set xlim to minimum and maximum value of the CI
   if(is.null(xlim)){
     xlim <- range(c(lower, upper), na.rm = TRUE)
@@ -207,15 +222,26 @@ forest <- function(data,
     for(i in 1:nrow(data)){
       if(is.na(est[[col_num]][i]))
         next
-      draw_ci <- makeci(est = est[[col_num]][i],
-                        lower = lower[[col_num]][i],
-                        upper = upper[[col_num]][i],
-                        size = sizes[[col_num]][i],
-                        xlim = xlim,
-                        pch = pch_list[col_num],
-                        lty = lty_list[col_num],
-                        nudge_y = nudge_y[col_num],
-                        color = color_list[col_num])
+      
+      if(is_summary[i]){
+        draw_ci <- make_summary(est = est[[col_num]][i],
+                                lower = lower[[col_num]][i],
+                                upper = upper[[col_num]][i],
+                                size = sizes[[col_num]][i],
+                                xlim = xlim,
+                                gp = theme$summary)
+      }else {
+        draw_ci <- makeci(est = est[[col_num]][i],
+                          lower = lower[[col_num]][i],
+                          upper = upper[[col_num]][i],
+                          size = sizes[[col_num]][i],
+                          xlim = xlim,
+                          pch = pch_list[col_num],
+                          lty = lty_list[col_num],
+                          nudge_y = nudge_y[col_num],
+                          color = color_list[col_num])
+      }
+      
 
       gt <- gtable_add_grob(gt, draw_ci,
                             t = i + 1,
