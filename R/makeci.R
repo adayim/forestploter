@@ -7,12 +7,13 @@
 #' @param size Size of the point
 #' @param pch Numeric or character vector indicating what sort of plotting
 #' symbol to use. See \code{\link[grid]{pointsGrob}}.
+#' @param lty Line type.
 #' @param xlim Limits for the x axis as a vector length 2, i.e. c(low, high)
 #' @param nudge_y Offset Y coordinates.
 #' @param color Color of the point and the line
 #'
 #'
-makeci <- function(est, lower, upper, pch, size = 1, xlim = c(0, 1), nudge_y = 0, color = "black"){
+makeci <- function(est, lower, upper, pch, lty = 1, size = 1, xlim = c(0, 1), nudge_y = 0, color = "black"){
 
   rec <- pointsGrob(x = unit(est, "native"),
                     y = 0.5 + nudge_y,
@@ -42,10 +43,10 @@ makeci <- function(est, lower, upper, pch, size = 1, xlim = c(0, 1), nudge_y = 0
     lng <- linesGrob(x=x_pos, y = 0.5 + nudge_y,
                      arrow=arrow(length=unit(0.05, "inches"),
                                  ends = arrow_side),
-                     gp=gpar(col= color))
+                     gp=gpar(col= color, lty = lty))
   } else {
     lng <- linesGrob(x=unit(c(lower, upper), "native"), y=0.5 + nudge_y,
-                     gp=gpar(col= color))
+                     gp=gpar(col= color, lty = lty))
   }
 
   # No dots if outside

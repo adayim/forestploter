@@ -113,6 +113,7 @@ forest <- function(data,
     # Get color and pch
     color_list <- rep(theme$ci$col, each = length(ci_column))
     pch_list <- rep(theme$ci$pch, each = length(ci_column))
+    lty_list <- rep(theme$ci$lty, each = length(ci_column))
 
     # Check nudge_y
     if(nudge_y >= 1 || nudge_y < 0)
@@ -147,6 +148,7 @@ forest <- function(data,
     ci_col_list <- ci_column
     color_list <- theme$ci$col
     pch_list <- theme$ci$pch
+    lty_list <- theme$ci$lty
 
     group_num <- 1
 
@@ -211,6 +213,7 @@ forest <- function(data,
                         size = sizes[[col_num]][i],
                         xlim = xlim,
                         pch = pch_list[col_num],
+                        lty = lty_list[col_num],
                         nudge_y = nudge_y[col_num],
                         color = color_list[col_num])
 
@@ -314,6 +317,7 @@ forest <- function(data,
     legend <- theme$legend
     legend$pch <- theme$ci$pch
     legend$color <- theme$ci$col
+    legend$lty <- theme$ci$lty
 
 
     leg_grob <- do.call(legend_grob, legend)

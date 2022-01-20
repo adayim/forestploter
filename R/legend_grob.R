@@ -6,6 +6,7 @@
 #' @param label legend labels (expressions).
 #' @param color Colors for the group
 #' @param pch Legend symbol.
+#' @param lty Line type.
 #' @param position Position of the legend, \code{"right"}, \code{"top"},
 #' \code{"bottom"}.
 #' @param hgap Horizontal gap between the legend entries,
@@ -26,6 +27,7 @@ legend_grob <- function(name = "",
                         hgap = unit(0.1, "lines"), #horizontal gap
                         vgap = unit(0.5, "lines"), #vertical gap
                         pch = 15,
+                        lty = 1,
                         fontsize = 12,
                         fontfamily = "",
                         ...
@@ -57,6 +59,7 @@ legend_grob <- function(name = "",
                          hgap = hgap, vgap = vgap,
                          gp = gpar(col = color,
                                    fill = color,
+                                   lty = lty,
                                    fontsize = fontsize,
                                    fontfamily = fontfamily))
 

@@ -11,6 +11,8 @@
 #' forest plot is grouped.
 #' @param ci_col Color of the CI. A vector of color should be provided for
 #' the grouped forest plot. An internal color set will be if only not.
+#' @param ci_lty Line type of the CI. A vector of line type should be provided
+#' for the grouped forest plot. 
 #' @param legend_name Title of the legend.
 #' @param legend_position Position of the legend, \code{"right"}, \code{"top"},
 #' \code{"bottom"}.
@@ -44,6 +46,7 @@ forest_theme <- function(base_size=12,
                          # Confidence interval
                          ci_pch = 15,
                          ci_col = "black",
+                         ci_lty = 1,
                          # Legend
                          legend_name = "Group",
                          legend_position = "right",
@@ -74,7 +77,7 @@ forest_theme <- function(base_size=12,
                 "#ffff33","#a65628","#f781bf","#999999")
 
     # Recycle if one of the values
-    max_len <- list(legend_value, ci_pch, ci_col)
+    max_len <- list(legend_value, ci_pch, ci_col, ci_lty)
     max_len <- max(vapply(max_len, length, FUN.VALUE = 1L), na.rm = TRUE) 
     
     if(max_len > 1){
@@ -82,6 +85,8 @@ forest_theme <- function(base_size=12,
         stop("legend_value should be provided each groups.")
 
       ci_pch <- rep_len(ci_pch, max_len)
+      ci_lty <- rep_len(ci_lty, max_len)
+
       if(length(ci_col) == 1)
         ci_col <- col_set[1:max_len] 
 
@@ -103,7 +108,7 @@ forest_theme <- function(base_size=12,
                         fontfamily = base_family)
 
     # Confidence interval
-    ci_gp <- list(pch = ci_pch, col = ci_col)
+    ci_gp <- list(pch = ci_pch, col = ci_col, lty = ci_lty)
 
     # X-axis
     xaxis_gp <- gpar(lwd = xaxis_lwd,
