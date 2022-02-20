@@ -74,7 +74,7 @@ p <- forest(dt[,c(1:3, 20:21)],
             ref_line = 1,
             arrow_lab = c("Placebo Better", "Treatment Better"),
             xlim = c(0, 4),
-            xaxis = set_xaxis(c(0.5, 1, 2, 3)),
+            ticks_at = c(0.5, 1, 2, 3),
             footnote = "This is the demo data. Please feel free to change\nanything you want.",
             theme = tm)
 
@@ -178,18 +178,10 @@ p <- forest(dt[,c(1:2, 20, 3, 22)],
             ref_line = 1,
             arrow_lab = c("Placebo Better", "Treatment Better"),
             nudge_y = 0.2,
+            xlog = TRUE,
             theme = tm)
 
 plot(p)
 ```
 
 <img src="man/figures/README-multiple-1.png" width="100%" height="80%" />
-
-# TODO
-
--   [ ] Expose more parameters, but keep it simple. Maybe treat it as a
-    theme.
--   [ ] More documentation
--   [ ] Different point estimation symbols allow for different
-    estimation type.
--   [ ] Need some testing.

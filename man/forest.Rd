@@ -10,12 +10,13 @@ forest(
   lower,
   upper,
   sizes = 0.4,
-  ref_line = 1,
+  ref_line = ifelse(xlog, 1, 0),
   vert_line = NULL,
   ci_column,
+  xlog = FALSE,
   is_summary = NULL,
   xlim = NULL,
-  xaxis = NULL,
+  ticks_at = NULL,
   arrow_lab = NULL,
   footnote = NULL,
   nudge_y = 0,
@@ -42,14 +43,20 @@ and considered as different groups.}
 
 \item{ci_column}{Column number of the data the CI will be displayed.}
 
+\item{xlog}{If TRUE, x-axis tick marks assume values are exponentiated, e.g.
+for logisticregressoin (OR), survival estimates (HR), Poisson regression etc.}
+
 \item{is_summary}{A logical vector indicating if the value is a summary value,
 which will have a diamond shape for the estimate. Can not be used with multiple
 group forestplot.}
 
 \item{xlim}{Limits for the x axis as a vector of length 2, i.e. c(low, high). It
-will take the minimum and maximum of the lower and upper value if not provided.}
+will take the minimum and maximum of the lower and upper value if not provided.
+This will apply to all CI columns if provided, and will be calculated automaticlly
+each column if not provided.}
 
-\item{xaxis}{Set X-axis breaks points and labels, should use \code{\link{set_xaxis}}.}
+\item{ticks_at}{Set X-axis tick-marks point. This will apply to all CI clumns if
+provided, and will be calcualted automaticlly for each column if not provided.}
 
 \item{arrow_lab}{Labels for the arrows, string vector of length two (left and
 right). The theme of arrow will inherit from the x-axis.}
@@ -78,7 +85,7 @@ dt <- read.csv(system.file("extdata", "example_data.csv", package = "forestplote
 dt <- dt[,1:6]
 
 # indent the subgroup if there is a number in the placebo column
-dt$Subgroup <- ifelse(is.na(dt$Placebo), 
+dt$Subgroup <- ifelse(is.na(dt$Placebo),
                       dt$Subgroup,
                       paste0("   ", dt$Subgroup))
 
@@ -88,7 +95,7 @@ dt$Placebo <- ifelse(is.na(dt$Placebo), "", dt$Placebo)
 dt$se <- (log(dt$hi) - log(dt$est))/1.96
 
 # Add blank column for the forest plot to display CI.
-# Adjust the column width with space. 
+# Adjust the column width with space.
 dt$` ` <- paste(rep(" ", 20), collapse = " ")
 
 # Create confidence interval column to display
@@ -104,14 +111,14 @@ tm <- forest_theme(base_size = 10,
 
 p <- forest(dt[,c(1:3, 8:9)],
             est = dt$est,
-            lower = dt$low, 
+            lower = dt$low,
             upper = dt$hi,
             sizes = dt$se,
             ci_column = 4,
             ref_line = 1,
             arrow_lab = c("Placebo Better", "Treatment Better"),
             xlim = c(0, 4),
-            xaxis = set_xaxis(break_at = c(0.5, 1, 2, 3)),
+            ticks_at = sc(0.5, 1, 2, 3),
             footnote = "This is the demo data. Please feel free to change\nanything you want.",
             theme = tm)
 

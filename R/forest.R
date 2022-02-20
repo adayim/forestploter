@@ -15,12 +15,17 @@
 #' @param ref_line X-axis coordinates of zero line, default is 1.
 #' @param vert_line Numerical vector, add additional vertical line at given value.
 #' @param ci_column Column number of the data the CI will be displayed.
+#' @param xlog If TRUE, x-axis tick marks assume values are exponentiated, e.g.
+#' for logisticregressoin (OR), survival estimates (HR), Poisson regression etc.
 #' @param is_summary A logical vector indicating if the value is a summary value,
 #' which will have a diamond shape for the estimate. Can not be used with multiple
 #' group forestplot.
 #' @param xlim Limits for the x axis as a vector of length 2, i.e. c(low, high). It
 #' will take the minimum and maximum of the lower and upper value if not provided.
-#' @param xaxis Set X-axis breaks points and labels, should use \code{\link{set_xaxis}}.
+#' This will apply to all CI columns if provided, and will be calculated automaticlly
+#' each column if not provided.
+#' @param ticks_at Set X-axis tick-marks point. This will apply to all CI clumns if 
+#' provided, and will be calcualted automaticlly for each column if not provided. 
 #' @param arrow_lab Labels for the arrows, string vector of length two (left and
 #' right). The theme of arrow will inherit from the x-axis.
 #' @param footnote Footnote for the forest plot, will be aligned at left bottom
@@ -41,12 +46,13 @@ forest <- function(data,
                    lower,
                    upper,
                    sizes = 0.4,
-                   ref_line = 1,
+                   ref_line = ifelse(xlog, 1, 0),
                    vert_line = NULL,
                    ci_column,
+                   xlog = FALSE,
                    is_summary = NULL,
                    xlim = NULL,
-                   xaxis = NULL,
+                   ticks_at = NULL,
                    arrow_lab = NULL,
                    footnote = NULL,
                    nudge_y = 0,
@@ -65,13 +71,13 @@ forest <- function(data,
     theme <- forest_theme()
   }
 
+  # Check xlim
+  if(inherits(xlim, "list"))
+    stop("xlim can not be list.")
+
   # Check vertical line
   if(!is.null(vert_line) && !is.numeric(vert_line))
     stop("vert_line must be a numeric vector.")
-
-  # Check x-axis
-  if(!is.null(xaxis) && !inherits(xaxis, "xaxis"))
-    stop("Please set xaxis with function set_xaxis")
 
   # Default color set
   col_set <- c("#e41a1c","#377eb8","#4daf4a","#984ea3","#ff7f00",
@@ -84,6 +90,30 @@ forest <- function(data,
   # Check length for the summary
   if(!is.null(is_summary) && length(is_summary) != nrow(data))
     stop("is_summary should have same legnth as data rownumber.")
+
+  # Check the break
+  if(!is.null(ticks_at) && !is.null(xlim)){
+    if(max(ticks_at) > max(xlim) || min(ticks_at) < min(xlim))
+      warning("ticks_at is outside the xlim.")
+  }
+
+  # Chekc exponential
+  if(xlog){
+    if (any(unlist(est) < 0, na.rm = TRUE) ||
+        any(unlist(lower) < 0, na.rm = TRUE) ||
+        any(unlist(upper) < 0, na.rm = TRUE) ||
+        (!is.na(ref_line) && ref_line <= 0) ||
+        (!missing(vert_line) && any(vert_line <= 0, na.rm = TRUE)) ||
+        (!missing(xlim) && xlim[1] < 0)) {
+      stop("est, lower, upper, ref_line, vert_line and xlim should be provided in exponential form if `xlog=TRUE`.")
+    }
+
+    ref_line <- log(ref_line)
+
+    if(!is.null(vert_line))
+      vert_line <- log(vert_line)
+
+  }
 
   if(inherits(est, "list") | inherits(lower, "list") | inherits(upper, "list")){
 
@@ -175,22 +205,20 @@ forest <- function(data,
     is_summary <- rep(FALSE, nrow(data))
 
   # Set xlim to minimum and maximum value of the CI
-  if(is.null(xlim)){
-    xlim <- range(c(lower, upper), na.rm = TRUE)
-    xlim <- c(floor(xlim[1]), ceiling(xlim[2]))
-  }
+  xlim <- make_xlim(xlim = xlim,
+                    lower = lower,
+                    upper = upper,
+                    gp_num = group_num,
+                    ref_line = ref_line,
+                    ticks_at = ticks_at,
+                    is_exp = xlog)
 
-  # Check the break
-  if(!is.null(xaxis)){
-    if(max(xaxis$break_at) > max(xlim) || min(xaxis$break_at) < min(xlim))
-      warning("break_at is outside the xlim.")
-  }
 
   # Set X-axis breaks if missing
-  if(is.null(xaxis)){
-    tick_breaks <- pretty(c(xlim[1], ref_line, xlim[2]))
-    xaxis <- set_xaxis(tick_breaks)
-  }
+  ticks_at <- lapply(xlim, function(xlm){
+    make_ticks(at = ticks_at, xlim = xlm, refline = ref_line, is_exp = xlog)
+  })
+
 
   # Calculate heights
   col_height <- apply(data,
@@ -215,33 +243,40 @@ forest <- function(data,
                     rows = NULL)
   }
 
+  # Column index
+  col_indx <- rep_len(1:group_num, length(ci_col_list))
 
   # Draw CI
   for(col_num in seq_along(ci_col_list)){
 
+    if(xlog){
+      est[[col_num]] <- log(est[[col_num]])
+      lower[[col_num]] <- log(lower[[col_num]])
+      upper[[col_num]] <- log(upper[[col_num]])
+    }
+
     for(i in 1:nrow(data)){
       if(is.na(est[[col_num]][i]))
         next
-      
+
       if(is_summary[i]){
         draw_ci <- make_summary(est = est[[col_num]][i],
                                 lower = lower[[col_num]][i],
                                 upper = upper[[col_num]][i],
                                 size = sizes[[col_num]][i],
-                                xlim = xlim,
+                                xlim = xlim[[col_indx[col_num]]],
                                 gp = theme$summary)
       }else {
         draw_ci <- makeci(est = est[[col_num]][i],
                           lower = lower[[col_num]][i],
                           upper = upper[[col_num]][i],
                           size = sizes[[col_num]][i],
-                          xlim = xlim,
+                          xlim = xlim[[col_indx[col_num]]],
                           pch = pch_list[col_num],
                           lty = lty_list[col_num],
                           nudge_y = nudge_y[col_num],
                           color = color_list[col_num])
       }
-      
 
       gt <- gtable_add_grob(gt, draw_ci,
                             t = i + 1,
@@ -256,14 +291,20 @@ forest <- function(data,
   tot_row <- nrow(gt)
 
   # Prepare X axis
-  x_axis <- make_xaxis(at = xaxis$break_at,
-                      label_at = xaxis$label_at,
-                      labels = xaxis$label_value,
-                      gp = theme$xaxis,
-                      xlim = xlim)
+  x_axis <- lapply(seq_along(xlim), function(i){
+    make_xaxis(at = ticks_at[[i]],
+               gp = theme$xaxis,
+               xlim = xlim[[i]],
+               is_exp = xlog)
+  })
 
-  x_axht <- sum(grobHeight(x_axis$children)) + unit(.5, "lines")
-  gt <- gtable_add_rows(gt, heights = convertHeight(x_axht, "mm"))
+  x_axht <- sapply(x_axis, function(x){
+    convertHeight(sum(grobHeight(x$children)) + unit(.5, "lines"),
+                  unitTo = "mm",
+                  valueOnly = TRUE)
+  })
+
+  gt <- gtable_add_rows(gt, heights = unit(max(x_axht), "mm"))
 
   # Add footnote
   if(!is.null(footnote)){
@@ -285,21 +326,29 @@ forest <- function(data,
 
   # Prepare arrow object and row to put it
   if(!is.null(arrow_lab)){
-    arrow_grob <- make_arrow(x0 = ref_line,
-                            arrow_lab = arrow_lab,
-                            gp = theme$xaxis,
-                            xlim = xlim)
+    arrow_grob <- lapply(seq_along(xlim), function(i){
+      make_arrow(x0 = ref_line,
+                 arrow_lab = arrow_lab,
+                 gp = theme$xaxis,
+                 xlim = xlim[[i]])
+    })
 
-    lb_ht <- max(grobHeight(arrow_grob$children)) + unit(.5, "lines")
-    gt <- gtable_add_rows(gt, heights = convertHeight(lb_ht, "mm"))
+    lb_ht <- sapply(arrow_grob, function(x){
+      convertHeight(max(grobHeight(x$children)) + unit(.5, "lines"),
+                    unitTo = "mm",
+                    valueOnly = TRUE)
+    })
+
+    gt <- gtable_add_rows(gt, heights = unit(max(lb_ht), "mm"))
 
   }
 
   for(j in ci_column){
+    idx <- which(ci_column == j)
     # Add reference line
     gt <- gtable_add_grob(gt,
                           vert_line(x = ref_line, gp = theme$refline,
-                                    xlim = xlim),
+                                    xlim = xlim[[idx]]),
                           t = 2,
                           l = j,
                           b = tot_row, r = j,
@@ -307,7 +356,7 @@ forest <- function(data,
                           name = paste0("reference.line-", j))
 
     # Add the X-axis
-    gt <- gtable_add_grob(gt, x_axis,
+    gt <- gtable_add_grob(gt, x_axis[[idx]],
                           t = tot_row + 1,
                           l = j,
                           b = tot_row + 1, r = j,
@@ -318,7 +367,7 @@ forest <- function(data,
     if(!is.null(vert_line))
       gt <- gtable_add_grob(gt,
                             vert_line(x = vert_line, gp = theme$vertline,
-                                      xlim = xlim),
+                                      xlim = xlim[[idx]]),
                             t = 2,
                             l = j,
                             b = tot_row, r = j,
@@ -327,7 +376,7 @@ forest <- function(data,
 
     # Add arrow
     if(!is.null(arrow_lab))
-      gt <- gtable_add_grob(gt, arrow_grob,
+      gt <- gtable_add_grob(gt, arrow_grob[[idx]],
                             t = nrow(gt), l = j,
                             b = nrow(gt), r = j,
                             clip = "off",
@@ -380,10 +429,19 @@ forest <- function(data,
 }
 
 
-# plot
+#' Draw plot
+#'
+#' Print or draw forestplot.
+#'
+#' @param x forestplot to display
+#' @param autofit If true, the plot will be autofit.
+#' @param ... other arguments not used by this method
+#' @return Invisibly returns the original forestplot.
+#' @rdname print.forestplot
+#' @method print forestplot
 #' @export
-plot.forestplot <- function(x, autofit = FALSE, ...){
-  
+print.forestplot <- function(x, autofit = FALSE, ...){
+
   if(autofit){
     # Auto fit the page
     x$widths <- unit(rep(1/ncol(x), ncol(x)), "npc")
@@ -392,7 +450,11 @@ plot.forestplot <- function(x, autofit = FALSE, ...){
 
   grid.newpage()
   grid.draw(x)
+
+  invisible(x)
 }
 
+#' @method plot forestplot
+#' @rdname print.forestplot
 #' @export
-print.forestplot <- plot.forestplot
+plot.forestplot <- print.forestplot

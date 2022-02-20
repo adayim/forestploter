@@ -22,3 +22,4 @@ A list.
 \description{
 Set x-axis
 }
+\keyword{deprecated}

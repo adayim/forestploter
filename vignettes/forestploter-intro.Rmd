@@ -90,7 +90,7 @@ p <- forest(dt[,c(1:3, 8:9)],
             ref_line = 1,
             arrow_lab = c("Placebo Better", "Treatment Better"),
             xlim = c(0, 4),
-            xaxis = set_xaxis(break_at = c(0.5, 1, 2, 3)),
+            ticks_at = c(0.5, 1, 2, 3),
             footnote = "This is the demo data. Please feel free to change\nanything you want.",
             theme = tm)
 
@@ -203,7 +203,7 @@ plot(p)
 
 
 # Saving plot
-One can use the base method or use `ggsave` function to save plot. For the `ggsave` function, please don't ignore the `plot` parameter. The width and height should be tuned to get a desired plot.
+One can use the base method or use `ggsave` function to save plot. For the `ggsave` function, please don't ignore the `plot` parameter. The width and height should be tuned to get a desired plot. You can also set `autofit=TRUE` in the `print` or `plot` function to autofit the plot, but this may change not be compact as it should be. 
 
 ```{r eval=FALSE}
 # Base method
