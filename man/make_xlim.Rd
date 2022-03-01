@@ -17,7 +17,7 @@ make_xlim(
 \arguments{
 \item{xlim}{Limits for the x axis as a vector of length 2, i.e. c(low, high). It
 will take the minimum and maximum of the lower and upper value if not provided.
-This will apply to all CI columns if provided, and will be calculated automaticlly
+This will apply to all CI columns if provided, and will be calculated automatically
 each column if not provided.}
 
 \item{lower}{Lower bound of the confidence interval, same as \code{est}.}
@@ -28,8 +28,8 @@ each column if not provided.}
 
 \item{ref_line}{X-axis coordinates of zero line, default is 1.}
 
-\item{ticks_at}{Set X-axis tick-marks point. This will apply to all CI clumns if
-provided, and will be calcualted automaticlly for each column if not provided.}
+\item{ticks_at}{Set X-axis tick-marks point. This will apply to all CI columns if
+provided, and will be calculated automatically for each column if not provided.}
 
 \item{is_exp}{If values is exponential.}
 }

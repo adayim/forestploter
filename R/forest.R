@@ -15,17 +15,17 @@
 #' @param ref_line X-axis coordinates of zero line, default is 1.
 #' @param vert_line Numerical vector, add additional vertical line at given value.
 #' @param ci_column Column number of the data the CI will be displayed.
-#' @param xlog If TRUE, x-axis tick marks assume values are exponentiated, e.g.
-#' for logisticregressoin (OR), survival estimates (HR), Poisson regression etc.
+#' @param xlog If TRUE, x-axis tick marks assume values are exponential, e.g.
+#' for logistic regression (OR), survival estimates (HR), Poisson regression etc.
 #' @param is_summary A logical vector indicating if the value is a summary value,
 #' which will have a diamond shape for the estimate. Can not be used with multiple
-#' group forestplot.
+#' group `forestplot`.
 #' @param xlim Limits for the x axis as a vector of length 2, i.e. c(low, high). It
 #' will take the minimum and maximum of the lower and upper value if not provided.
-#' This will apply to all CI columns if provided, and will be calculated automaticlly
+#' This will apply to all CI columns if provided, and will be calculated automatically
 #' each column if not provided.
-#' @param ticks_at Set X-axis tick-marks point. This will apply to all CI clumns if 
-#' provided, and will be calcualted automaticlly for each column if not provided. 
+#' @param ticks_at Set X-axis tick-marks point. This will apply to all CI columns if
+#' provided, and will be calculated automatically for each column if not provided.
 #' @param arrow_lab Labels for the arrows, string vector of length two (left and
 #' right). The theme of arrow will inherit from the x-axis.
 #' @param footnote Footnote for the forest plot, will be aligned at left bottom

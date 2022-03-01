@@ -1,3 +1,8 @@
+# forestploter 0.1.2
+-   Added `xlog` options for exponential estimates, eg HR, OR.
+-   Auto calculate x-ticks and xlim for multiple column.
+-   Minor updates and changes.
+
 # forestploter 0.1.1
 -   Added summary diamond shape.
 -   Able to change CI line type.
