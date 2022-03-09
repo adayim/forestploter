@@ -1,7 +1,8 @@
 
 #' Edit forest plot
 #'
-#' This function is used to edit the graphical parameter of the forest plot.
+#' This function is used to edit the graphical parameter of text and background
+#' of the forest plot.
 #'
 #' @param plot A forest plot object.
 #' @param row A numeric value or vector indicating row number to edit in the

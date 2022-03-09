@@ -9,11 +9,11 @@ makeci(
   lower,
   upper,
   pch,
-  lty = 1,
   size = 1,
+  gp = gpar(),
+  t_height = NULL,
   xlim = c(0, 1),
-  nudge_y = 0,
-  color = "black"
+  nudge_y = 0
 )
 }
 \arguments{
@@ -26,9 +26,12 @@ makeci(
 \item{pch}{Numeric or character vector indicating what sort of plotting
 symbol to use. See \code{\link[grid]{pointsGrob}}.}
 
-\item{lty}{Line type.}
-
 \item{size}{Size of the point}
+
+\item{gp}{Grphical parameters.}
+
+\item{t_height}{The height confidence interval line end vertices. If
+value is \code{NULL} (default), no vertices will be drawn.}
 
 \item{xlim}{Limits for the x axis as a vector length 2, i.e. c(low, high)}
 

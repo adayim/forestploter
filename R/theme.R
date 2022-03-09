@@ -13,6 +13,10 @@
 #' the grouped forest plot. An internal color set will be if only not.
 #' @param ci_lty Line type of the CI. A vector of line type should be provided
 #' for the grouped forest plot. 
+#' @param ci_lwd Line width of the CI. A vector of line type should be provided
+#' for the grouped forest plot. 
+#' @param ci_Theight A unit specifying the height of the T end of CI. If set to
+#' `NULL` (default), no T end will be drawn.
 #' @param legend_name Title of the legend.
 #' @param legend_position Position of the legend, \code{"right"}, \code{"top"},
 #' \code{"bottom"}.
@@ -43,12 +47,14 @@
 #'
 #' @export
 #'
-forest_theme <- function(base_size=12,
+forest_theme <- function(base_size = 12,
                          base_family = "",
                          # Confidence interval
                          ci_pch = 15,
                          ci_col = "black",
                          ci_lty = 1,
+                         ci_lwd = 1,
+                         ci_Theight = NULL,
                          # Legend
                          legend_name = "Group",
                          legend_position = "right",
@@ -81,8 +87,12 @@ forest_theme <- function(base_size=12,
     col_set <- c("#e41a1c","#377eb8","#4daf4a","#984ea3","#ff7f00",
                 "#ffff33","#a65628","#f781bf","#999999")
 
+    # Check length
+    if(!is.null(ci_Theight) && length(ci_Theight) > 1)
+      stop("`ci_Theight` must be of length 1.")
+
     # Recycle if one of the values
-    max_len <- list(legend_value, ci_pch, ci_col, ci_lty)
+    max_len <- list(legend_value, ci_pch, ci_col, ci_lty, ci_lwd)
     max_len <- max(vapply(max_len, length, FUN.VALUE = 1L), na.rm = TRUE) 
     
     if(max_len > 1){
@@ -91,6 +101,7 @@ forest_theme <- function(base_size=12,
 
       ci_pch <- rep_len(ci_pch, max_len)
       ci_lty <- rep_len(ci_lty, max_len)
+      ci_lwd <- rep_len(ci_lwd, max_len)
 
       if(length(ci_col) == 1)
         ci_col <- col_set[1:max_len] 
@@ -113,7 +124,7 @@ forest_theme <- function(base_size=12,
                         fontfamily = base_family)
 
     # Confidence interval
-    ci_gp <- list(pch = ci_pch, col = ci_col, lty = ci_lty)
+    ci_gp <- list(pch = ci_pch, col = ci_col, lty = ci_lty, lwd = ci_lwd, t_height = ci_Theight)
 
     # X-axis
     xaxis_gp <- gpar(lwd = xaxis_lwd,
