@@ -10,6 +10,8 @@ forest_theme(
   ci_pch = 15,
   ci_col = "black",
   ci_lty = 1,
+  ci_lwd = 1,
+  ci_Theight = NULL,
   legend_name = "Group",
   legend_position = "right",
   legend_value = "",
@@ -42,6 +44,12 @@ the grouped forest plot. An internal color set will be if only not.}
 
 \item{ci_lty}{Line type of the CI. A vector of line type should be provided
 for the grouped forest plot.}
+
+\item{ci_lwd}{Line width of the CI. A vector of line type should be provided
+for the grouped forest plot.}
+
+\item{ci_Theight}{A unit specifying the height of the T end of CI. If set to
+\code{NULL} (default), no T end will be drawn.}
 
 \item{legend_name}{Title of the legend.}
 

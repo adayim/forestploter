@@ -114,7 +114,7 @@ make_xlim <- function(xlim = NULL,
                       unlist(upper)),
                     na.rm = TRUE)
     }
-      
+
     if(is_exp){
       if(min(xlim) == 0)
         xlim[which.min(xlim)] <- min(c(unlist(lower),
@@ -125,7 +125,7 @@ make_xlim <- function(xlim = NULL,
 
     }
 
-    xlim <- list(xlim)
+    xlim <- rep(list(xlim), gp_num)
 
   }else{
 

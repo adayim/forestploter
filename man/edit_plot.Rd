@@ -34,5 +34,6 @@ be passed as \code{gpar(col = "red")}.}
 A \code{\link[gtable]{gtable}} object.
 }
 \description{
-This function is used to edit the graphical parameter of the forest plot.
+This function is used to edit the graphical parameter of text and background
+of the forest plot.
 }

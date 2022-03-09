@@ -25,6 +25,14 @@ think the plot as a table.
 You can install the development version of `forestploter` from
 [GitHub](https://github.com/adayim/forestploter) with:
 
+**Install from CRAN**
+
+``` r
+install.packages("forestploter")
+```
+
+**Install development version from GitHub**
+
 ``` r
 # install.packages("devtools")
 devtools::install_github("adayim/forestploter")

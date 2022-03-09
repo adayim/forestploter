@@ -136,6 +136,10 @@ forest <- function(data,
     if(group_num > 1 & length(theme$ci$lty) == 1)
       theme$ci$lty <- rep_len(theme$ci$lty, group_num)
 
+    # If line width is given and not have the same length as group number
+    if(group_num > 1 & length(theme$ci$lwd) == 1)
+      theme$ci$lwd <- rep_len(theme$ci$lwd, group_num)
+
     # Make legend multiple
     if(group_num > 1 & length(theme$ci$pch) == 1)
       theme$ci$pch <- rep_len(theme$ci$pch, group_num)
@@ -156,6 +160,7 @@ forest <- function(data,
     color_list <- rep(theme$ci$col, each = length(ci_column))
     pch_list <- rep(theme$ci$pch, each = length(ci_column))
     lty_list <- rep(theme$ci$lty, each = length(ci_column))
+    lwd_list <- rep(theme$ci$lwd, each = length(ci_column))
 
     # Check nudge_y
     if(nudge_y >= 1 || nudge_y < 0)
@@ -191,6 +196,7 @@ forest <- function(data,
     color_list <- theme$ci$col
     pch_list <- theme$ci$pch
     lty_list <- theme$ci$lty
+    lwd_list <- theme$ci$lwd
 
     group_num <- 1
 
@@ -273,9 +279,11 @@ forest <- function(data,
                           size = sizes[[col_num]][i],
                           xlim = xlim[[col_indx[col_num]]],
                           pch = pch_list[col_num],
-                          lty = lty_list[col_num],
-                          nudge_y = nudge_y[col_num],
-                          color = color_list[col_num])
+                          gp = gpar(lty = lty_list[col_num],
+                                    lwd = lwd_list[col_num],
+                                    col = color_list[col_num]),
+                          t_height = theme$ci$t_height,
+                          nudge_y = nudge_y[col_num])
       }
 
       gt <- gtable_add_grob(gt, draw_ci,
