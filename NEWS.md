@@ -1,3 +1,8 @@
+# forestploter 0.1.3
+-   Added CI line width option.
+-   Added CI T end option.
+-   Fixed bug in `xlim`.
+
 # forestploter 0.1.2
 -   Added `xlog` options for exponential estimates, eg HR, OR.
 -   Auto calculate x-ticks and xlim for multiple column.
