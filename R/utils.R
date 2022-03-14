@@ -125,7 +125,7 @@ make_xlim <- function(xlim = NULL,
 
     }
 
-    xlim <- rep(list(xlim), gp_num)
+    xlim <- rep(list(xlim), length(lower))
 
   }else{
 
