@@ -12,9 +12,9 @@
 #' @param ci_col Color of the CI. A vector of color should be provided for
 #' the grouped forest plot. An internal color set will be if only not.
 #' @param ci_lty Line type of the CI. A vector of line type should be provided
-#' for the grouped forest plot. 
+#' for the grouped forest plot.
 #' @param ci_lwd Line width of the CI. A vector of line type should be provided
-#' for the grouped forest plot. 
+#' for the grouped forest plot.
 #' @param ci_Theight A unit specifying the height of the T end of CI. If set to
 #' `NULL` (default), no T end will be drawn.
 #' @param legend_name Title of the legend.
@@ -33,8 +33,8 @@
 #' given.
 #' @param vertline_lty Line type for extra vertical line. Works same as \code{vertline_lwd}.
 #' @param vertline_col Line color for the extra vertical line. Works same as \code{vertline_lwd}.
-#' @param summary_fill Colour for filling the summary diamond shape. 
-#' @param summary_col Colour for borders of the summary diamond shape. 
+#' @param summary_fill Color for filling the summary diamond shape.
+#' @param summary_col Color for borders of the summary diamond shape.
 #' @param footnote_cex Multiplier applied to font size for footnote.
 #' @param footnote_fontface The font face for footnote.
 #' @param footnote_col Color of the footnote.
@@ -42,7 +42,7 @@
 #'  for details.
 #'
 #' @importFrom utils modifyList
-#' 
+#'
 #' @return A list.
 #'
 #' @export
@@ -80,8 +80,8 @@ forest_theme <- function(base_size = 12,
                          # Legend
                          # legend_lwd = 0.6,
                          ...){
-    
-    legend_position <- match.arg(legend_position, c("right", "top", "bottom"))  
+
+    legend_position <- match.arg(legend_position, c("right", "top", "bottom"))
 
     # Default color set
     col_set <- c("#e41a1c","#377eb8","#4daf4a","#984ea3","#ff7f00",
@@ -93,8 +93,8 @@ forest_theme <- function(base_size = 12,
 
     # Recycle if one of the values
     max_len <- list(legend_value, ci_pch, ci_col, ci_lty, ci_lwd)
-    max_len <- max(vapply(max_len, length, FUN.VALUE = 1L), na.rm = TRUE) 
-    
+    max_len <- max(vapply(max_len, length, FUN.VALUE = 1L), na.rm = TRUE)
+
     if(max_len > 1){
       if(length(legend_value) < max_len)
         stop("legend_value should be provided each groups.")
@@ -104,10 +104,10 @@ forest_theme <- function(base_size = 12,
       ci_lwd <- rep_len(ci_lwd, max_len)
 
       if(length(ci_col) == 1)
-        ci_col <- col_set[1:max_len] 
+        ci_col <- col_set[1:max_len]
 
     }
-                       
+
 
     # Reference line
     refline_gp <- gpar(lwd = refline_lwd,
@@ -128,6 +128,7 @@ forest_theme <- function(base_size = 12,
 
     # X-axis
     xaxis_gp <- gpar(lwd = xaxis_lwd,
+                     cex = xaxis_cex,
                      fontsize = base_size,
                      fontfamily = base_family)
 
