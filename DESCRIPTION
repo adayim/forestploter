@@ -1,7 +1,7 @@
 Package: forestploter
 Title: Create Flexible Forest Plot
 Version: 0.1.4
-Authors@R:person(given="Alimu", 
+Authors@R: person(given="Alimu", 
                  family = "Dayimu",
                  email = "ad938@cam.ac.uk",
                  role = c("aut", "cre"),
@@ -19,5 +19,8 @@ Imports:
     gtable
 Suggests: 
     rmarkdown,
-    knitr
+    knitr,
+    vdiffr,
+    testthat (>= 3.0.0)
 VignetteBuilder: knitr
+Config/testthat/edition: 3

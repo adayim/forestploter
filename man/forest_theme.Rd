@@ -78,9 +78,9 @@ given.}
 
 \item{vertline_col}{Line color for the extra vertical line. Works same as \code{vertline_lwd}.}
 
-\item{summary_fill}{Colour for filling the summary diamond shape.}
+\item{summary_fill}{Color for filling the summary diamond shape.}
 
-\item{summary_col}{Colour for borders of the summary diamond shape.}
+\item{summary_col}{Color for borders of the summary diamond shape.}
 
 \item{footnote_cex}{Multiplier applied to font size for footnote.}
 
