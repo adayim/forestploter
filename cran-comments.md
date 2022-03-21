@@ -11,4 +11,4 @@ There were no ERRORs or WARNINGs.
 
 ---
 
-This version includes two new feature and 1 bug fix. 
+This version includes 2 bug fix. 

@@ -1,3 +1,8 @@
+# forestploter 0.1.4
+-   Fixed issues with xlim calculation.
+-   Fixed bug in theme setting axis cex not used.
+-   Added some unit tests.
+
 # forestploter 0.1.3
 -   Added CI line width option.
 -   Added CI T end option.
