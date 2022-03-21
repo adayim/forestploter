@@ -250,7 +250,7 @@ forest <- function(data,
   }
 
   # Column index
-  col_indx <- rep_len(1:group_num, length(ci_col_list))
+  col_indx <- rep_len(1:length(ci_column), length(ci_col_list))
 
   # Draw CI
   for(col_num in seq_along(ci_col_list)){

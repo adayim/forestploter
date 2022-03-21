@@ -105,7 +105,7 @@ make_xlim <- function(xlim = NULL,
                       ticks_at = NULL,
                       is_exp = FALSE){
 
-  if(gp_num == 1 || !is.null(xlim)){
+  if(length(lower)/gp_num == 1 || !is.null(xlim)){
 
     # Use range if missing
     if(is.null(xlim)){
@@ -125,13 +125,13 @@ make_xlim <- function(xlim = NULL,
 
     }
 
-    xlim <- rep(list(xlim), length(lower))
+    xlim <- rep(list(xlim), length(lower)/gp_num)
 
   }else{
 
-    gp_list <- rep_len(1:gp_num, length(lower))
+    gp_list <- rep_len(1:(length(lower)/gp_num), length(lower))
 
-    xlim <- lapply(1:gp_num, function(x){
+    xlim <- lapply(1:(length(lower)/gp_num), function(x){
       sel_num <- gp_list == x
 
       xlim <- range(c(unlist(lower[sel_num]),
