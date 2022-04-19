@@ -14,7 +14,7 @@
 #'
 set_xaxis <- function(break_at, label_at = NULL, label_value = NULL){
 
-  if(!is.numeric(break_at) || (!missing(label_at) && !is.numeric(label_at)))
+  if(!is.numeric(break_at) || (!is.null(label_at) && !is.numeric(label_at)))
     stop("break_at and label_at must be a numeric vector.")
 
   if(is.null(label_at))

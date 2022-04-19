@@ -103,8 +103,8 @@ forest <- function(data,
         any(unlist(lower) < 0, na.rm = TRUE) ||
         any(unlist(upper) < 0, na.rm = TRUE) ||
         (!is.na(ref_line) && ref_line <= 0) ||
-        (!missing(vert_line) && any(vert_line <= 0, na.rm = TRUE)) ||
-        (!missing(xlim) && xlim[1] < 0)) {
+        (!is.null(vert_line) && any(vert_line <= 0, na.rm = TRUE)) ||
+        (!is.null(xlim) && xlim[1] < 0)) {
       stop("est, lower, upper, ref_line, vert_line and xlim should be provided in exponential form if `xlog=TRUE`.")
     }
 
