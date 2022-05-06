@@ -136,3 +136,41 @@ test_that("Multiple column", {
   vdiffr::expect_doppelganger("Multiple columns", p)
 })
 
+
+test_that("Multiple column and Multi parameters", {
+
+  tm <- forest_theme(base_size = 10,
+                     refline_col = "green",
+                     ci_lty = c(1, 3),
+                     ci_lwd = 1.5,
+                     ci_Theight = 0.2,
+                     footnote_col = "blue",
+                     legend_name = "GP",
+                     legend_value = c("Trt 1", "Trt 2"))
+
+  p <- forest(dt[,c(1:2, 20, 3, 22)],
+              est = list(dt$est_gp1,
+                         dt$est_gp2,
+                         dt$est_gp3,
+                         dt$est_gp4),
+              lower = list(dt$low_gp1,
+                           dt$low_gp2,
+                           dt$low_gp3,
+                           dt$low_gp4),
+              upper = list(dt$hi_gp1,
+                           dt$hi_gp2,
+                           dt$hi_gp3,
+                           dt$hi_gp4),
+              ci_column = c(3, 5),
+              ref_line = c(1, 0),
+              vert_line = list(c(0.3, 1.4), c(0.6, 2)),
+              xlog = c(T, F),
+              arrow_lab = list(c("L1", "R1"), c("L2", "R2")),
+              xlim = list(c(0, 3), c(-1, 3)),
+              ticks_at = list(c(0.1, 0.5, 1, 2.5), c(-1, 0, 2)),
+              xlab = c("OR", "Beta"),
+              nudge_y = 0.2,
+              theme = tm)
+
+  vdiffr::expect_doppelganger("Multiple columns and multi parameters", p)
+})
