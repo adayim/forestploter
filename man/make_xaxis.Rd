@@ -4,12 +4,14 @@
 \alias{make_xaxis}
 \title{Create xaxis}
 \usage{
-make_xaxis(at, xlab = NULL, is_exp = FALSE, gp = gpar(), xlim)
+make_xaxis(at, xlab = NULL, x0 = 1, is_exp = FALSE, gp = gpar(), xlim)
 }
 \arguments{
 \item{at}{Numerical vector, create ticks at given values.}
 
 \item{xlab}{X-axis label.}
+
+\item{x0}{Position of vertical line for 0 or 1.}
 
 \item{is_exp}{If values is exponential.}
 

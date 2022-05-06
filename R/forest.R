@@ -12,22 +12,32 @@
 #' @param lower Lower bound of the confidence interval, same as \code{est}.
 #' @param upper Upper bound of the confidence interval, same as \code{est}.
 #' @param sizes Size of the point estimation box, can be a unit, vector or a list.
-#' @param ref_line X-axis coordinates of zero line, default is 1.
+#' @param ref_line X-axis coordinates of zero line, default is 1. Provide an atomic
+#'  vector if different reference line for each \code{ci_column} is desired.
 #' @param vert_line Numerical vector, add additional vertical line at given value.
+#' Provide a list of numerical vector element if different vertical line for each
+#'  \code{ci_column} is desired.
 #' @param ci_column Column number of the data the CI will be displayed.
 #' @param xlog If TRUE, x-axis tick marks assume values are exponential, e.g.
 #' for logistic regression (OR), survival estimates (HR), Poisson regression etc.
+#' Provide a logical vector if different conversion for each \code{ci_column} is
+#' desired.
 #' @param is_summary A logical vector indicating if the value is a summary value,
 #' which will have a diamond shape for the estimate. Can not be used with multiple
 #' group `forestplot`.
 #' @param xlim Limits for the x axis as a vector of length 2, i.e. c(low, high). It
 #' will take the minimum and maximum of the lower and upper value if not provided.
 #' This will apply to all CI columns if provided, and will be calculated automatically
-#' each column if not provided.
+#' for each column if not provided. This should be a list with the same length of
+#' \code{ci_column} if different \code{xlim} for different column is desired.
 #' @param ticks_at Set X-axis tick-marks point. This will apply to all CI columns if
 #' provided, and will be calculated automatically for each column if not provided.
+#' This should be a list if different \code{ticks_at} for different column is desired.
 #' @param arrow_lab Labels for the arrows, string vector of length two (left and
-#' right). The theme of arrow will inherit from the x-axis.
+#' right). The theme of arrow will inherit from the x-axis. This should be a list
+#' if different arrow labels for each column is desired.
+#' @param xlab X-axis labels, it will be put under the x-axis. An atomic vector should 
+#' be provided if different \code{xlab} for different column is desired.
 #' @param footnote Footnote for the forest plot, will be aligned at left bottom
 #' of the plot. Please adjust the line length with line break to avoid the overlap
 #' with the arrow and/or x-axis.
@@ -54,66 +64,43 @@ forest <- function(data,
                    xlim = NULL,
                    ticks_at = NULL,
                    arrow_lab = NULL,
+                   xlab = NULL,
                    footnote = NULL,
                    nudge_y = 0,
                    theme = NULL){
 
+  check_errors(data, est, lower, upper, sizes, ref_line, vert_line, ci_column, xlog, is_summary, xlim, ticks_at, arrow_lab, xlab)
+
   # Point sizes
   if(length(sizes) == 1 & !inherits(sizes, "list"))
     sizes <- rep(sizes, nrow(data))
-
-  # Check arrow
-  if(!is.null(arrow_lab) & length(arrow_lab) != 2)
-    stop("Arrow label must of length 2.")
 
   # Set theme
   if(is.null(theme)){
     theme <- forest_theme()
   }
 
-  # Check xlim
-  if(inherits(xlim, "list"))
-    stop("xlim can not be list.")
+  # For multiple ci_column
+  if(length(ref_line) == 1)
+    ref_line <- rep(ref_line, length(ci_column))
 
-  # Check vertical line
-  if(!is.null(vert_line) && !is.numeric(vert_line))
-    stop("vert_line must be a numeric vector.")
+  if(!is.null(vert_line) && !inherits(vert_line, "list"))
+    vert_line <- rep(list(vert_line), length(ci_column))
 
-  # Default color set
-  col_set <- c("#e41a1c","#377eb8","#4daf4a","#984ea3","#ff7f00",
-               "#ffff33","#a65628","#f781bf","#999999")
+  if(length(xlog) == 1)
+    xlog <- rep(xlog, length(ci_column))
 
-  # Check length
-  if(length(unique(c(length(est), length(lower), length(upper)))) != 1)
-      stop("Estimate, lower and upper should have the same length.")
+  if(!is.null(xlim) && !inherits(xlim, "list"))
+    xlim <- rep(list(xlim), length(ci_column))
 
-  # Check length for the summary
-  if(!is.null(is_summary) && length(is_summary) != nrow(data))
-    stop("is_summary should have same legnth as data rownumber.")
+  if(!is.null(ticks_at) && !inherits(ticks_at, "list"))
+    ticks_at <- rep(list(ticks_at), length(ci_column))
 
-  # Check the break
-  if(!is.null(ticks_at) && !is.null(xlim)){
-    if(max(ticks_at) > max(xlim) || min(ticks_at) < min(xlim))
-      warning("ticks_at is outside the xlim.")
-  }
+  if(!is.null(arrow_lab) && !inherits(arrow_lab, "list"))
+    arrow_lab <- rep(list(arrow_lab), length(ci_column))
 
-  # Chekc exponential
-  if(xlog){
-    if (any(unlist(est) < 0, na.rm = TRUE) ||
-        any(unlist(lower) < 0, na.rm = TRUE) ||
-        any(unlist(upper) < 0, na.rm = TRUE) ||
-        (!is.na(ref_line) && ref_line <= 0) ||
-        (!is.null(vert_line) && any(vert_line <= 0, na.rm = TRUE)) ||
-        (!is.null(xlim) && xlim[1] < 0)) {
-      stop("est, lower, upper, ref_line, vert_line and xlim should be provided in exponential form if `xlog=TRUE`.")
-    }
-
-    ref_line <- log(ref_line)
-
-    if(!is.null(vert_line))
-      vert_line <- log(vert_line)
-
-  }
+  if(length(xlab) == 1)
+    xlab <- rep(xlab, length(ci_column))
 
   if(inherits(est, "list") | inherits(lower, "list") | inherits(upper, "list")){
 
@@ -128,33 +115,7 @@ forest <- function(data,
     if(!inherits(sizes, "list"))
       sizes <- rep(list(sizes), length(ci_col_list))
 
-    # If color is given and not have the same length as group number
-    if(group_num > 1 & length(theme$ci$col) == 1)
-      theme$ci$col <- col_set[1:group_num]
-
-    # If line type is given and not have the same length as group number
-    if(group_num > 1 & length(theme$ci$lty) == 1)
-      theme$ci$lty <- rep_len(theme$ci$lty, group_num)
-
-    # If line width is given and not have the same length as group number
-    if(group_num > 1 & length(theme$ci$lwd) == 1)
-      theme$ci$lwd <- rep_len(theme$ci$lwd, group_num)
-
-    # Make legend multiple
-    if(group_num > 1 & length(theme$ci$pch) == 1)
-      theme$ci$pch <- rep_len(theme$ci$pch, group_num)
-
-    if(group_num > 1 && length(theme$legend$label) == 1 && theme$legend$label == ""){
-      theme$legend$label <- paste("Group", 1:group_num)
-    }
-
-    # Check for group and color
-    if(group_num > 1 & length(theme$ci$col) < group_num & length(theme$ci$col) > 1)
-      stop("More groups than colors.")
-
-    # Check for group and legend label
-    if(group_num > 1 & length(theme$legend$label) < group_num & length(theme$legend$label) > 1)
-      stop("More groups than legend labels.")
+    theme <- make_group_theme(theme = theme, group_num = group_num)
 
     # Get color and pch
     color_list <- rep(theme$ci$col, each = length(ci_column))
@@ -210,28 +171,46 @@ forest <- function(data,
   if(group_num > 1 || is.null(is_summary))
     is_summary <- rep(FALSE, nrow(data))
 
+  # Positions of values in ci_column
+  gp_list <- rep_len(1:(length(lower)/group_num), length(lower))
+
+  # Check exponential
+  for(i in seq_along(xlog)){
+    if(xlog[i]){
+      sel_num <- gp_list == i
+      if (any(unlist(est[sel_num]) <= 0, na.rm = TRUE) ||
+            any(unlist(lower[sel_num]) <= 0, na.rm = TRUE) ||
+            any(unlist(upper[sel_num]) <= 0, na.rm = TRUE) ||
+            (any(ref_line[i] <= 0)) ||
+            (!is.null(vert_line) && any(unlist(vert_line[[i]]) <= 0, na.rm = TRUE)) ||
+            (!is.null(xlim) && any(unlist(xlim[[i]]) < 0))) {
+        stop("est, lower, upper, ref_line, vert_line and xlim should be larger than 0, if `xlog=TRUE`.")
+      }
+    }
+  }
+
   # Set xlim to minimum and maximum value of the CI
-  xlim <- make_xlim(xlim = xlim,
-                    lower = lower,
-                    upper = upper,
-                    gp_num = group_num,
-                    ref_line = ref_line,
-                    ticks_at = ticks_at,
-                    is_exp = xlog)
-
-
-  # Set X-axis breaks if missing
-  ticks_at <- lapply(xlim, function(xlm){
-    make_ticks(at = ticks_at, xlim = xlm, refline = ref_line, is_exp = xlog)
+  xlim <- lapply(seq_along(ci_column), function(i){
+    sel_num <- gp_list == i
+    make_xlim(xlim = xlim[[i]],
+              lower = lower[sel_num],
+              upper = upper[sel_num],
+              ref_line = ref_line[i],
+              ticks_at = ticks_at[[i]],
+              is_exp = xlog[i])
   })
 
+  # Set X-axis breaks if missing
+  ticks_at <- lapply(seq_along(xlim), function(i){
+    make_ticks(at = ticks_at[[i]],
+               xlim = xlim[[i]],
+               refline = ref_line[i],
+               is_exp = xlog[i])
+  })
 
   # Calculate heights
-  col_height <- apply(data,
-                      1,
-                      function(x){
-                        max(convertHeight(stringHeight(x), "mm",
-                                         valueOnly = TRUE))
+  col_height <- apply(data, 1, function(x){
+                        max(convertHeight(stringHeight(x), "mm", valueOnly = TRUE))
                       })
   col_height <- unit(col_height, "mm")
 
@@ -255,7 +234,7 @@ forest <- function(data,
   # Draw CI
   for(col_num in seq_along(ci_col_list)){
 
-    if(xlog){
+    if(xlog[col_indx[col_num]]){
       est[[col_num]] <- log(est[[col_num]])
       lower[[col_num]] <- log(lower[[col_num]])
       upper[[col_num]] <- log(upper[[col_num]])
@@ -302,8 +281,10 @@ forest <- function(data,
   x_axis <- lapply(seq_along(xlim), function(i){
     make_xaxis(at = ticks_at[[i]],
                gp = theme$xaxis,
+               x0 = ref_line[i],
                xlim = xlim[[i]],
-               is_exp = xlog)
+               xlab = xlab[i],
+               is_exp = xlog[i])
   })
 
   x_axht <- sapply(x_axis, function(x){
@@ -335,9 +316,10 @@ forest <- function(data,
   # Prepare arrow object and row to put it
   if(!is.null(arrow_lab)){
     arrow_grob <- lapply(seq_along(xlim), function(i){
-      make_arrow(x0 = ref_line,
-                 arrow_lab = arrow_lab,
+      make_arrow(x0 = ref_line[i],
+                 arrow_lab = arrow_lab[[i]],
                  gp = theme$xaxis,
+                 is_exp = xlog[i],
                  xlim = xlim[[i]])
     })
 
@@ -355,8 +337,10 @@ forest <- function(data,
     idx <- which(ci_column == j)
     # Add reference line
     gt <- gtable_add_grob(gt,
-                          vert_line(x = ref_line, gp = theme$refline,
-                                    xlim = xlim[[idx]]),
+                          vert_line(x = ref_line[idx],
+                                    gp = theme$refline,
+                                    xlim = xlim[[idx]],
+                                    is_exp = xlog[idx]),
                           t = 2,
                           l = j,
                           b = tot_row, r = j,
@@ -374,8 +358,10 @@ forest <- function(data,
     # Add vertical line
     if(!is.null(vert_line))
       gt <- gtable_add_grob(gt,
-                            vert_line(x = vert_line, gp = theme$vertline,
-                                      xlim = xlim[[idx]]),
+                            vert_line(x = vert_line[[idx]],
+                                      gp = theme$vertline,
+                                      xlim = xlim[[idx]],
+                                      is_exp = xlog[idx]),
                             t = 2,
                             l = j,
                             b = tot_row, r = j,

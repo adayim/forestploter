@@ -8,7 +8,6 @@ make_xlim(
   xlim = NULL,
   lower,
   upper,
-  gp_num = 1,
   ref_line = ifelse(is_exp, 1, 0),
   ticks_at = NULL,
   is_exp = FALSE
@@ -18,18 +17,19 @@ make_xlim(
 \item{xlim}{Limits for the x axis as a vector of length 2, i.e. c(low, high). It
 will take the minimum and maximum of the lower and upper value if not provided.
 This will apply to all CI columns if provided, and will be calculated automatically
-each column if not provided.}
+for each column if not provided. This should be a list with the same length of
+\code{ci_column} if different \code{xlim} for different column is desired.}
 
 \item{lower}{Lower bound of the confidence interval, same as \code{est}.}
 
 \item{upper}{Upper bound of the confidence interval, same as \code{est}.}
 
-\item{gp_num}{Group number}
-
-\item{ref_line}{X-axis coordinates of zero line, default is 1.}
+\item{ref_line}{X-axis coordinates of zero line, default is 1. Provide an atomic
+vector if different reference line for each \code{ci_column} is desired.}
 
 \item{ticks_at}{Set X-axis tick-marks point. This will apply to all CI columns if
-provided, and will be calculated automatically for each column if not provided.}
+provided, and will be calculated automatically for each column if not provided.
+This should be a list if different \code{ticks_at} for different column is desired.}
 
 \item{is_exp}{If values is exponential.}
 }

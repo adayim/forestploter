@@ -4,10 +4,14 @@
 #' @param x0 Position of vertical line for 0 or 1.
 #' @param xlim Limits for the x axis as a vector length 2, i.e. c(low, high)
 #' @param arrow_lab Label for the arrow, left and right.
+#' @param is_exp If values is exponential.
 #' @param gp Graphical parameters for arrow.
 #'
 #' @keywords internal
-make_arrow <- function(x0 = 1, arrow_lab, gp, xlim){
+make_arrow <- function(x0 = 1, arrow_lab, gp, xlim, is_exp = FALSE){
+
+  if(is_exp)
+    x0 <- log(x0)
 
   t_lft <- textGrob(arrow_lab[1],
                     x = unit(x0, "native") - unit(0.05, "inches"),

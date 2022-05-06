@@ -1,3 +1,9 @@
+# forestploter 0.1.5
+
+* Fixed issues with checks for zeros if `xlog=TRUE`.
+* Different reference line, x-axis label, xlog, vertical line, xlim, x-axis ticks and arrow label is possible for different CI columns.
+* Able to add x-axis label.
+
 # forestploter 0.1.4
 
 * Fixed issues with xlim calculation.

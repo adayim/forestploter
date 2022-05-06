@@ -4,7 +4,7 @@
 \alias{make_ticks}
 \title{Set x-axis ticks}
 \usage{
-make_ticks(at = NULL, xlim, refline = ifelse(is_exp, 1, 0), is_exp = FALSE)
+make_ticks(at = NULL, xlim, refline = 1, is_exp = FALSE)
 }
 \arguments{
 \item{at}{Numerical vector, create ticks at given values.}
@@ -12,7 +12,8 @@ make_ticks(at = NULL, xlim, refline = ifelse(is_exp, 1, 0), is_exp = FALSE)
 \item{xlim}{Limits for the x axis as a vector of length 2, i.e. c(low, high). It
 will take the minimum and maximum of the lower and upper value if not provided.
 This will apply to all CI columns if provided, and will be calculated automatically
-each column if not provided.}
+for each column if not provided. This should be a list with the same length of
+\code{ci_column} if different \code{xlim} for different column is desired.}
 
 \item{is_exp}{If values is exponential.}
 }

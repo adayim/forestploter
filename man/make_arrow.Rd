@@ -4,7 +4,7 @@
 \alias{make_arrow}
 \title{Make arrow}
 \usage{
-make_arrow(x0 = 1, arrow_lab, gp, xlim)
+make_arrow(x0 = 1, arrow_lab, gp, xlim, is_exp = FALSE)
 }
 \arguments{
 \item{x0}{Position of vertical line for 0 or 1.}
@@ -14,6 +14,8 @@ make_arrow(x0 = 1, arrow_lab, gp, xlim)
 \item{gp}{Graphical parameters for arrow.}
 
 \item{xlim}{Limits for the x axis as a vector length 2, i.e. c(low, high)}
+
+\item{is_exp}{If values is exponential.}
 }
 \description{
 Make arrow

@@ -5,16 +5,18 @@
 #' @param at Numerical vector, create ticks at given values.
 #' @param xlab X-axis label.
 #' @param is_exp If values is exponential.
+#' @param x0 Position of vertical line for 0 or 1.
 #' @param gp Graphical parameters for arrow.
 #' @param xlim Limits for the x axis as a vector length 2, i.e. c(low, high)
 #'
 #' @return A grob
 #'
 #' @keywords internal
-make_xaxis <- function(at, xlab = NULL, is_exp = FALSE, gp = gpar(), xlim){
+make_xaxis <- function(at, xlab = NULL, x0 = 1, is_exp = FALSE, gp = gpar(), xlim){
 
   if(is_exp){
     label_at <- log(round(exp(at), 1))
+    x0 <- log(x0)
     labels <- as.character(round(exp(at), 1))
   }else {
     label_at <- round(at, 1)
@@ -43,7 +45,7 @@ make_xaxis <- function(at, xlab = NULL, is_exp = FALSE, gp = gpar(), xlim){
 
   if(!is.null(xlab)){
     xlab_gb <- textGrob(xlab,
-                        x = unit(ifelse(is_exp, 1, 0), "native"),
+                        x = unit(x0, "native"),
                         y = maj_cord$yb - unit(2, "lines"),
                         gp = gp,
                         check.overlap=TRUE,

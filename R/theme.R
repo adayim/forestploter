@@ -184,3 +184,43 @@ forest_theme <- function(base_size = 12,
 
 }
 
+
+# 
+make_group_theme <- function(theme, group_num){
+
+  # Default color set
+  col_set <- c("#e41a1c","#377eb8","#4daf4a","#984ea3","#ff7f00",
+               "#ffff33","#a65628","#f781bf","#999999")
+
+  # If color is given and not have the same length as group number
+    if(group_num > 1 & length(theme$ci$col) == 1)
+      theme$ci$col <- col_set[1:group_num]
+
+    # If line type is given and not have the same length as group number
+    if(group_num > 1 & length(theme$ci$lty) == 1)
+      theme$ci$lty <- rep_len(theme$ci$lty, group_num)
+
+    # If line width is given and not have the same length as group number
+    if(group_num > 1 & length(theme$ci$lwd) == 1)
+      theme$ci$lwd <- rep_len(theme$ci$lwd, group_num)
+
+    # Make legend multiple
+    if(group_num > 1 & length(theme$ci$pch) == 1)
+      theme$ci$pch <- rep_len(theme$ci$pch, group_num)
+
+    if(group_num > 1 && length(theme$legend$label) == 1 && theme$legend$label == ""){
+      theme$legend$label <- paste("Group", 1:group_num)
+    }
+
+    # Check for group and color
+    if(group_num > 1 & length(theme$ci$col) < group_num & length(theme$ci$col) > 1)
+      stop("More groups than colors.")
+
+    # Check for group and legend label
+    if(group_num > 1 & length(theme$legend$label) < group_num & length(theme$legend$label) > 1)
+      stop("More groups than legend labels.")
+    
+    return(theme)
+
+}
+

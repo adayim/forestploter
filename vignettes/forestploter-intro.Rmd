@@ -252,7 +252,7 @@ p <- forest(dt[,c(1, 19, 21, 20, 22)],
 plot(p)
 ```
 
-# Multiple CI columns with different xlim etc.
+# Different parameters for different CI columns
 
 If the desired forest plot is multiple column, some may want to have different settings for different columns. For example, different CI column has different xlim, x-axis ticks, x-axis labels, xlog, reference line, vertical line or arrow labels. This can be easily done by providing a list or vector. Provide a list for `xlim`, `vert_line`, `arrow_lab` and `ticks_at`, atomic vector for `xlab`, `xlog` and `ref_line`. See the example below.
 
