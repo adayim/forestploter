@@ -17,6 +17,7 @@ check_errors(
   is_summary,
   xlim,
   ticks_at,
+  ticks_digits,
   arrow_lab,
   xlab
 )
@@ -62,6 +63,9 @@ for each column if not provided. This should be a list with the same length of
 \item{ticks_at}{Set X-axis tick-marks point. This will apply to all CI columns if
 provided, and will be calculated automatically for each column if not provided.
 This should be a list if different \code{ticks_at} for different column is desired.}
+
+\item{ticks_digits}{Number of digits for the x-axis, default is 1. This should be
+a numerical vector if different rounding will be applied to different column.}
 
 \item{arrow_lab}{Labels for the arrows, string vector of length two (left and
 right). The theme of arrow will inherit from the x-axis. This should be a list

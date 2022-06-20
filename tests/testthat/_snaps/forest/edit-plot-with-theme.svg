@@ -1797,9 +1797,9 @@
 <line x1='431.37' y1='449.18' x2='431.37' y2='455.18' style='stroke-width: 0.45;' />
 <line x1='461.29' y1='449.18' x2='461.29' y2='455.18' style='stroke-width: 0.45;' />
 <text x='386.49' y='464.62' text-anchor='middle' style='font-size: 10.00px; font-family: sans;' textLength='13.90px' lengthAdjust='spacingAndGlyphs'>0.5</text>
-<text x='401.45' y='464.62' text-anchor='middle' style='font-size: 10.00px; font-family: sans;' textLength='5.56px' lengthAdjust='spacingAndGlyphs'>1</text>
-<text x='431.37' y='464.62' text-anchor='middle' style='font-size: 10.00px; font-family: sans;' textLength='5.56px' lengthAdjust='spacingAndGlyphs'>2</text>
-<text x='461.29' y='464.62' text-anchor='middle' style='font-size: 10.00px; font-family: sans;' textLength='5.56px' lengthAdjust='spacingAndGlyphs'>3</text>
+<text x='401.45' y='464.62' text-anchor='middle' style='font-size: 10.00px; font-family: sans;' textLength='13.90px' lengthAdjust='spacingAndGlyphs'>1.0</text>
+<text x='431.37' y='464.62' text-anchor='middle' style='font-size: 10.00px; font-family: sans;' textLength='13.90px' lengthAdjust='spacingAndGlyphs'>2.0</text>
+<text x='461.29' y='464.62' text-anchor='middle' style='font-size: 10.00px; font-family: sans;' textLength='13.90px' lengthAdjust='spacingAndGlyphs'>3.0</text>
 <text x='397.85' y='479.99' text-anchor='end' style='font-size: 10.00px; font-family: sans;' textLength='65.60px' lengthAdjust='spacingAndGlyphs'>Placebo Better</text>
 <line x1='332.25' y1='470.70' x2='397.85' y2='470.70' style='stroke-width: 0.45;' />
 <polyline points='335.37,468.90 332.25,470.70 335.37,472.50 ' style='stroke-width: 0.45;' />

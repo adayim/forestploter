@@ -4,7 +4,15 @@
 \alias{make_xaxis}
 \title{Create xaxis}
 \usage{
-make_xaxis(at, xlab = NULL, x0 = 1, is_exp = FALSE, gp = gpar(), xlim)
+make_xaxis(
+  at,
+  xlab = NULL,
+  x0 = 1,
+  is_exp = FALSE,
+  ticks_digits = 1,
+  gp = gpar(),
+  xlim
+)
 }
 \arguments{
 \item{at}{Numerical vector, create ticks at given values.}
@@ -14,6 +22,8 @@ make_xaxis(at, xlab = NULL, x0 = 1, is_exp = FALSE, gp = gpar(), xlim)
 \item{x0}{Position of vertical line for 0 or 1.}
 
 \item{is_exp}{If values is exponential.}
+
+\item{ticks_digits}{Number of digits for the x-axis, default is 1.}
 
 \item{gp}{Graphical parameters for arrow.}
 

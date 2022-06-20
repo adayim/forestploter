@@ -33,6 +33,8 @@
 #' @param ticks_at Set X-axis tick-marks point. This will apply to all CI columns if
 #' provided, and will be calculated automatically for each column if not provided.
 #' This should be a list if different \code{ticks_at} for different column is desired.
+#' @param ticks_digits Number of digits for the x-axis, default is 1. This should be
+#' a numerical vector if different rounding will be applied to different column.
 #' @param arrow_lab Labels for the arrows, string vector of length two (left and
 #' right). The theme of arrow will inherit from the x-axis. This should be a list
 #' if different arrow labels for each column is desired.
@@ -63,13 +65,17 @@ forest <- function(data,
                    is_summary = NULL,
                    xlim = NULL,
                    ticks_at = NULL,
+                   ticks_digits = 1,
                    arrow_lab = NULL,
                    xlab = NULL,
                    footnote = NULL,
                    nudge_y = 0,
                    theme = NULL){
 
-  check_errors(data, est, lower, upper, sizes, ref_line, vert_line, ci_column, xlog, is_summary, xlim, ticks_at, arrow_lab, xlab)
+  check_errors(data = data, est = est, lower = lower, upper = upper, sizes = sizes, 
+               ref_line = ref_line, vert_line = vert_line, ci_column = ci_column,
+               xlog = xlog, is_summary = is_summary, xlim = xlim, ticks_at = ticks_at,
+               ticks_digits = ticks_digits, arrow_lab = arrow_lab, xlab = xlab)
 
   # Point sizes
   if(length(sizes) == 1 & !inherits(sizes, "list"))
@@ -95,6 +101,9 @@ forest <- function(data,
 
   if(!is.null(ticks_at) && !inherits(ticks_at, "list"))
     ticks_at <- rep(list(ticks_at), length(ci_column))
+
+  if(length(ci_column) != length(ticks_digits))
+    ticks_digits <- rep(ticks_digits, length(ci_column))
 
   if(!is.null(arrow_lab) && !inherits(arrow_lab, "list"))
     arrow_lab <- rep(list(arrow_lab), length(ci_column))
@@ -281,6 +290,7 @@ forest <- function(data,
   x_axis <- lapply(seq_along(xlim), function(i){
     make_xaxis(at = ticks_at[[i]],
                gp = theme$xaxis,
+               ticks_digits = ticks_digits[i],
                x0 = ref_line[i],
                xlim = xlim[[i]],
                xlab = xlab[i],
