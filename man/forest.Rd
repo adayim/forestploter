@@ -21,6 +21,7 @@ forest(
   arrow_lab = NULL,
   xlab = NULL,
   footnote = NULL,
+  title = NULL,
   nudge_y = 0,
   theme = NULL
 )
@@ -80,6 +81,8 @@ be provided if different \code{xlab} for different column is desired.}
 \item{footnote}{Footnote for the forest plot, will be aligned at left bottom
 of the plot. Please adjust the line length with line break to avoid the overlap
 with the arrow and/or x-axis.}
+
+\item{title}{The text for the title.}
 
 \item{nudge_y}{Horizontal adjustment to nudge groups by, must be within 0 to 1.}
 

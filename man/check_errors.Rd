@@ -18,6 +18,7 @@ check_errors(
   xlim,
   ticks_at,
   ticks_digits,
+  title,
   arrow_lab,
   xlab
 )
@@ -66,6 +67,8 @@ This should be a list if different \code{ticks_at} for different column is desir
 
 \item{ticks_digits}{Number of digits for the x-axis, default is 1. This should be
 a numerical vector if different rounding will be applied to different column.}
+
+\item{title}{The text for the title.}
 
 \item{arrow_lab}{Labels for the arrows, string vector of length two (left and
 right). The theme of arrow will inherit from the x-axis. This should be a list

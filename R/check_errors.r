@@ -19,11 +19,15 @@ check_errors <- function(data,
                          xlim,
                          ticks_at,
                          ticks_digits,
+                         title,
                          arrow_lab,
                          xlab){
 
   if(!is.numeric(ci_column))
     stop("ci_column must be numeric atomic vector.")
+
+  if(!is.null(title) && length(title) != 1)
+      stop("title must be of length 1.")
 
   # Check length
   if(length(unique(c(length(est), length(lower), length(upper)))) != 1)

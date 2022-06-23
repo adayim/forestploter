@@ -174,3 +174,55 @@ test_that("Multiple column and Multi parameters", {
 
   vdiffr::expect_doppelganger("Multiple columns and multi parameters", p)
 })
+
+
+test_that("Summary CI", {
+
+  dt_tmp <- rbind(dt[-1, ], dt[1, ])
+  dt_tmp[nrow(dt_tmp), 1] <- "Overall"
+
+  tm <- forest_theme(base_size = 10,
+                     # Confidence interval point shape, line type/color/width
+                     ci_pch = 16,
+                     ci_col = "#762a83",
+                     ci_lty = 1,
+                     ci_lwd = 1.5,
+                     ci_Theight = 0.2, # Set an T end at the end of CI
+                     # Reference line width/type/color
+                     refline_lwd = 1,
+                     refline_lty = "dashed",
+                     refline_col = "grey20",
+                     # Vertical line width/type/color
+                     vertline_lwd = 1,
+                     vertline_lty = "dashed",
+                     vertline_col = "grey20",
+                     # Change summary color for filling and borders
+                     summary_fill = "#4575b4",
+                     summary_col = "#4575b4",
+                     # Footnote font size/face/color
+                     footnote_cex = 0.6,
+                     footnote_fontface = "italic",
+                     footnote_col = "blue",
+                     # Title
+                     title_just = "center",
+                     title_col = "red")
+
+  p <- forest(dt_tmp[,c(1:3, 20:21)],
+              est = dt_tmp$est,
+              lower = dt_tmp$low,
+              upper = dt_tmp$hi,
+              sizes = dt_tmp$se,
+              is_summary = c(rep(FALSE, nrow(dt_tmp)-1), TRUE),
+              ci_column = 4,
+              ref_line = 1,
+              arrow_lab = c("Placebo Better", "Treatment Better"),
+              xlim = c(0, 4),
+              ticks_at = c(0.5, 1, 2, 3),
+              title = "This is a title",
+              footnote = "This is the demo data. Please feel free to change\nanything you want.",
+              theme = tm)
+
+  vdiffr::expect_doppelganger("Summary CI", p)
+})
+
+

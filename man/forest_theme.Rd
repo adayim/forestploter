@@ -28,6 +28,11 @@ forest_theme(
   footnote_cex = 0.6,
   footnote_fontface = "plain",
   footnote_col = "black",
+  title_just = c("left", "right", "center"),
+  title_cex = 1.2,
+  title_fontface = "bold",
+  title_col = "black",
+  title_fontfamily = base_family,
   ...
 )
 }
@@ -87,6 +92,16 @@ given.}
 \item{footnote_fontface}{The font face for footnote.}
 
 \item{footnote_col}{Color of the footnote.}
+
+\item{title_just}{The justification of the title, default is \code{'left'}.}
+
+\item{title_cex}{Multiplier applied to font size for title.}
+
+\item{title_fontface}{The font face for title, default is \code{'bold'}.}
+
+\item{title_col}{Color of title.}
+
+\item{title_fontfamily}{Font family of title.}
 
 \item{...}{Other parameters passed to table. See \code{\link[gridExtra]{tableGrob}}
 for details.}
