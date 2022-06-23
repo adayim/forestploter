@@ -43,6 +43,7 @@
 #' @param footnote Footnote for the forest plot, will be aligned at left bottom
 #' of the plot. Please adjust the line length with line break to avoid the overlap
 #' with the arrow and/or x-axis.
+#' @param title The text for the title.
 #' @param nudge_y Horizontal adjustment to nudge groups by, must be within 0 to 1.
 #' @param theme Theme of the forest plot, see \code{\link{forest_theme}} for
 #' details.
@@ -69,13 +70,15 @@ forest <- function(data,
                    arrow_lab = NULL,
                    xlab = NULL,
                    footnote = NULL,
+                   title = NULL,
                    nudge_y = 0,
                    theme = NULL){
 
   check_errors(data = data, est = est, lower = lower, upper = upper, sizes = sizes, 
                ref_line = ref_line, vert_line = vert_line, ci_column = ci_column,
                xlog = xlog, is_summary = is_summary, xlim = xlim, ticks_at = ticks_at,
-               ticks_digits = ticks_digits, arrow_lab = arrow_lab, xlab = xlab)
+               ticks_digits = ticks_digits, arrow_lab = arrow_lab, xlab = xlab,
+               title = title)
 
   # Point sizes
   if(length(sizes) == 1 & !inherits(sizes, "list"))
@@ -417,6 +420,29 @@ forest <- function(data,
                             clip = "off",
                             name = "legend")
     }
+  }
+
+  if(!is.null(title)){
+    max_height <- max(convertHeight(stringHeight(title), "mm", valueOnly = TRUE))
+    gt <- gtable_add_rows(gt, unit(max_height, "mm") + unit(2, "mm"), pos = 0)
+    title_x <- switch(theme$title$just,
+                      right = unit(1, "npc"),
+                      left  = unit(0, "npc"),
+                      center = unit(.5, "npc"))
+    title_gb <- textGrob(label = title,
+                         gp = theme$title$gp,
+                         x = title_x,
+                         just = theme$title$just,
+                         check.overlap = TRUE,
+                         name = "plot.title")
+
+    gt <- gtable_add_grob(gt, title_gb,
+                          t = 1,
+                          b = 1,
+                          l = 1,
+                          r = ncol(gt),
+                          clip = "off",
+                          name = "plot.title")
   }
 
   # Add padding

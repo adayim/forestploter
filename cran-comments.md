@@ -1,7 +1,7 @@
 ## Test environments
 
 * local Windows install, R 4.1.0
-* Ubuntu Linux 20.04.1 LTS (on R-hub), R 4.1.2
+* Ubuntu Linux 20.04.1 LTS (on R-hub), R 4.2.0
 * Fedora Linux (on R-hub) R-devel
 * Windows (devel and release)
 

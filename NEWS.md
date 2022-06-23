@@ -1,3 +1,8 @@
+# forestploter 0.1.6
+
+* Able to define the rounding digits for ticks.
+* Able to add title to the plot.
+
 # forestploter 0.1.5
 
 * Fixed issues with checks for zeros if `xlog=TRUE`.

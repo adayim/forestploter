@@ -38,6 +38,11 @@
 #' @param footnote_cex Multiplier applied to font size for footnote.
 #' @param footnote_fontface The font face for footnote.
 #' @param footnote_col Color of the footnote.
+#' @param title_just The justification of the title, default is \code{'left'}.
+#' @param title_cex Multiplier applied to font size for title.
+#' @param title_fontface The font face for title, default is \code{'bold'}.
+#' @param title_col Color of title.
+#' @param title_fontfamily Font family of title. 
 #' @param ... Other parameters passed to table. See \code{\link[gridExtra]{tableGrob}}
 #'  for details.
 #'
@@ -77,6 +82,12 @@ forest_theme <- function(base_size = 12,
                          footnote_cex = 0.6,
                          footnote_fontface = "plain",
                          footnote_col = "black",
+                         # Title
+                         title_just = c("left", "right", "center"),
+                         title_cex = 1.2,
+                         title_fontface = "bold",
+                         title_col = "black",
+                         title_fontfamily = base_family,
                          # Legend
                          # legend_lwd = 0.6,
                          ...){
@@ -150,6 +161,13 @@ forest_theme <- function(base_size = 12,
                       position = legend_position,
                       label = legend_value)
 
+    # Title
+    title_gp <- list(just = match.arg(title_just),
+                     gp = gpar(cex = title_cex,
+                               fontface = title_fontface,
+                               col = title_col,
+                               fontfamily = title_fontfamily))
+
     # Table body
     core <- list(fg_params = list(hjust = 0,
                                x = 0.05,
@@ -177,6 +195,7 @@ forest_theme <- function(base_size = 12,
                 ci = ci_gp,
                 xaxis = xaxis_gp,
                 footnote = footnote_gp,
+                title  = title_gp,
                 refline = refline_gp,
                 vertline = vertline_gp,
                 summary = sum_gp,
