@@ -98,7 +98,17 @@ test_that("Apply theme", {
                 just = "left",
                 gp = gpar(cex = 1, col = "red", fontface = "italic"))
 
-  vdiffr::expect_doppelganger("Edit plot with theme", p)
+  vdiffr::expect_doppelganger("Edit plot with theme", g)
+
+  ## Insert multiple rows
+  # Insert text at top
+  g <- insert_text(p,
+                   text = c("Demographic", "Baseline"),
+                   # col = 2:3,
+                   row = c(2, 17),
+                   just = "left",
+                   gp = gpar(fontface = "bold"))
+  vdiffr::expect_doppelganger("Insert text vector", g)
 })
 
 
