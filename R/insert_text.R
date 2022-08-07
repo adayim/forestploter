@@ -98,7 +98,7 @@ insert_text <- function(plot,
       row[i] <- row[i] - 1 # Account for padding of the plot and header
 
     if(i != 1)
-      row[1] <- row[i] + i - 1 # The row number will change after adding one row
+      row[i] <- row[i] + i - 1 # The row number will change after adding one row
 
     if(by_col){
       # Get maximum height of text and add a row

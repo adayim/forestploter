@@ -392,9 +392,9 @@ forest <- function(data,
   }
 
   # Add legend
-  if(group_num > 1){
+  if(group_num > 1 & theme$legend$position != "none"){
 
-    by_row <- if(!theme$legend$position %in% c("top", "bottom") || is.null(theme$legend$position)) TRUE else FALSE
+    by_row <- !theme$legend$position %in% c("top", "bottom")
 
     legend <- theme$legend
     legend$pch <- theme$ci$pch
