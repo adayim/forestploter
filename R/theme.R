@@ -19,7 +19,7 @@
 #' `NULL` (default), no T end will be drawn.
 #' @param legend_name Title of the legend.
 #' @param legend_position Position of the legend, \code{"right"}, \code{"top"},
-#' \code{"bottom"}.
+#' \code{"bottom"} or \code{"none"} to suppress the legend.
 #' @param legend_value Legend labels (expressions). A vector should be provided
 #' for the grouped forest plot. A "Group 1" etc will be created if not a vector
 #' for a grouped forest plot.
@@ -92,7 +92,7 @@ forest_theme <- function(base_size = 12,
                          # legend_lwd = 0.6,
                          ...){
 
-    legend_position <- match.arg(legend_position, c("right", "top", "bottom"))
+    legend_position <- match.arg(legend_position, c("right", "top", "bottom", "none"))
 
     # Default color set
     col_set <- c("#e41a1c","#377eb8","#4daf4a","#984ea3","#ff7f00",
