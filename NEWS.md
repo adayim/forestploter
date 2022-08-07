@@ -1,3 +1,8 @@
+# forestploter 0.1.7
+
+* Fixed minor issue in inserting text.
+* Able to suppress legend
+
 # forestploter 0.1.6
 
 * Able to define the rounding digits for ticks.
