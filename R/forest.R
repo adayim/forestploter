@@ -33,8 +33,11 @@
 #' @param ticks_at Set X-axis tick-marks point. This will apply to all CI columns if
 #' provided, and will be calculated automatically for each column if not provided.
 #' This should be a list if different \code{ticks_at} for different column is desired.
-#' @param ticks_digits Number of digits for the x-axis, default is 1. This should be
-#' a numerical vector if different rounding will be applied to different column.
+#' @param ticks_digits Number of digits for the x-axis, default is \code{1L}. This 
+#' should be a numerical vector if different rounding will be applied to different 
+#' column. If an integer is specified, for example \code{1L}, trailing zeros after 
+#' the decimal mark will be dropped. Specify numeric, for example \code{1}, to keep
+#' the trailing zero after the decimal mark.
 #' @param arrow_lab Labels for the arrows, string vector of length two (left and
 #' right). The theme of arrow will inherit from the x-axis. This should be a list
 #' if different arrow labels for each column is desired.
@@ -66,7 +69,7 @@ forest <- function(data,
                    is_summary = NULL,
                    xlim = NULL,
                    ticks_at = NULL,
-                   ticks_digits = 1,
+                   ticks_digits = 1L,
                    arrow_lab = NULL,
                    xlab = NULL,
                    footnote = NULL,
@@ -180,8 +183,11 @@ forest <- function(data,
 
   }
 
-  if(group_num > 1 || is.null(is_summary))
+  if(group_num > 1 || is.null(is_summary)){
+    if(!is.null(is_summary))
+      warning("Summary CI is not supported for multiple groups and will be ignored.")
     is_summary <- rep(FALSE, nrow(data))
+  }
 
   # Positions of values in ci_column
   gp_list <- rep_len(1:(length(lower)/group_num), length(lower))
@@ -246,6 +252,11 @@ forest <- function(data,
   # Draw CI
   for(col_num in seq_along(ci_col_list)){
 
+    # Get current CI column and group number
+    current_col <- ci_col_list[col_num]
+    current_gp <- sum(col_indx[1:col_num] == col_indx[col_num])
+
+    # Convert value is exponentiated
     if(xlog[col_indx[col_num]]){
       est[[col_num]] <- log(est[[col_num]])
       lower[[col_num]] <- log(lower[[col_num]])
@@ -277,13 +288,21 @@ forest <- function(data,
                           nudge_y = nudge_y[col_num])
       }
 
+      # Skip if CI is outside xlim
+      if(is.null(draw_ci)){
+        message("The confidence interval of row ", i, ", column ", current_col, ", group ", current_gp,
+                " is outside of the xlim.")
+        next
+      }
+        
+
       gt <- gtable_add_grob(gt, draw_ci,
                             t = i + 1,
-                            l = ci_col_list[col_num],
+                            l = current_col,
                             b = i + 1,
-                            r = ci_col_list[col_num],
+                            r = current_col,
                             clip = "off",
-                            name = paste0("ci-", i, "-", col_num))
+                            name = paste0("ci-", i, "-", current_col, "-", current_gp))
     }
   }
 
@@ -358,7 +377,7 @@ forest <- function(data,
                           l = j,
                           b = tot_row, r = j,
                           clip = "off",
-                          name = paste0("reference.line-", j))
+                          name = paste0("ref.line-", j))
 
     # Add the X-axis
     gt <- gtable_add_grob(gt, x_axis[[idx]],

@@ -18,10 +18,10 @@ make_xaxis <- function(at, xlab = NULL, x0 = 1, is_exp = FALSE, ticks_digits = 1
   if(is_exp){
     label_at <- log(round(exp(at), ticks_digits))
     x0 <- log(x0)
-    labels <- format(round(exp(at), ticks_digits), nsmall = ticks_digits)
+    labels <- trimws(formatC(exp(at), format="f", digits = ticks_digits, drop0trailing = is.integer(ticks_digits)))
   }else {
     label_at <- round(at, ticks_digits)
-    labels <- format(round(at, ticks_digits), nsmall = ticks_digits)
+    labels <- trimws(formatC(at, format="f", digits = ticks_digits, drop0trailing = is.integer(ticks_digits)))
   }
 
   maj <- linesGrob(x = unit(c(min(xlim), max(xlim)), "native"),

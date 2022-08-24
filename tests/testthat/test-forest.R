@@ -30,6 +30,7 @@ test_that("Simple forestplot", {
               upper = dt$hi,
               sizes = dt$se,
               ci_column = 4,
+              ticks_digits = 1,
               ref_line = 1,
               arrow_lab = c("Placebo Better", "Treatment Better"))
 
@@ -56,6 +57,7 @@ test_that("Apply theme", {
               arrow_lab = c("Placebo Better", "Treatment Better"),
               xlim = c(0, 4),
               ticks_at = c(0.5, 1, 2, 3),
+              ticks_digits = 1,
               footnote = "This is only a demo",
               theme = tm)
 
@@ -141,6 +143,7 @@ test_that("Multiple column", {
               arrow_lab = c("Placebo Better", "Treatment Better"),
               nudge_y = 0.2,
               xlim = c(0, 4),
+              ticks_digits = 1,
               theme = tm)
 
   vdiffr::expect_doppelganger("Multiple columns", p)
@@ -178,6 +181,7 @@ test_that("Multiple column and Multi parameters", {
               arrow_lab = list(c("L1", "R1"), c("L2", "R2")),
               xlim = list(c(0, 3), c(-1, 3)),
               ticks_at = list(c(0.1, 0.5, 1, 2.5), c(-1, 0, 2)),
+              ticks_digits = 1,
               xlab = c("OR", "Beta"),
               nudge_y = 0.2,
               theme = tm)
@@ -228,6 +232,7 @@ test_that("Summary CI", {
               arrow_lab = c("Placebo Better", "Treatment Better"),
               xlim = c(0, 4),
               ticks_at = c(0.5, 1, 2, 3),
+              ticks_digits = 1,
               title = "This is a title",
               footnote = "This is the demo data. Please feel free to change\nanything you want.",
               theme = tm)

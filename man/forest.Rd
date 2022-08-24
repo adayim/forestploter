@@ -17,7 +17,7 @@ forest(
   is_summary = NULL,
   xlim = NULL,
   ticks_at = NULL,
-  ticks_digits = 1,
+  ticks_digits = 1L,
   arrow_lab = NULL,
   xlab = NULL,
   footnote = NULL,
@@ -68,8 +68,11 @@ for each column if not provided. This should be a list with the same length of
 provided, and will be calculated automatically for each column if not provided.
 This should be a list if different \code{ticks_at} for different column is desired.}
 
-\item{ticks_digits}{Number of digits for the x-axis, default is 1. This should be
-a numerical vector if different rounding will be applied to different column.}
+\item{ticks_digits}{Number of digits for the x-axis, default is \code{1L}. This
+should be a numerical vector if different rounding will be applied to different
+column. If an integer is specified, for example \code{1L}, trailing zeros after
+the decimal mark will be dropped. Specify numeric, for example \code{1}, to keep
+the trailing zero after the decimal mark.}
 
 \item{arrow_lab}{Labels for the arrows, string vector of length two (left and
 right). The theme of arrow will inherit from the x-axis. This should be a list
