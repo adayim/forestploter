@@ -18,6 +18,10 @@
 makeci <- function(est, lower, upper, pch, size = 1, gp = gpar(), 
                    t_height = NULL, xlim = c(0, 1), nudge_y = 0){
 
+  # Return NULL if the CI is outside
+  if(upper < min(xlim) | lower > max(xlim))
+    return(NULL)
+
   rec <- pointsGrob(x = unit(est, "native"),
                     y = 0.5 + nudge_y,
                     pch = pch,
@@ -85,6 +89,11 @@ makeci <- function(est, lower, upper, pch, size = 1, gp = gpar(),
 
 # Create pooled summary diamond shape
 make_summary <- function(est, lower, upper, size = 1, gp, xlim){
+
+  # Return NULL if the CI is outside
+  if(upper < min(xlim) | lower > max(xlim))
+    return(NULL)
+
   polygonGrob(x = unit(c(lower, est, upper, est), "native"),
               y = unit(0.5 + c(0, 0.5 * size, 0, -0.5*size), "npc"),
               gp = gp,
