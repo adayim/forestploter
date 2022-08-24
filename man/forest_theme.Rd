@@ -59,7 +59,7 @@ for the grouped forest plot.}
 \item{legend_name}{Title of the legend.}
 
 \item{legend_position}{Position of the legend, \code{"right"}, \code{"top"},
-\code{"bottom"}.}
+\code{"bottom"} or \code{"none"} to suppress the legend.}
 
 \item{legend_value}{Legend labels (expressions). A vector should be provided
 for the grouped forest plot. A "Group 1" etc will be created if not a vector
