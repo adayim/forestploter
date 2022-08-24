@@ -84,6 +84,9 @@ forest <- function(data,
                title = title)
 
   # Point sizes
+  if(any(unlist(sizes) <= 0, na.rm = TRUE))
+    stop("Sizes must be larger than 0.")
+    
   if(length(sizes) == 1 & !inherits(sizes, "list"))
     sizes <- rep(sizes, nrow(data))
 

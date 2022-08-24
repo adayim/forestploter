@@ -37,6 +37,21 @@ test_that("Simple forestplot", {
   vdiffr::expect_doppelganger("Simple forest plot", p)
 })
 
+test_that("CI outside forestplot", {
+
+  expect_message(p <- forest(dt[,c(1:3, 20:21)],
+                             est = dt$est,
+                             lower = dt$low,
+                             upper = dt$hi,
+                             sizes = dt$se,
+                             ci_column = 4,
+                             ticks_digits = 1L,
+                             xlim = c(1.7, 5)),
+                 "The confidence interval of row")
+
+  vdiffr::expect_doppelganger("CI outside plot", p)
+})
+
 
 test_that("Apply theme", {
 
@@ -240,4 +255,28 @@ test_that("Summary CI", {
   vdiffr::expect_doppelganger("Summary CI", p)
 })
 
+
+# Check error for xlog
+test_that("forestplot check ERRORS", {
+
+  dt$low[3] <- -dt$low[3]
+  expect_error(forest(dt[,c(1:3, 20:21)],
+                      est = dt$est,
+                      lower = dt$low,
+                      upper = dt$hi,
+                      sizes = dt$se,
+                      xlog = TRUE,
+                      ci_column = 4),
+               "est, lower, upper, ref_line, vert_line and xlim should be larger than 0")
+
+  dt$se_n <- - dt$se
+  expect_error(forest(dt[,c(1:3, 20:21)],
+                      est = dt$est,
+                      lower = dt$low,
+                      upper = dt$hi,
+                      sizes = dt$se_n,
+                      ci_column = 4),
+               "Sizes must be larger than 0")
+
+})
 
