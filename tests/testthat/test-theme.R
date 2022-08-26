@@ -4,7 +4,8 @@ test_that("Test themes default value", {
   tm <- forest_theme()
   expect_type(tm, "list")
   expect_equal(names(tm), c('legend', 'ci', 'xaxis', 'footnote', "title",
-                            'refline', 'vertline', 'summary', 'tab_theme'))
+                            'arrow', 'refline', 'vertline', 'summary',
+                            'tab_theme'))
 
   expect_identical(tm$legend, list('fontsize' = 12, 'fontfamily' = "",
                                    'name' = "Group", 'position' = "right",

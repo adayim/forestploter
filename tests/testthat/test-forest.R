@@ -280,3 +280,45 @@ test_that("forestplot check ERRORS", {
 
 })
 
+# Check arrow
+test_that("check arrow", {
+
+  dt <- dt[1:9, ]
+  tm <- forest_theme(arrow_cex = .5,
+                     arrow_label_just = "end",
+                     xaxis_cex = .5,
+                     arrow_length = 0.1,
+                     arrow_type = "closed")
+
+  p <- forest(dt[,c(1:3, 8:9)],
+              est = dt$est,
+              lower = dt$low,
+              upper = dt$hi,
+              ci_column = 4,
+              ref_line = 1,
+              arrow_lab = c("This Placebo Better", " text Bet"),
+              ticks_digits = 2L,
+              theme = tm)
+
+  vdiffr::expect_doppelganger("arrow end", p)
+
+  tm <- forest_theme(arrow_cex = .5,
+                     arrow_label_just = "start",
+                     xaxis_cex = .5,
+                     arrow_length = 0.1,
+                     arrow_type = "closed")
+
+  p <- forest(dt[,c(1:3, 8:9)],
+              est = dt$est,
+              lower = dt$low,
+              upper = dt$hi,
+              ci_column = 4,
+              ref_line = 1,
+              arrow_lab = c("Worse", "Better"),
+              ticks_digits = 2L,
+              theme = tm)
+
+  vdiffr::expect_doppelganger("arrow start", p)
+
+})
+
