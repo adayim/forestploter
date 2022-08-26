@@ -45,3 +45,7 @@ multiple rows and columns. The height of the row will be changed accordingly
 if the text is added to only one row. The width of the text may exceeds the
 columns provided if the text is too long.
 }
+\seealso{
+\code{\link[gtable]{gtable}} \code{\link[grid]{gpar}} \code{\link[grid]{textGrob}}
+\code{\link[gtable]{gtable_add_grob}}
+}

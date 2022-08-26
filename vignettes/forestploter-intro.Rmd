@@ -238,12 +238,14 @@ plot(p)
 
 ```
 
+## Arrow labels
+You can let the arrow labels aling to the middle or the end of the arrow head. Many efforts have been made to make sure the arrow would be long enough to cover the whole x-asix if the label length is short or extend to the length of the label if the label is too long. But it is hard to compare the length of the label and x-axis, cause the viewport is determine after the arrow and label is created. The current solution is not perfect, please paste some leading or trailing space to get what you want.
 
 # Multiple CI columns
 
-Sometimes one may want to have multiple CI columns, each column may represent different outcome. If this is the case, one only need to provide a vector of the position of the columns to be drawn in the data. As seen in the example below, the CI will be drawn in the column 3 and 5. The first and second elements in `est`, `lower` and `upper` will be drawn in column 3 and column 5. 
+Sometimes one may want to have multiple CI columns, each column may represent different outcome. If this is the case, one only need to provide a vector of the position of the columns to be drawn in the data. If the number of columns provided to draw the CI columns are same as number of `est`, one CI will be drawn into each CI columns. If the number of columns provided is less than number of `est`, the extra `est` will be considered as a group and will be drawn to the CI columns again. In the latter case, group number equals is calcualted as `length(est)/length(ci_column)` and multiple columns will be drawn into one cell. As seen in the example below, the CI will be drawn in the column 3 and 5. The first and second elements in `est`, `lower` and `upper` will be drawn in column 3 and column 5.
 
-In a more complex situation, one may want to draw CI by groups. For example, multiple CI in one cell. The solution is simple, just provide all the values sequently to `est`, `lower` and `upper`. Which means, the first `n` elements in the `est`, `lower` and `upper` are considered as same group, same for next `n` elements. The `n` is determined by the length of `ci_column`. As it is shown in the example below, `est_gp1` and `est_gp2` will be drawn in column 3 and column 5 as normal, considered as **group 1**. The `est_gp3` and `est_gp4` will be drawn in column 3 and column 5 as normal, considered as **group 2**. 
+In a multiple groups example, two or more CI in one cell. The solution is simple, just provide all the values sequently to `est`, `lower` and `upper`. Which means, the first `n` elements in the `est`, `lower` and `upper` are considered as same group, same for next `n` elements. The `n` is determined by the length of `ci_column`. As it is shown in the example below, `est_gp1` and `est_gp2` will be drawn in column 3 and column 5 as normal, considered as **group 1**. The `est_gp3` and `est_gp4` will be drawn in column 3 and column 5 as normal, considered as **group 2**. 
 
 This is an example of multiple CI columns and groups:
 

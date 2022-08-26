@@ -37,3 +37,6 @@ A \code{\link[gtable]{gtable}} object.
 This function is used to edit the graphical parameter of text and background
 of the forest plot.
 }
+\seealso{
+\code{\link[grid]{gpar}} \code{\link[grid]{editGrob}}
+}

@@ -48,3 +48,6 @@ for the row number if you have added text before, including header. This is
 achieved by inserted new row(s) to the plot and will affect the row number.
 A text vector can be inserted to multiple columns or rows.
 }
+\seealso{
+\code{\link[grid]{gpar}} \code{\link[grid]{textGrob}} \code{\link[gtable]{gtable_add_grob}}
+}

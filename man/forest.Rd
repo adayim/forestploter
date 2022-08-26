@@ -147,3 +147,7 @@ p <- forest(dt[,c(1:3, 8:9)],
 # Print plot
 plot(p)
 }
+\seealso{
+\code{\link[gtable]{gtable}} \code{\link[gridExtra]{tableGrob}}
+\code{\link{forest_theme}}
+}
