@@ -33,15 +33,15 @@
 #' @param ticks_at Set X-axis tick-marks point. This will apply to all CI columns if
 #' provided, and will be calculated automatically for each column if not provided.
 #' This should be a list if different \code{ticks_at} for different column is desired.
-#' @param ticks_digits Number of digits for the x-axis, default is \code{1L}. This 
-#' should be a numerical vector if different rounding will be applied to different 
-#' column. If an integer is specified, for example \code{1L}, trailing zeros after 
+#' @param ticks_digits Number of digits for the x-axis, default is \code{1L}. This
+#' should be a numerical vector if different rounding will be applied to different
+#' column. If an integer is specified, for example \code{1L}, trailing zeros after
 #' the decimal mark will be dropped. Specify numeric, for example \code{1}, to keep
 #' the trailing zero after the decimal mark.
 #' @param arrow_lab Labels for the arrows, string vector of length two (left and
 #' right). The theme of arrow will inherit from the x-axis. This should be a list
 #' if different arrow labels for each column is desired.
-#' @param xlab X-axis labels, it will be put under the x-axis. An atomic vector should 
+#' @param xlab X-axis labels, it will be put under the x-axis. An atomic vector should
 #' be provided if different \code{xlab} for different column is desired.
 #' @param footnote Footnote for the forest plot, will be aligned at left bottom
 #' of the plot. Please adjust the line length with line break to avoid the overlap
@@ -52,6 +52,8 @@
 #' details.
 #'
 #' @return A \code{\link[gtable]{gtable}} object.
+#' @seealso \code{\link[gtable]{gtable}} \code{\link[gridExtra]{tableGrob}}
+#'  \code{\link{forest_theme}}
 #' @example inst/examples/forestplot-example.R
 #' @export
 #'
@@ -77,7 +79,7 @@ forest <- function(data,
                    nudge_y = 0,
                    theme = NULL){
 
-  check_errors(data = data, est = est, lower = lower, upper = upper, sizes = sizes, 
+  check_errors(data = data, est = est, lower = lower, upper = upper, sizes = sizes,
                ref_line = ref_line, vert_line = vert_line, ci_column = ci_column,
                xlog = xlog, is_summary = is_summary, xlim = xlim, ticks_at = ticks_at,
                ticks_digits = ticks_digits, arrow_lab = arrow_lab, xlab = xlab,
@@ -86,7 +88,7 @@ forest <- function(data,
   # Point sizes
   if(any(unlist(sizes) <= 0, na.rm = TRUE))
     stop("Sizes must be larger than 0.")
-    
+
   if(length(sizes) == 1 & !inherits(sizes, "list"))
     sizes <- rep(sizes, nrow(data))
 
@@ -297,7 +299,7 @@ forest <- function(data,
                 " is outside of the xlim.")
         next
       }
-        
+
 
       gt <- gtable_add_grob(gt, draw_ci,
                             t = i + 1,
@@ -323,19 +325,38 @@ forest <- function(data,
   })
 
   x_axht <- sapply(x_axis, function(x){
-    convertHeight(sum(grobHeight(x$children)) + unit(.5, "lines"),
-                  unitTo = "mm",
-                  valueOnly = TRUE)
+    ht <- Reduce(`+`, lapply(x$children, grobHeight)) 
+    convertHeight(ht, unitTo = "mm", valueOnly = TRUE)
   })
 
-  gt <- gtable_add_rows(gt, heights = unit(max(x_axht), "mm"))
+  gt <- gtable_add_rows(gt, heights = unit(max(x_axht), "mm") + unit(.8, "lines"))
+
+  # Prepare arrow object and row to put it
+  if(!is.null(arrow_lab)){
+    arrow_grob <- lapply(seq_along(xlim), function(i){
+      make_arrow(x0 = ref_line[i],
+                 arrow_lab = arrow_lab[[i]],
+                 arrow_gp = theme$arrow,
+                 is_exp = xlog[i],
+                 xlim = xlim[[i]])
+    })
+
+    lb_ht <- sapply(arrow_grob, function(x){
+      ht <- Reduce(`+`, lapply(x$children, heightDetails))
+      convertHeight(ht, unitTo = "mm", valueOnly = TRUE)
+    })
+
+    gt <- gtable_add_rows(gt, heights = unit(max(lb_ht), "mm"))
+
+  }
 
   # Add footnote
   if(!is.null(footnote)){
     footnote_grob <- textGrob(label = footnote,
                               gp = theme$footnote,
                               x = 0,
-                              just = c("left", "top"),
+                              y = 0.9,
+                              just = "left",
                               check.overlap = TRUE,
                               name = "footnote")
 
@@ -343,29 +364,9 @@ forest <- function(data,
                           footnote_grob,
                           t = tot_row + 1,
                           l = 1,
-                          b = tot_row + 1, r = min(ci_column),
+                          b = nrow(gt), r = min(ci_column),
                           clip = "off",
                           name = "footnote")
-  }
-
-  # Prepare arrow object and row to put it
-  if(!is.null(arrow_lab)){
-    arrow_grob <- lapply(seq_along(xlim), function(i){
-      make_arrow(x0 = ref_line[i],
-                 arrow_lab = arrow_lab[[i]],
-                 gp = theme$xaxis,
-                 is_exp = xlog[i],
-                 xlim = xlim[[i]])
-    })
-
-    lb_ht <- sapply(arrow_grob, function(x){
-      convertHeight(max(grobHeight(x$children)) + unit(.5, "lines"),
-                    unitTo = "mm",
-                    valueOnly = TRUE)
-    })
-
-    gt <- gtable_add_rows(gt, heights = unit(max(lb_ht), "mm"))
-
   }
 
   for(j in ci_column){
