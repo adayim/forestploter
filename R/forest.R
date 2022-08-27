@@ -126,9 +126,6 @@ forest <- function(data,
   if(length(x_trans) == 1)
     x_trans <- rep(x_trans, length(ci_column))
 
-  if(any(ref_line[x_trans %in% c("log", "log2", "log10")] != 1))
-    warning("log scales defined in x_trans but the reference line is not 1.")
-
   if(!is.null(xlim) && !inherits(xlim, "list"))
     xlim <- rep(list(xlim), length(ci_column))
 
@@ -223,12 +220,15 @@ forest <- function(data,
   for(i in seq_along(x_trans)){
     if(x_trans[i] %in% c("log", "log2", "log10")){
       sel_num <- gp_list == i
-      if (any(unlist(est[sel_num]) <= 0, na.rm = TRUE) ||
-            any(unlist(lower[sel_num]) <= 0, na.rm = TRUE) ||
-            any(unlist(upper[sel_num]) <= 0, na.rm = TRUE) ||
-            (any(ref_line[i] <= 0)) ||
-            (!is.null(vert_line) && any(unlist(vert_line[[i]]) <= 0, na.rm = TRUE)) ||
-            (!is.null(xlim) && any(unlist(xlim[[i]]) < 0))) {
+      checks_ill <- c(any(unlist(est[sel_num]) <= 0, na.rm = TRUE),
+            any(unlist(lower[sel_num]) <= 0, na.rm = TRUE),
+            any(unlist(upper[sel_num]) <= 0, na.rm = TRUE),
+            (any(ref_line[i] <= 0)),
+            (!is.null(vert_line) && any(unlist(vert_line[[i]]) <= 0, na.rm = TRUE)),
+            (!is.null(xlim) && any(unlist(xlim[[i]]) < 0)))
+      zeros <- c("est", "lower", "upper", "ref_line", "vert_line", "xlim")
+      if (any(checks_ill)) {
+        message("found values equal or less than 0 in ", zeros[checks_ill])
         stop("est, lower, upper, ref_line, vert_line and xlim should be larger than 0, if `x_trans` in \"log\", \"log2\", \"log10\".")
       }
     }

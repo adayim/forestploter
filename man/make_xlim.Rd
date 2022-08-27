@@ -8,9 +8,9 @@ make_xlim(
   xlim = NULL,
   lower,
   upper,
-  ref_line = ifelse(is_exp, 1, 0),
+  ref_line = ifelse(x_trans \%in\% c("log", "log2", "log10"), 1, 0),
   ticks_at = NULL,
-  is_exp = FALSE
+  x_trans = "none"
 )
 }
 \arguments{
@@ -31,7 +31,13 @@ vector if different reference line for each \code{ci_column} is desired.}
 provided, and will be calculated automatically for each column if not provided.
 This should be a list if different \code{ticks_at} for different column is desired.}
 
-\item{is_exp}{If values is exponential.}
+\item{x_trans}{Change axis scale, Allowed values are one of c("none", "log", "log2",
+"log10"). Default is \code{"none"}, no transformation will be applied.
+The formated label will be used when \code{scale  = "log2"} or \code{"log10"},
+for example \code{"10^3"} for "log10". Provide a character vector if different
+conversion for each \code{ci_column} is desired. Set this to \code{"log"} if x-axis
+tick marks assume values are exponential, e.g. for logistic regression (OR),
+survival estimates (HR), Poisson regression etc.}
 }
 \value{
 A list

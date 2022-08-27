@@ -10,15 +10,16 @@ forest(
   lower,
   upper,
   sizes = 0.4,
-  ref_line = ifelse(xlog, 1, 0),
+  ref_line = ifelse(x_trans \%in\% c("log", "log2", "log10"), 1, 0),
   vert_line = NULL,
   ci_column,
-  xlog = FALSE,
   is_summary = NULL,
   xlim = NULL,
   ticks_at = NULL,
   ticks_digits = 1L,
   arrow_lab = NULL,
+  x_trans = "none",
+  xlog = FALSE,
   xlab = NULL,
   footnote = NULL,
   title = NULL,
@@ -49,11 +50,6 @@ Provide a list of numerical vector element if different vertical line for each
 
 \item{ci_column}{Column number of the data the CI will be displayed.}
 
-\item{xlog}{If TRUE, x-axis tick marks assume values are exponential, e.g.
-for logistic regression (OR), survival estimates (HR), Poisson regression etc.
-Provide a logical vector if different conversion for each \code{ci_column} is
-desired.}
-
 \item{is_summary}{A logical vector indicating if the value is a summary value,
 which will have a diamond shape for the estimate. Can not be used with multiple
 group \code{forestplot}.}
@@ -77,6 +73,20 @@ the trailing zero after the decimal mark.}
 \item{arrow_lab}{Labels for the arrows, string vector of length two (left and
 right). The theme of arrow will inherit from the x-axis. This should be a list
 if different arrow labels for each column is desired.}
+
+\item{x_trans}{Change axis scale, Allowed values are one of c("none", "log", "log2",
+"log10"). Default is \code{"none"}, no transformation will be applied.
+The formated label will be used when \code{scale  = "log2"} or \code{"log10"},
+for example \code{"10^3"} for "log10". Provide a character vector if different
+conversion for each \code{ci_column} is desired. Set this to \code{"log"} if x-axis
+tick marks assume values are exponential, e.g. for logistic regression (OR),
+survival estimates (HR), Poisson regression etc.}
+
+\item{xlog}{\strong{This will be depredicated, please define it in \code{x_trans}}.
+If TRUE, x-axis tick marks assume values are exponential, e.g.
+for logistic regression (OR), survival estimates (HR), Poisson regression etc.
+Provide a logical vector if different conversion for each \code{ci_column} is
+desired.}
 
 \item{xlab}{X-axis labels, it will be put under the x-axis. An atomic vector should
 be provided if different \code{xlab} for different column is desired.}

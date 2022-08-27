@@ -265,6 +265,7 @@ test_that("forestplot check ERRORS", {
                       lower = dt$low,
                       upper = dt$hi,
                       sizes = dt$se,
+                      ref_line = 1,
                       xlog = TRUE,
                       ci_column = 4),
                "est, lower, upper, ref_line, vert_line and xlim should be larger than 0")

@@ -16,6 +16,7 @@ check_errors(
   xlog,
   is_summary,
   xlim,
+  x_trans,
   ticks_at,
   ticks_digits,
   title,
@@ -46,7 +47,8 @@ Provide a list of numerical vector element if different vertical line for each
 
 \item{ci_column}{Column number of the data the CI will be displayed.}
 
-\item{xlog}{If TRUE, x-axis tick marks assume values are exponential, e.g.
+\item{xlog}{\strong{This will be depredicated, please define it in \code{x_trans}}.
+If TRUE, x-axis tick marks assume values are exponential, e.g.
 for logistic regression (OR), survival estimates (HR), Poisson regression etc.
 Provide a logical vector if different conversion for each \code{ci_column} is
 desired.}
@@ -60,6 +62,14 @@ will take the minimum and maximum of the lower and upper value if not provided.
 This will apply to all CI columns if provided, and will be calculated automatically
 for each column if not provided. This should be a list with the same length of
 \code{ci_column} if different \code{xlim} for different column is desired.}
+
+\item{x_trans}{Change axis scale, Allowed values are one of c("none", "log", "log2",
+"log10"). Default is \code{"none"}, no transformation will be applied.
+The formated label will be used when \code{scale  = "log2"} or \code{"log10"},
+for example \code{"10^3"} for "log10". Provide a character vector if different
+conversion for each \code{ci_column} is desired. Set this to \code{"log"} if x-axis
+tick marks assume values are exponential, e.g. for logistic regression (OR),
+survival estimates (HR), Poisson regression etc.}
 
 \item{ticks_at}{Set X-axis tick-marks point. This will apply to all CI columns if
 provided, and will be calculated automatically for each column if not provided.
