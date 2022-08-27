@@ -322,3 +322,42 @@ test_that("check arrow", {
 
 })
 
+test_that("x-scale trans", {
+
+  dt <- dt[1:9, ]
+  dt$hi <- dt$hi * 3
+  dt$`HR (95% CI)` <- ifelse(is.na(dt$se), "",
+                             sprintf("%.2f (%.2f to %.2f)",
+                                     dt$est, dt$low, dt$hi))
+
+  p <- forest(dt[,c(1:3, 20:21)],
+              est = dt$est,
+              lower = dt$low,
+              upper = dt$hi,
+              ci_column = 4,
+              ticks_at = c(2^-2, 1, 2^2),
+              x_trans = "log2",
+              ticks_digits = 1L)
+
+  vdiffr::expect_doppelganger("x-scale of log2", p)
+
+  dt$hi <- 100
+  dt$low <- 10^-1
+  dt$`HR (95% CI)` <- ifelse(is.na(dt$se), "",
+                             sprintf("%.2f (%.2f to %.2f)",
+                                     dt$est, dt$low, dt$hi))
+
+  p <- forest(dt[,c(1:3, 20:21)],
+              est = dt$est,
+              lower = dt$low,
+              upper = dt$hi,
+              ci_column = 4,
+              ticks_at = c(10^-1, 1, 10, 10^2),
+              x_trans = "log10",
+              xlim = c(10^-1.1, 10^2.1),
+              ticks_digits = 1L)
+
+  vdiffr::expect_doppelganger("x-scale of log10", p)
+
+})
+

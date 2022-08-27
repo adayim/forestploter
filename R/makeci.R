@@ -1,18 +1,12 @@
 
 #' Create confidence interval
 #'
-#' @param est Point estimates, numeric
-#' @param lower Lower bound
-#' @param upper Upper bound
-#' @param size Size of the point
+#' @inheritParams forest
 #' @param pch Numeric or character vector indicating what sort of plotting
 #' symbol to use. See \code{\link[grid]{pointsGrob}}.
 #' @param gp Grphical parameters.
 #' @param t_height The height confidence interval line end vertices. If 
 #' value is `NULL` (default), no vertices will be drawn.
-#' @param xlim Limits for the x axis as a vector length 2, i.e. c(low, high)
-#' @param nudge_y Offset Y coordinates.
-#' @param color Color of the point and the line
 #'
 #' @keywords internal
 makeci <- function(est, lower, upper, pch, size = 1, gp = gpar(), 

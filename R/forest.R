@@ -18,10 +18,6 @@
 #' Provide a list of numerical vector element if different vertical line for each
 #'  \code{ci_column} is desired.
 #' @param ci_column Column number of the data the CI will be displayed.
-#' @param xlog If TRUE, x-axis tick marks assume values are exponential, e.g.
-#' for logistic regression (OR), survival estimates (HR), Poisson regression etc.
-#' Provide a logical vector if different conversion for each \code{ci_column} is
-#' desired.
 #' @param is_summary A logical vector indicating if the value is a summary value,
 #' which will have a diamond shape for the estimate. Can not be used with multiple
 #' group `forestplot`.
@@ -41,6 +37,18 @@
 #' @param arrow_lab Labels for the arrows, string vector of length two (left and
 #' right). The theme of arrow will inherit from the x-axis. This should be a list
 #' if different arrow labels for each column is desired.
+#' @param x_trans Change axis scale, Allowed values are one of c("none", "log", "log2", 
+#' "log10"). Default is \code{"none"}, no transformation will be applied.
+#' The formated label will be used when \code{scale  = "log2"} or \code{"log10"}, 
+#' for example \code{"10^3"} for "log10". Provide a character vector if different 
+#' conversion for each \code{ci_column} is desired. Set this to \code{"log"} if x-axis
+#'  tick marks assume values are exponential, e.g. for logistic regression (OR), 
+#' survival estimates (HR), Poisson regression etc.
+#' @param xlog \strong{This will be depredicated, please define it in \code{x_trans}}. 
+#' If TRUE, x-axis tick marks assume values are exponential, e.g.
+#' for logistic regression (OR), survival estimates (HR), Poisson regression etc.
+#' Provide a logical vector if different conversion for each \code{ci_column} is
+#' desired.
 #' @param xlab X-axis labels, it will be put under the x-axis. An atomic vector should
 #' be provided if different \code{xlab} for different column is desired.
 #' @param footnote Footnote for the forest plot, will be aligned at left bottom
@@ -64,15 +72,16 @@ forest <- function(data,
                    lower,
                    upper,
                    sizes = 0.4,
-                   ref_line = ifelse(xlog, 1, 0),
+                   ref_line = ifelse(x_trans %in% c("log", "log2", "log10"), 1, 0),
                    vert_line = NULL,
                    ci_column,
-                   xlog = FALSE,
                    is_summary = NULL,
                    xlim = NULL,
                    ticks_at = NULL,
                    ticks_digits = 1L,
                    arrow_lab = NULL,
+                   x_trans = "none",
+                   xlog = FALSE,
                    xlab = NULL,
                    footnote = NULL,
                    title = NULL,
@@ -83,7 +92,14 @@ forest <- function(data,
                ref_line = ref_line, vert_line = vert_line, ci_column = ci_column,
                xlog = xlog, is_summary = is_summary, xlim = xlim, ticks_at = ticks_at,
                ticks_digits = ticks_digits, arrow_lab = arrow_lab, xlab = xlab,
-               title = title)
+               title = title, x_trans = x_trans)
+
+  # put message
+  if(any(xlog)){
+    message("xlog will be deprecated soon, please use the `x_trans` instead.")
+    x_trans <- rep("none", length(xlog))
+    x_trans[xlog] <- "log"
+  }
 
   # Point sizes
   if(any(unlist(sizes) <= 0, na.rm = TRUE))
@@ -106,6 +122,12 @@ forest <- function(data,
 
   if(length(xlog) == 1)
     xlog <- rep(xlog, length(ci_column))
+  
+  if(length(x_trans) == 1)
+    x_trans <- rep(x_trans, length(ci_column))
+
+  if(any(ref_line[x_trans %in% c("log", "log2", "log10")] != 1))
+    warning("log scales defined in x_trans but the reference line is not 1.")
 
   if(!is.null(xlim) && !inherits(xlim, "list"))
     xlim <- rep(list(xlim), length(ci_column))
@@ -198,8 +220,8 @@ forest <- function(data,
   gp_list <- rep_len(1:(length(lower)/group_num), length(lower))
 
   # Check exponential
-  for(i in seq_along(xlog)){
-    if(xlog[i]){
+  for(i in seq_along(x_trans)){
+    if(x_trans[i] %in% c("log", "log2", "log10")){
       sel_num <- gp_list == i
       if (any(unlist(est[sel_num]) <= 0, na.rm = TRUE) ||
             any(unlist(lower[sel_num]) <= 0, na.rm = TRUE) ||
@@ -207,7 +229,7 @@ forest <- function(data,
             (any(ref_line[i] <= 0)) ||
             (!is.null(vert_line) && any(unlist(vert_line[[i]]) <= 0, na.rm = TRUE)) ||
             (!is.null(xlim) && any(unlist(xlim[[i]]) < 0))) {
-        stop("est, lower, upper, ref_line, vert_line and xlim should be larger than 0, if `xlog=TRUE`.")
+        stop("est, lower, upper, ref_line, vert_line and xlim should be larger than 0, if `x_trans` in \"log\", \"log2\", \"log10\".")
       }
     }
   }
@@ -220,7 +242,7 @@ forest <- function(data,
               upper = upper[sel_num],
               ref_line = ref_line[i],
               ticks_at = ticks_at[[i]],
-              is_exp = xlog[i])
+              x_trans = x_trans[i])
   })
 
   # Set X-axis breaks if missing
@@ -228,7 +250,7 @@ forest <- function(data,
     make_ticks(at = ticks_at[[i]],
                xlim = xlim[[i]],
                refline = ref_line[i],
-               is_exp = xlog[i])
+               x_trans = x_trans[i])
   })
 
   # Calculate heights
@@ -262,10 +284,11 @@ forest <- function(data,
     current_gp <- sum(col_indx[1:col_num] == col_indx[col_num])
 
     # Convert value is exponentiated
-    if(xlog[col_indx[col_num]]){
-      est[[col_num]] <- log(est[[col_num]])
-      lower[[col_num]] <- log(lower[[col_num]])
-      upper[[col_num]] <- log(upper[[col_num]])
+    col_trans <- x_trans[col_indx[col_num]]
+    if(col_trans != "none"){
+      est[[col_num]] <- xscale(est[[col_num]], col_trans)
+      lower[[col_num]] <- xscale(lower[[col_num]], col_trans)
+      upper[[col_num]] <- xscale(upper[[col_num]], col_trans)
     }
 
     for(i in 1:nrow(data)){
@@ -321,7 +344,7 @@ forest <- function(data,
                x0 = ref_line[i],
                xlim = xlim[[i]],
                xlab = xlab[i],
-               is_exp = xlog[i])
+               x_trans = x_trans[i])
   })
 
   x_axht <- sapply(x_axis, function(x){
@@ -337,7 +360,7 @@ forest <- function(data,
       make_arrow(x0 = ref_line[i],
                  arrow_lab = arrow_lab[[i]],
                  arrow_gp = theme$arrow,
-                 is_exp = xlog[i],
+                 x_trans = x_trans[i],
                  col_width = convertWidth(gt$widths[ci_column[i]], "char", valueOnly = TRUE),
                  xlim = xlim[[i]])
     })
@@ -377,7 +400,7 @@ forest <- function(data,
                           vert_line(x = ref_line[idx],
                                     gp = theme$refline,
                                     xlim = xlim[[idx]],
-                                    is_exp = xlog[idx]),
+                                    x_trans = x_trans[idx]),
                           t = 2,
                           l = j,
                           b = tot_row, r = j,
@@ -398,7 +421,7 @@ forest <- function(data,
                             vert_line(x = vert_line[[idx]],
                                       gp = theme$vertline,
                                       xlim = xlim[[idx]],
-                                      is_exp = xlog[idx]),
+                                      x_trans = x_trans[idx]),
                             t = 2,
                             l = j,
                             b = tot_row, r = j,

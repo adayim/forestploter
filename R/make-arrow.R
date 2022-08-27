@@ -1,18 +1,16 @@
 
 #' Make arrow
-#'
+#'  
+#' @inheritParams forest
 #' @param x0 Position of vertical line for 0 or 1.
-#' @param xlim Limits for the x axis as a vector length 2, i.e. c(low, high)
-#' @param arrow_lab Label for the arrow, left and right.
-#' @param is_exp If values is exponential.
 #' @param col_width Width of the column arrow to be fitted.
 #' @param arrow_gp Graphical parameters for arrow.
 #'
 #' @keywords internal
-make_arrow <- function(x0 = 1, arrow_lab, arrow_gp, col_width, xlim, is_exp = FALSE){
+make_arrow <- function(x0 = 1, arrow_lab, arrow_gp, col_width, xlim, x_trans = "none"){
 
-  if(is_exp)
-    x0 <- log(x0)
+  if(x_trans != "none")
+    x0 <- xscale(x0, scale = x_trans)
 
   gp <- arrow_gp$gp
 

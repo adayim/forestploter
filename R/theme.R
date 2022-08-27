@@ -1,9 +1,24 @@
 
 #' Forest plot default theme
 #'
+#' @description
+#'
 #' Default theme for the forest plot, but can pass other parameters. The
 #' parameters will be passed to corresponding elements of the forest plot.
-#' See \code{\link[grid]{gpar}} for details.
+#'
+#' \itemize{
+#'   \item{\code{ci_*}}{Control the graphical parameters of confidence intervals}
+#'   \item{\code{legend_*}}{Control the graphical parameters of legend}
+#'   \item{\code{xaxis_*}}{Control the graphical parameters of x-axis}
+#'   \item{\code{refline_*}}{Control the graphical parameters of reference line}
+#'   \item{\code{vertline_*}}{Control the graphical parameters of vertical line}
+#'   \item{\code{summary_*}}{Control the graphical parameters of diamond shaped summary CI}
+#'   \item{\code{footnote_*}}{Control the graphical parameters of footnote}
+#'   \item{\code{title_*}}{Control the graphical parameters of title}
+#'   \item{\code{arrow_*}}{Control the graphical parameters of arrow}
+#' }
+#'
+#' See \code{\link[grid]{gpar}} for more details.
 #'
 #' @param base_size The size of text
 #' @param base_family The font family
@@ -42,7 +57,7 @@
 #' @param title_cex Multiplier applied to font size for title.
 #' @param title_fontface The font face for title, default is \code{'bold'}.
 #' @param title_col Color of title.
-#' @param title_fontfamily Font family of title. 
+#' @param title_fontfamily Font family of title.
 #' @param arrow_type Type of the arrow below x-axis, see \code{\link[grid]{arrow}}.
 #' @param arrow_label_just The justification of the arrow label relative to arrow. Control
 #' the arrow label to align to the starting point of the arrow \code{"start"} (default) or
@@ -55,6 +70,7 @@
 #' @param arrow_cex Multiplier applied to font size for arrow label, same as \code{xaxis_cex} by default.
 #' @param ... Other parameters passed to table. See \code{\link[gridExtra]{tableGrob}}
 #'  for details.
+#'
 #'
 #' @importFrom utils modifyList
 #' @seealso \code{\link[gridExtra]{tableGrob}} \code{\link{forest}} \code{\link[grid]{textGrob}}
@@ -198,7 +214,7 @@ forest_theme <- function(base_size = 12,
                             lwd = arrow_lwd,
                             fill = arrow_fill,
                             col = arrow_col,
-                            cex = arrow_cex))                           
+                            cex = arrow_cex))
 
     # Table body
     core <- list(fg_params = list(hjust = 0,
@@ -237,7 +253,7 @@ forest_theme <- function(base_size = 12,
 }
 
 
-# 
+#
 make_group_theme <- function(theme, group_num){
 
   # Default color set
@@ -271,7 +287,7 @@ make_group_theme <- function(theme, group_num){
     # Check for group and legend label
     if(group_num > 1 & length(theme$legend$label) < group_num & length(theme$legend$label) > 1)
       stop("More groups than legend labels.")
-    
+
     return(theme)
 
 }

@@ -1,8 +1,8 @@
 # Add vertical line
-vert_line <- function(x, gp = grid::gpar(), xlim, is_exp = FALSE){
+vert_line <- function(x, gp = grid::gpar(), xlim, x_trans = "none"){
   
-  if(is_exp)
-    x <- log(x)
+  if(x_trans != "none")
+    x <- xscale(x, scale = x_trans)
     
   segmentsGrob(x0 = unit(x,"native"),
                x1 = unit(x,"native"),
