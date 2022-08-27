@@ -1802,8 +1802,8 @@
 <line x1='332.25' y1='477.61' x2='397.85' y2='477.61' style='stroke-width: 0.45;' />
 <polyline points='335.37,475.81 332.25,477.61 335.37,479.41 ' style='stroke-width: 0.45;' />
 <text x='405.05' y='489.29' style='font-size: 10.00px; font-family: sans;' textLength='75.04px' lengthAdjust='spacingAndGlyphs'>Treatment Better</text>
-<line x1='480.09' y1='477.61' x2='405.05' y2='477.61' style='stroke-width: 0.45;' />
-<polyline points='476.97,479.41 480.09,477.61 476.97,475.81 ' style='stroke-width: 0.45;' />
+<line x1='491.21' y1='477.61' x2='405.05' y2='477.61' style='stroke-width: 0.45;' />
+<polyline points='488.09,479.41 491.21,477.61 488.09,475.81 ' style='stroke-width: 0.45;' />
 <text x='360.00' y='93.63' text-anchor='middle' style='font-size: 14.40px; font-weight: bold; fill: #FF0000; font-family: sans;' textLength='80.02px' lengthAdjust='spacingAndGlyphs'>This is a title</text>
 </g>
 </svg>

@@ -325,7 +325,7 @@ forest <- function(data,
   })
 
   x_axht <- sapply(x_axis, function(x){
-    ht <- Reduce(`+`, lapply(x$children, grobHeight)) 
+    ht <- Reduce(`+`, lapply(x$children, grobHeight))
     convertHeight(ht, unitTo = "mm", valueOnly = TRUE)
   })
 
@@ -338,6 +338,7 @@ forest <- function(data,
                  arrow_lab = arrow_lab[[i]],
                  arrow_gp = theme$arrow,
                  is_exp = xlog[i],
+                 col_width = convertWidth(gt$widths[ci_column[i]], "char", valueOnly = TRUE),
                  xlim = xlim[[i]])
     })
 

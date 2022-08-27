@@ -290,7 +290,7 @@ test_that("check arrow", {
                      arrow_length = 0.1,
                      arrow_type = "closed")
 
-  p <- forest(dt[,c(1:3, 8:9)],
+  p <- forest(dt[,c(1:3, 20:21)],
               est = dt$est,
               lower = dt$low,
               upper = dt$hi,
@@ -308,7 +308,7 @@ test_that("check arrow", {
                      arrow_length = 0.1,
                      arrow_type = "closed")
 
-  p <- forest(dt[,c(1:3, 8:9)],
+  p <- forest(dt[,c(1:3, 20:21)],
               est = dt$est,
               lower = dt$low,
               upper = dt$hi,
