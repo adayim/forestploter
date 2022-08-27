@@ -10,7 +10,13 @@
 #' @return A grob
 #'
 #' @keywords internal
-make_xaxis <- function(at, xlab = NULL, x0 = 1, x_trans = "none", ticks_digits = 1, gp = gpar(), xlim){
+make_xaxis <- function(at, 
+                       xlab = NULL, 
+                       x0 = 1, 
+                       x_trans = "none", 
+                       ticks_digits = 1, 
+                       gp = gpar(), 
+                       xlim){
 
   if(x_trans != "none"){
     label_at <- xscale(round(xscale(at, scale = x_trans, type = "inv"), ticks_digits), scale = x_trans)

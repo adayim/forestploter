@@ -167,7 +167,7 @@ p <- forest(dt[,c(1:2, 20, 3, 22)],
             ref_line = 1,
             arrow_lab = c("Placebo Better", "Treatment Better"),
             nudge_y = 0.2,
-            xlog = TRUE,
+            x_trans = "log",
             theme = tm)
 
 plot(p)

@@ -2,14 +2,8 @@
 title: "Introduction to forestploter"
 author: "Alimu Dayimu"
 date: "`r Sys.Date()`"
-output:
-  html_document:
-    fig_caption: false
-    toc: true
-    toc_float:
-      collapsed: false
-      smooth_scroll: false
-    toc_depth: 3
+output: 
+  rmarkdown::html_vignette:
 vignette: >
   %\VignetteIndexEntry{Introduction to forestploter}
   %\VignetteEngine{knitr::rmarkdown}
@@ -241,7 +235,7 @@ plot(p)
 
 # Multiple CI columns
 
-Sometimes one may want to have multiple CI columns, each column may represent different outcome. If this is the case, one only need to provide a vector of the position of the columns to be drawn in the data. If the number of columns provided to draw the CI columns are same as number of `est`, one CI will be drawn into each CI columns. If the number of columns provided is less than number of `est`, the extra `est` will be considered as a group and will be drawn to the CI columns again. In the latter case, group number equals is calcualted as `length(est)/length(ci_column)` and multiple columns will be drawn into one cell. As seen in the example below, the CI will be drawn in the column 3 and 5. The first and second elements in `est`, `lower` and `upper` will be drawn in column 3 and column 5.
+Sometimes one may want to have multiple CI columns, each column may represent different outcome. If this is the case, one only need to provide a vector of the position of the columns to be drawn in the data. If the number of columns provided to draw the CI columns are same as number of `est`, one CI will be drawn into each CI columns. If the number of columns provided is less than number of `est`, the extra `est` will be considered as a group and will be drawn to the CI columns again. In the latter case, group number equals is calculated as `length(est)/length(ci_column)` and multiple columns will be drawn into one cell. As seen in the example below, the CI will be drawn in the column 3 and 5. The first and second elements in `est`, `lower` and `upper` will be drawn in column 3 and column 5.
 
 In a multiple groups example, two or more CI in one cell. The solution is simple, just provide all the values sequently to `est`, `lower` and `upper`. Which means, the first `n` elements in the `est`, `lower` and `upper` are considered as same group, same for next `n` elements. The `n` is determined by the length of `ci_column`. As it is shown in the example below, `est_gp1` and `est_gp2` will be drawn in column 3 and column 5 as normal, considered as **group 1**. The `est_gp3` and `est_gp4` will be drawn in column 3 and column 5 as normal, considered as **group 2**. 
 
@@ -255,8 +249,8 @@ dt$Subgroup <- ifelse(is.na(dt$Placebo),
                       paste0("   ", dt$Subgroup))
 
 # NA to blank or NA will be transformed to carachter.
-dt$`n` <- ifelse(is.na(dt$Treatment), "", dt$Treatment)
-dt$`n ` <- ifelse(is.na(dt$Placebo), "", dt$Placebo)
+dt$n1 <- ifelse(is.na(dt$Treatment), "", dt$Treatment)
+dt$n2 <- ifelse(is.na(dt$Placebo), "", dt$Placebo)
 
 # Add two blank column for CI
 dt$`CVD outcome` <- paste(rep(" ", 20), collapse = " ")
@@ -297,27 +291,31 @@ plot(p)
 
 # Different parameters for different CI columns
 
-If the desired forest plot is multiple column, some may want to have different settings for different columns. For example, different CI column has different xlim, x-axis ticks, x-axis labels, xlog, reference line, vertical line or arrow labels. This can be easily done by providing a list or vector. Provide a list for `xlim`, `vert_line`, `arrow_lab` and `ticks_at`, atomic vector for `xlab`, `xlog` and `ref_line`. See the example below.
+If the desired forest plot is multiple column, some may want to have different settings for different columns. For example, different CI column has different xlim, x-axis ticks, x-axis labels, x_trans, reference line, vertical line or arrow labels. This can be easily done by providing a list or vector. Provide a list for `xlim`, `vert_line`, `arrow_lab` and `ticks_at`, atomic vector for `xlab`, `x_trans` and `ref_line`. See the example below.
 
-```{r multiple-param, out.width="80%", fig.width  = 8, fig.height = 8}
+```{r multiple-param, out.width="70%", fig.width  = 10, fig.height = 8}
 
-p <- forest(dt[,c(1, 19, 21, 20, 22)],
+dt$`HR (95% CI)` <- ifelse(is.na(dt$est_gp1), "",
+                             sprintf("%.2f (%.2f to %.2f)",
+                                     dt$est_gp1, dt$low_gp1, dt$hi_gp1))
+dt$`Beta (95% CI)` <- ifelse(is.na(dt$est_gp2), "",
+                             sprintf("%.2f (%.2f to %.2f)",
+                                     dt$est_gp2, dt$low_gp2, dt$hi_gp2))
+
+tm <- forest_theme(arrow_type = "closed",
+                   arrow_label_just = "end")
+
+p <- forest(dt[,c(1, 21, 23, 22, 24)],
             est = list(dt$est_gp1,
-                       dt$est_gp2,
-                       dt$est_gp3,
-                       dt$est_gp4),
+                       dt$est_gp2),
             lower = list(dt$low_gp1,
-                         dt$low_gp2,
-                         dt$low_gp3,
-                         dt$low_gp4), 
+                         dt$low_gp2), 
             upper = list(dt$hi_gp1,
-                         dt$hi_gp2,
-                         dt$hi_gp3,
-                         dt$hi_gp4),
-            ci_column = c(3, 5),
+                         dt$hi_gp2),
+            ci_column = c(2, 4),
             ref_line = c(1, 0),
             vert_line = list(c(0.3, 1.4), c(0.6, 2)),
-            xlog = c(T, F),
+            x_trans = c("log", "none"),
             arrow_lab = list(c("L1", "R1"), c("L2", "R2")),
             xlim = list(c(0, 3), c(-1, 3)),
             ticks_at = list(c(0.1, 0.5, 1, 2.5), c(-1, 0, 2)),
@@ -330,7 +328,7 @@ plot(p)
 
 
 # Saving plot
-One can use the base method or use `ggsave` function to save plot. For the `ggsave` function, please don't ignore the `plot` parameter. The width and height should be tuned to get a desired plot. You can also set `autofit=TRUE` in the `print` or `plot` function to autofit the plot, but this may change not be compact as it should be. 
+One can use the base method or use `ggsave` function to save plot. For the `ggsave` function, please don't ignore the `plot` parameter. The width and height should be tuned to get a desired plot. You can also set `autofit=TRUE` in the `print` or `plot` function to auto fit the plot, but this may change not be compact as it should be. 
 
 ```{r eval=FALSE}
 # Base method

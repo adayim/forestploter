@@ -5,7 +5,7 @@
 #' @param scale axis scale. Allowed values are one of c("none", "log2", "log10",
 #'  "sqrt", "percent", "dollar", "scientific"); e.g.: .scale="log2".
 #' @param inv Inverse value back to its orignal.
-#' @param format ogical value. If TRUE, axis tick mark labels will be formatted
+#' @param format logical value. If TRUE, axis tick mark labels will be formatted
 #'  when scale  = "log2" or "log10".
 #' @param format_digits Digits to keep while formating
 #' @keywords internal
@@ -34,8 +34,8 @@ xscale <- function(x,
   # Format value
   if(type == "format"){
     r <- switch(scale,
-                log2 = math_exp(x, expr = 2^x),
-                log10 = math_exp(x, expr = 10^x),
+                log2 = trimws(formatC(2^x, format="f", digits = format_digits, drop0trailing = is.integer(format_digits))),
+                log10 = trimws(formatC(10^x, format="f", digits = format_digits, drop0trailing = is.integer(format_digits))),
                 none = trimws(formatC(x, format="f", digits = format_digits, drop0trailing = is.integer(format_digits))),
                 log = trimws(formatC(exp(x), format="f", digits = format_digits, drop0trailing = is.integer(format_digits))),
                 scientific = trimws(formatC(x, format="e", digits = format_digits, drop0trailing = is.integer(format_digits)))

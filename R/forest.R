@@ -29,6 +29,9 @@
 #' @param ticks_at Set X-axis tick-marks point. This will apply to all CI columns if
 #' provided, and will be calculated automatically for each column if not provided.
 #' This should be a list if different \code{ticks_at} for different column is desired.
+#' Although many efforts have been made to automaticlly get a pretty ticks break,
+#' it will not give a perfect solution, especially if \code{'log2'} and \code{'log10'}
+#' defined for \code{x_trans}. Please provide this value if possible. 
 #' @param ticks_digits Number of digits for the x-axis, default is \code{1L}. This
 #' should be a numerical vector if different rounding will be applied to different
 #' column. If an integer is specified, for example \code{1L}, trailing zeros after
@@ -39,11 +42,10 @@
 #' if different arrow labels for each column is desired.
 #' @param x_trans Change axis scale, Allowed values are one of c("none", "log", "log2", 
 #' "log10"). Default is \code{"none"}, no transformation will be applied.
-#' The formated label will be used when \code{scale  = "log2"} or \code{"log10"}, 
-#' for example \code{"10^3"} for "log10". Provide a character vector if different 
-#' conversion for each \code{ci_column} is desired. Set this to \code{"log"} if x-axis
-#'  tick marks assume values are exponential, e.g. for logistic regression (OR), 
-#' survival estimates (HR), Poisson regression etc.
+#' The formated label will be used for \code{scale  = "log2"} or \code{"log10"}, change
+#' this in \code{x_trans}. Set this to \code{"log"} if x-axis tick marks assume values
+#'  are exponential, e.g. for logistic regression (OR), survival estimates (HR), Poisson
+#'  regression etc.
 #' @param xlog \strong{This will be depredicated, please define it in \code{x_trans}}. 
 #' If TRUE, x-axis tick marks assume values are exponential, e.g.
 #' for logistic regression (OR), survival estimates (HR), Poisson regression etc.
@@ -119,15 +121,9 @@ forest <- function(data,
 
   if(!is.null(vert_line) && !inherits(vert_line, "list"))
     vert_line <- rep(list(vert_line), length(ci_column))
-
-  if(length(xlog) == 1)
-    xlog <- rep(xlog, length(ci_column))
   
   if(length(x_trans) == 1)
     x_trans <- rep(x_trans, length(ci_column))
-
-  if(any(ref_line[x_trans %in% c("log", "log2", "log10")] != 1))
-    warning("log scales defined in x_trans but the reference line is not 1.")
 
   if(!is.null(xlim) && !inherits(xlim, "list"))
     xlim <- rep(list(xlim), length(ci_column))
@@ -220,16 +216,21 @@ forest <- function(data,
   gp_list <- rep_len(1:(length(lower)/group_num), length(lower))
 
   # Check exponential
-  for(i in seq_along(x_trans)){
-    if(x_trans[i] %in% c("log", "log2", "log10")){
-      sel_num <- gp_list == i
-      if (any(unlist(est[sel_num]) <= 0, na.rm = TRUE) ||
-            any(unlist(lower[sel_num]) <= 0, na.rm = TRUE) ||
-            any(unlist(upper[sel_num]) <= 0, na.rm = TRUE) ||
-            (any(ref_line[i] <= 0)) ||
-            (!is.null(vert_line) && any(unlist(vert_line[[i]]) <= 0, na.rm = TRUE)) ||
-            (!is.null(xlim) && any(unlist(xlim[[i]]) < 0))) {
-        stop("est, lower, upper, ref_line, vert_line and xlim should be larger than 0, if `x_trans` in \"log\", \"log2\", \"log10\".")
+  if(any(x_trans %in% c("log", "log2", "log10"))){
+    for(i in seq_along(x_trans)){
+      if(x_trans[i] %in% c("log", "log2", "log10")){
+        sel_num <- gp_list == i
+        checks_ill <- c(any(unlist(est[sel_num]) <= 0, na.rm = TRUE),
+              any(unlist(lower[sel_num]) <= 0, na.rm = TRUE),
+              any(unlist(upper[sel_num]) <= 0, na.rm = TRUE),
+              (any(ref_line[i] <= 0)),
+              (!is.null(vert_line) && any(unlist(vert_line[[i]]) <= 0, na.rm = TRUE)),
+              (!is.null(xlim) && any(unlist(xlim[[i]]) < 0)))
+        zeros <- c("est", "lower", "upper", "ref_line", "vert_line", "xlim")
+        if (any(checks_ill)) {
+          message("found values equal or less than 0 in ", zeros[checks_ill])
+          stop("est, lower, upper, ref_line, vert_line and xlim should be larger than 0, if `x_trans` in \"log\", \"log2\", \"log10\".")
+        }
       }
     }
   }

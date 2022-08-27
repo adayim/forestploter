@@ -47,7 +47,7 @@ check_errors <- function(data,
     stop("xlog must be logical and of length 1 or the same length as ci_column.")
   
   # Check the x_trans
-  if(!x_trans %in% c("none", "log", "log2", "log10") || !length(x_trans) %in% c(1, length(ci_column)))
+  if(!all(x_trans %in% c("none", "log", "log2", "log10")) || !length(x_trans) %in% c(1, length(ci_column)))
     stop("x_trans must be in \"none\", \"log\", \"log2\", \"log10\" and of length 1 or the same length as ci_column.")
 
   # Check the xlab
