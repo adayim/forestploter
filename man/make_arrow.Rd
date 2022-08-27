@@ -4,7 +4,7 @@
 \alias{make_arrow}
 \title{Make arrow}
 \usage{
-make_arrow(x0 = 1, arrow_lab, arrow_gp, xlim, is_exp = FALSE)
+make_arrow(x0 = 1, arrow_lab, arrow_gp, col_width, xlim, is_exp = FALSE)
 }
 \arguments{
 \item{x0}{Position of vertical line for 0 or 1.}
@@ -12,6 +12,8 @@ make_arrow(x0 = 1, arrow_lab, arrow_gp, xlim, is_exp = FALSE)
 \item{arrow_lab}{Label for the arrow, left and right.}
 
 \item{arrow_gp}{Graphical parameters for arrow.}
+
+\item{col_width}{Width of the column arrow to be fitted.}
 
 \item{xlim}{Limits for the x axis as a vector length 2, i.e. c(low, high)}
 

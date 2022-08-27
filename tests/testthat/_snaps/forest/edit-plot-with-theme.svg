@@ -1804,8 +1804,8 @@
 <line x1='332.25' y1='493.00' x2='397.85' y2='493.00' style='stroke-width: 0.45;' />
 <polyline points='335.37,491.20 332.25,493.00 335.37,494.80 ' style='stroke-width: 0.45;' />
 <text x='405.05' y='504.68' style='font-size: 10.00px; font-family: sans;' textLength='75.04px' lengthAdjust='spacingAndGlyphs'>Treatment Better</text>
-<line x1='480.09' y1='493.00' x2='405.05' y2='493.00' style='stroke-width: 0.45;' />
-<polyline points='476.97,494.80 480.09,493.00 476.97,491.20 ' style='stroke-width: 0.45;' />
+<line x1='491.21' y1='493.00' x2='405.05' y2='493.00' style='stroke-width: 0.45;' />
+<polyline points='488.09,494.80 491.21,493.00 488.09,491.20 ' style='stroke-width: 0.45;' />
 <text x='319.33' y='77.24' text-anchor='middle' style='font-size: 12.00px; font-weight: bold; font-family: sans;' textLength='88.72px' lengthAdjust='spacingAndGlyphs'>Treatment group</text>
 </g>
 <defs>

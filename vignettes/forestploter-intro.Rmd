@@ -238,8 +238,6 @@ plot(p)
 
 ```
 
-## Arrow labels
-You can let the arrow labels aling to the middle or the end of the arrow head. Many efforts have been made to make sure the arrow would be long enough to cover the whole x-asix if the label length is short or extend to the length of the label if the label is too long. But it is hard to compare the length of the label and x-axis, cause the viewport is determine after the arrow and label is created. The current solution is not perfect, please paste some leading or trailing space to get what you want.
 
 # Multiple CI columns
 

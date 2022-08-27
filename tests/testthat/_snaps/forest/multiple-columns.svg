@@ -2003,8 +2003,8 @@
 <line x1='279.00' y1='527.45' x2='344.60' y2='527.45' style='stroke-width: 0.45;' />
 <polyline points='282.12,525.65 279.00,527.45 282.12,529.25 ' style='stroke-width: 0.45;' />
 <text x='351.80' y='539.13' style='font-size: 10.00px; font-family: sans;' textLength='75.04px' lengthAdjust='spacingAndGlyphs'>Treatment Better</text>
-<line x1='426.84' y1='527.45' x2='351.80' y2='527.45' style='stroke-width: 0.45;' />
-<polyline points='423.72,529.25 426.84,527.45 423.72,525.65 ' style='stroke-width: 0.45;' />
+<line x1='437.96' y1='527.45' x2='351.80' y2='527.45' style='stroke-width: 0.45;' />
+<polyline points='434.85,529.25 437.96,527.45 434.85,525.65 ' style='stroke-width: 0.45;' />
 <line x1='501.48' y1='497.85' x2='501.48' y2='54.44' style='stroke-width: 0.75; stroke: #00FF00; stroke-dasharray: 4.00,4.00;' />
 <polyline points='485.45,502.62 549.57,502.62 ' style='stroke-width: 0.45;' />
 <line x1='485.45' y1='502.62' x2='485.45' y2='508.62' style='stroke-width: 0.45;' />
