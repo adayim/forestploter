@@ -30,10 +30,26 @@ test_that("Simple forestplot", {
               upper = dt$hi,
               sizes = dt$se,
               ci_column = 4,
+              ticks_digits = 1,
               ref_line = 1,
               arrow_lab = c("Placebo Better", "Treatment Better"))
 
   vdiffr::expect_doppelganger("Simple forest plot", p)
+})
+
+test_that("CI outside forestplot", {
+
+  expect_message(p <- forest(dt[,c(1:3, 20:21)],
+                             est = dt$est,
+                             lower = dt$low,
+                             upper = dt$hi,
+                             sizes = dt$se,
+                             ci_column = 4,
+                             ticks_digits = 1L,
+                             xlim = c(1.7, 5)),
+                 "The confidence interval of row")
+
+  vdiffr::expect_doppelganger("CI outside plot", p)
 })
 
 
@@ -56,6 +72,7 @@ test_that("Apply theme", {
               arrow_lab = c("Placebo Better", "Treatment Better"),
               xlim = c(0, 4),
               ticks_at = c(0.5, 1, 2, 3),
+              ticks_digits = 1,
               footnote = "This is only a demo",
               theme = tm)
 
@@ -141,6 +158,7 @@ test_that("Multiple column", {
               arrow_lab = c("Placebo Better", "Treatment Better"),
               nudge_y = 0.2,
               xlim = c(0, 4),
+              ticks_digits = 1,
               theme = tm)
 
   vdiffr::expect_doppelganger("Multiple columns", p)
@@ -178,6 +196,7 @@ test_that("Multiple column and Multi parameters", {
               arrow_lab = list(c("L1", "R1"), c("L2", "R2")),
               xlim = list(c(0, 3), c(-1, 3)),
               ticks_at = list(c(0.1, 0.5, 1, 2.5), c(-1, 0, 2)),
+              ticks_digits = 1,
               xlab = c("OR", "Beta"),
               nudge_y = 0.2,
               theme = tm)
@@ -228,6 +247,7 @@ test_that("Summary CI", {
               arrow_lab = c("Placebo Better", "Treatment Better"),
               xlim = c(0, 4),
               ticks_at = c(0.5, 1, 2, 3),
+              ticks_digits = 1,
               title = "This is a title",
               footnote = "This is the demo data. Please feel free to change\nanything you want.",
               theme = tm)
@@ -235,4 +255,122 @@ test_that("Summary CI", {
   vdiffr::expect_doppelganger("Summary CI", p)
 })
 
+
+# Check error for xlog
+test_that("forestplot check ERRORS", {
+
+  dt$low[3] <- -dt$low[3]
+  expect_error(forest(dt[,c(1:3, 20:21)],
+                      est = dt$est,
+                      lower = dt$low,
+                      upper = dt$hi,
+                      sizes = dt$se,
+                      ref_line = 1,
+                      xlog = TRUE,
+                      ci_column = 4),
+               "est, lower, upper, ref_line, vert_line and xlim should be larger than 0")
+
+  dt$se_n <- - dt$se
+  expect_error(forest(dt[,c(1:3, 20:21)],
+                      est = dt$est,
+                      lower = dt$low,
+                      upper = dt$hi,
+                      sizes = dt$se_n,
+                      ci_column = 4),
+               "Sizes must be larger than 0")
+
+})
+
+# Check arrow
+test_that("check arrow", {
+
+  dt <- dt[1:9, ]
+  tm <- forest_theme(arrow_cex = .5,
+                     arrow_label_just = "end",
+                     xaxis_cex = .5,
+                     arrow_length = 0.1,
+                     arrow_type = "closed")
+
+  p <- forest(dt[,c(1:3, 20:21)],
+              est = dt$est,
+              lower = dt$low,
+              upper = dt$hi,
+              ci_column = 4,
+              ref_line = 1,
+              arrow_lab = c("This Placebo Better", " text Bet"),
+              ticks_digits = 2L,
+              theme = tm)
+
+  vdiffr::expect_doppelganger("arrow end", p)
+
+  tm <- forest_theme(arrow_cex = .5,
+                     arrow_label_just = "start",
+                     xaxis_cex = .5,
+                     arrow_length = 0.1,
+                     arrow_type = "closed")
+
+  p <- forest(dt[,c(1:3, 20:21)],
+              est = dt$est,
+              lower = dt$low,
+              upper = dt$hi,
+              ci_column = 4,
+              ref_line = 1,
+              arrow_lab = c("Worse", "Better"),
+              ticks_digits = 2L,
+              theme = tm)
+
+  vdiffr::expect_doppelganger("arrow start", p)
+
+})
+
+test_that("x-scale trans", {
+
+  dt <- dt[1:9, ]
+  dt$hi <- dt$hi * 3
+
+  dt$hi[9] <- 8
+  dt$hi[8] <- 6
+  dt$hi[7] <- 2
+  dt$low[9] <- 0.25
+  dt$low[8] <- 0.1
+  dt$`HR (95% CI)` <- ifelse(is.na(dt$se), "",
+                             sprintf("%.2f (%.2f to %.2f)",
+                                     dt$est, dt$low, dt$hi))
+
+  p <- forest(dt[,c(1:3, 20:21)],
+              est = dt$est,
+              lower = dt$low,
+              upper = dt$hi,
+              ci_column = 4,
+              vert_line = 6,
+              ticks_at = c(0.1, 0.25, 1, 2, 6, 8),
+              x_trans = "log2",
+              ticks_digits = 1L)
+
+  vdiffr::expect_doppelganger("x-scale log2", p)
+
+
+  dt$hi[9] <- 20
+  dt$hi[8] <- 15
+  dt$hi[7] <- 5
+  dt$low[9] <- 0.5
+  dt$low[8] <- 0.1
+
+  dt$`HR (95% CI)` <- ifelse(is.na(dt$se), "",
+                             sprintf("%.2f (%.2f to %.2f)",
+                                     dt$est, dt$low, dt$hi))
+  p <- forest(dt[,c(1:3, 20:21)],
+              est = dt$est,
+              lower = dt$low,
+              upper = dt$hi,
+              ci_column = 4,
+              vert_line = 5,
+              ticks_at = c(0.1, 0.5, 1, 5, 15, 20),
+              x_trans = "log10",
+              xlim = c(0.09, 24),
+              ticks_digits = 1L)
+
+  vdiffr::expect_doppelganger("x-scale log10", p)
+
+})
 

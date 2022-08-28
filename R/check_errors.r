@@ -17,6 +17,7 @@ check_errors <- function(data,
                          xlog ,
                          is_summary,
                          xlim,
+                         x_trans,
                          ticks_at,
                          ticks_digits,
                          title,
@@ -44,6 +45,10 @@ check_errors <- function(data,
   # Check the xlog
   if(!is.logical(xlog) || !length(xlog) %in% c(1, length(ci_column)))
     stop("xlog must be logical and of length 1 or the same length as ci_column.")
+  
+  # Check the x_trans
+  if(!all(x_trans %in% c("none", "log", "log2", "log10")) || !length(x_trans) %in% c(1, length(ci_column)))
+    stop("x_trans must be in \"none\", \"log\", \"log2\", \"log10\" and of length 1 or the same length as ci_column.")
 
   # Check the xlab
   if(!is.null(xlab) && !length(xlab) %in% c(1, length(ci_column)))

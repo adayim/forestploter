@@ -21,7 +21,7 @@
 #' @param padding Padding of the text, default is \code{unit(1, "mm")}
 #' 
 #' @return A \code{\link[gtable]{gtable}} object.
-#'
+#' @seealso \code{\link[grid]{gpar}} \code{\link[grid]{textGrob}} \code{\link[gtable]{gtable_add_grob}} 
 #' @export
 #'
 insert_text <- function(plot,

@@ -1,22 +1,20 @@
 
 #' Create confidence interval
 #'
-#' @param est Point estimates, numeric
-#' @param lower Lower bound
-#' @param upper Upper bound
-#' @param size Size of the point
+#' @inheritParams forest
 #' @param pch Numeric or character vector indicating what sort of plotting
 #' symbol to use. See \code{\link[grid]{pointsGrob}}.
-#' @param gp Grphical parameters.
+#' @param gp Graphical parameters.
 #' @param t_height The height confidence interval line end vertices. If 
 #' value is `NULL` (default), no vertices will be drawn.
-#' @param xlim Limits for the x axis as a vector length 2, i.e. c(low, high)
-#' @param nudge_y Offset Y coordinates.
-#' @param color Color of the point and the line
 #'
 #' @keywords internal
 makeci <- function(est, lower, upper, pch, size = 1, gp = gpar(), 
                    t_height = NULL, xlim = c(0, 1), nudge_y = 0){
+
+  # Return NULL if the CI is outside
+  if(upper < min(xlim) | lower > max(xlim))
+    return(NULL)
 
   rec <- pointsGrob(x = unit(est, "native"),
                     y = 0.5 + nudge_y,
@@ -85,6 +83,11 @@ makeci <- function(est, lower, upper, pch, size = 1, gp = gpar(),
 
 # Create pooled summary diamond shape
 make_summary <- function(est, lower, upper, size = 1, gp, xlim){
+
+  # Return NULL if the CI is outside
+  if(upper < min(xlim) | lower > max(xlim))
+    return(NULL)
+
   polygonGrob(x = unit(c(lower, est, upper, est), "native"),
               y = unit(0.5 + c(0, 0.5 * size, 0, -0.5*size), "npc"),
               gp = gp,

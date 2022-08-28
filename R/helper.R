@@ -1,9 +1,100 @@
+
+#' Get the scale to fit the plot
+#'
+#' Use \code{get_scale} function to get the optimal scale with a wanted width and height to
+#' print the plot. This function can be used with \code{\link[ggsave]{ggplot2}}
+#' function.
+#'
+#' @inheritParams get_wh
+#' @param width_wanted,height_wanted Desired plot size in `units` to save plot.
+#'
+#' @rdname get_scale
+#' @return A numeric value
+#' @export
+#' @examples
+#' \dontrun{
+#'  dt <- read.csv(system.file("extdata", "example_data.csv", package = "forestploter"))
+#'  dt <- dt[1:6,1:6]
+#'
+#'  dt$` ` <- paste(rep(" ", 20), collapse = " ")
+#'
+#'  p <- forest(dt[,c(1:3, 7)],
+#'              est = dt$est,
+#'              lower = dt$low,
+#'              upper = dt$hi,
+#'              ci_column = 4)
+#' 
+#' # Use ggsave from ggplot2 package and scale
+#' scale = get_scale(p, 5, 3)
+#' ggplot2::ggsave("test.pdf", p,
+#'        width = 5,
+#'        height = 3,
+#'        units = 'in',
+#'        scale = scale)
+#' }
+#'
+get_scale <- function(plot,
+                      width_wanted,
+                      height_wanted,
+                      unit = c("in", "cm", "mm")){
+
+  if(!inherits(plot, "forestplot"))
+    stop("plot is not a forestplot")
+
+  unit <- match.arg(unit)
+  h <- convertHeight(sum(plot$heights), unit, TRUE)
+  w <- convertWidth(sum(plot$widths), unit, TRUE)
+  max(c(w/width_wanted,  h/height_wanted))
+}
+
+#' Get widths and height the forestplot
+#'
+#' \code{get_wh} can be used to find the correct width and height of the forestplot 
+#' for saving, as the width and height is difficult to fit for saving.
+#'
+#' @param plot A forest plot object.
+#' @param unit Unit of the plot size in `units` ("in", "cm", or "mm")to be saved.
+#'
+#' @return A named vector of width and height
+#' @export
+#' @examples
+#' \dontrun{
+#'  dt <- read.csv(system.file("extdata", "example_data.csv", package = "forestploter"))
+#'  dt <- dt[1:6,1:6]
+#'
+#'  dt$` ` <- paste(rep(" ", 20), collapse = " ")
+#'
+#'  p <- forest(dt[,c(1:3, 7)],
+#'              est = dt$est,
+#'              lower = dt$low,
+#'              upper = dt$hi,
+#'              ci_column = 4)
+#'
+#' # get_wh example
+#' p_wh <- get_wh(p)
+#' pdf('test.pdf',width = p_wh[1], height = p_wh[2])
+#' plot(p)
+#' dev.off()
+#' }
+
+get_wh <- function(plot, unit = c("in", "cm", "mm")){
+
+  if(!inherits(plot, "forestplot"))
+    stop("plot is not a forestplot")
+
+  unit <- match.arg(unit)
+  h <- convertHeight(sum(plot$heights), unit, TRUE)
+  w <- convertWidth(sum(plot$widths), unit, TRUE)
+  return(c(width = w, height = h))
+}
+
+
 # Add vertical line
-vert_line <- function(x, gp = grid::gpar(), xlim, is_exp = FALSE){
-  
-  if(is_exp)
-    x <- log(x)
-    
+vert_line <- function(x, gp = grid::gpar(), xlim, x_trans = "none"){
+
+  if(x_trans != "none")
+    x <- xscale(x, scale = x_trans)
+
   segmentsGrob(x0 = unit(x,"native"),
                x1 = unit(x,"native"),
                y0 = unit(0.01,"npc"),

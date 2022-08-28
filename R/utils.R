@@ -3,7 +3,6 @@
 #' Create ticks points.
 #'
 #' @param at Numerical vector, create ticks at given values.
-#' @param is_exp If values is exponential.
 #' @inheritParams forest
 #'
 #' @return A vector
@@ -13,11 +12,11 @@
 make_ticks <- function(at = NULL,
                        xlim,
                        refline = 1,
-                       is_exp = FALSE){
+                       x_trans = "none"){
 
   if(is.null(at)){
 
-    if(!is_exp){
+    if(x_trans %in% c("none", "scientific")){
       ticks_at <- pretty(xlim)
     }else {
       pt_cut <- pretty(range(c(xlim, log(refline))))
@@ -28,10 +27,7 @@ make_ticks <- function(at = NULL,
     }
 
   }else {
-    if(is_exp)
-      ticks_at <- log(at)
-    else
-      ticks_at <- at
+    ticks_at <- xscale(at, scale = x_trans)
   }
 
   ticks_at <- ticks_at[is.finite(ticks_at)]
@@ -44,7 +40,6 @@ make_ticks <- function(at = NULL,
 #'
 #' Create xlim based on value ranges.
 #'
-#' @param is_exp If values is exponential.
 #' @inheritParams forest
 #'
 #' @return A list
@@ -54,9 +49,9 @@ make_ticks <- function(at = NULL,
 make_xlim <- function(xlim = NULL,
                       lower,
                       upper,
-                      ref_line = ifelse(is_exp, 1, 0),
+                      ref_line = ifelse(x_trans %in% c("log", "log2", "log10"), 1, 0),
                       ticks_at = NULL,
-                      is_exp = FALSE){
+                      x_trans = "none"){
 
   # Use range if missing
   if(is.null(xlim)){
@@ -66,13 +61,13 @@ make_xlim <- function(xlim = NULL,
                   na.rm = TRUE)
   }
 
-  if(is_exp){
+  if(x_trans %in% c("log", "log2", "log10")){
     if(min(xlim) == 0)
       xlim[which.min(xlim)] <- min(c(unlist(lower),
                                      ref_line,
                                      ticks_at),
                                    na.rm = TRUE)
-    xlim <- log(xlim)
+    xlim <- xscale(xlim, scale = x_trans)
 
   }
 

@@ -18,10 +18,6 @@
 #' Provide a list of numerical vector element if different vertical line for each
 #'  \code{ci_column} is desired.
 #' @param ci_column Column number of the data the CI will be displayed.
-#' @param xlog If TRUE, x-axis tick marks assume values are exponential, e.g.
-#' for logistic regression (OR), survival estimates (HR), Poisson regression etc.
-#' Provide a logical vector if different conversion for each \code{ci_column} is
-#' desired.
 #' @param is_summary A logical vector indicating if the value is a summary value,
 #' which will have a diamond shape for the estimate. Can not be used with multiple
 #' group `forestplot`.
@@ -33,12 +29,29 @@
 #' @param ticks_at Set X-axis tick-marks point. This will apply to all CI columns if
 #' provided, and will be calculated automatically for each column if not provided.
 #' This should be a list if different \code{ticks_at} for different column is desired.
-#' @param ticks_digits Number of digits for the x-axis, default is 1. This should be
-#' a numerical vector if different rounding will be applied to different column.
+#' Although many efforts have been made to automatically get a pretty ticks break,
+#' it will not give a perfect solution, especially if \code{'log2'} and \code{'log10'}
+#' defined for \code{x_trans}. Please provide this value if possible.
+#' @param ticks_digits Number of digits for the x-axis, default is \code{1L}. This
+#' should be a numerical vector if different rounding will be applied to different
+#' column. If an integer is specified, for example \code{1L}, trailing zeros after
+#' the decimal mark will be dropped. Specify numeric, for example \code{1}, to keep
+#' the trailing zero after the decimal mark.
 #' @param arrow_lab Labels for the arrows, string vector of length two (left and
 #' right). The theme of arrow will inherit from the x-axis. This should be a list
 #' if different arrow labels for each column is desired.
-#' @param xlab X-axis labels, it will be put under the x-axis. An atomic vector should 
+#' @param x_trans Change axis scale, Allowed values are one of c("none", "log", "log2",
+#' "log10"). Default is \code{"none"}, no transformation will be applied.
+#' The formatted label will be used for \code{scale  = "log2"} or \code{"log10"}, change
+#' this in \code{x_trans}. Set this to \code{"log"} if x-axis tick marks assume values
+#'  are exponential, e.g. for logistic regression (OR), survival estimates (HR), Poisson
+#'  regression etc.
+#' @param xlog \strong{This will be deprecated, please define it in \code{x_trans}}.
+#' If TRUE, x-axis tick marks assume values are exponential, e.g.
+#' for logistic regression (OR), survival estimates (HR), Poisson regression etc.
+#' Provide a logical vector if different conversion for each \code{ci_column} is
+#' desired.
+#' @param xlab X-axis labels, it will be put under the x-axis. An atomic vector should
 #' be provided if different \code{xlab} for different column is desired.
 #' @param footnote Footnote for the forest plot, will be aligned at left bottom
 #' of the plot. Please adjust the line length with line break to avoid the overlap
@@ -49,6 +62,8 @@
 #' details.
 #'
 #' @return A \code{\link[gtable]{gtable}} object.
+#' @seealso \code{\link[gtable]{gtable}} \code{\link[gridExtra]{tableGrob}}
+#'  \code{\link{forest_theme}}
 #' @example inst/examples/forestplot-example.R
 #' @export
 #'
@@ -59,28 +74,39 @@ forest <- function(data,
                    lower,
                    upper,
                    sizes = 0.4,
-                   ref_line = ifelse(xlog, 1, 0),
+                   ref_line = ifelse(x_trans %in% c("log", "log2", "log10"), 1, 0),
                    vert_line = NULL,
                    ci_column,
-                   xlog = FALSE,
                    is_summary = NULL,
                    xlim = NULL,
                    ticks_at = NULL,
-                   ticks_digits = 1,
+                   ticks_digits = 1L,
                    arrow_lab = NULL,
+                   x_trans = "none",
+                   xlog = FALSE,
                    xlab = NULL,
                    footnote = NULL,
                    title = NULL,
                    nudge_y = 0,
                    theme = NULL){
 
-  check_errors(data = data, est = est, lower = lower, upper = upper, sizes = sizes, 
+  check_errors(data = data, est = est, lower = lower, upper = upper, sizes = sizes,
                ref_line = ref_line, vert_line = vert_line, ci_column = ci_column,
                xlog = xlog, is_summary = is_summary, xlim = xlim, ticks_at = ticks_at,
                ticks_digits = ticks_digits, arrow_lab = arrow_lab, xlab = xlab,
-               title = title)
+               title = title, x_trans = x_trans)
+
+  # put message
+  if(any(xlog)){
+    message("xlog will be deprecated soon, please use the `x_trans` instead.")
+    x_trans <- rep("none", length(xlog))
+    x_trans[xlog] <- "log"
+  }
 
   # Point sizes
+  if(any(unlist(sizes) <= 0, na.rm = TRUE))
+    stop("Sizes must be larger than 0.")
+
   if(length(sizes) == 1 & !inherits(sizes, "list"))
     sizes <- rep(sizes, nrow(data))
 
@@ -96,8 +122,8 @@ forest <- function(data,
   if(!is.null(vert_line) && !inherits(vert_line, "list"))
     vert_line <- rep(list(vert_line), length(ci_column))
 
-  if(length(xlog) == 1)
-    xlog <- rep(xlog, length(ci_column))
+  if(length(x_trans) == 1)
+    x_trans <- rep(x_trans, length(ci_column))
 
   if(!is.null(xlim) && !inherits(xlim, "list"))
     xlim <- rep(list(xlim), length(ci_column))
@@ -180,23 +206,31 @@ forest <- function(data,
 
   }
 
-  if(group_num > 1 || is.null(is_summary))
+  if(group_num > 1 || is.null(is_summary)){
+    if(!is.null(is_summary))
+      warning("Summary CI is not supported for multiple groups and will be ignored.")
     is_summary <- rep(FALSE, nrow(data))
+  }
 
   # Positions of values in ci_column
   gp_list <- rep_len(1:(length(lower)/group_num), length(lower))
 
   # Check exponential
-  for(i in seq_along(xlog)){
-    if(xlog[i]){
-      sel_num <- gp_list == i
-      if (any(unlist(est[sel_num]) <= 0, na.rm = TRUE) ||
-            any(unlist(lower[sel_num]) <= 0, na.rm = TRUE) ||
-            any(unlist(upper[sel_num]) <= 0, na.rm = TRUE) ||
-            (any(ref_line[i] <= 0)) ||
-            (!is.null(vert_line) && any(unlist(vert_line[[i]]) <= 0, na.rm = TRUE)) ||
-            (!is.null(xlim) && any(unlist(xlim[[i]]) < 0))) {
-        stop("est, lower, upper, ref_line, vert_line and xlim should be larger than 0, if `xlog=TRUE`.")
+  if(any(x_trans %in% c("log", "log2", "log10"))){
+    for(i in seq_along(x_trans)){
+      if(x_trans[i] %in% c("log", "log2", "log10")){
+        sel_num <- gp_list == i
+        checks_ill <- c(any(unlist(est[sel_num]) <= 0, na.rm = TRUE),
+              any(unlist(lower[sel_num]) <= 0, na.rm = TRUE),
+              any(unlist(upper[sel_num]) <= 0, na.rm = TRUE),
+              (any(ref_line[i] <= 0)),
+              (!is.null(vert_line) && any(unlist(vert_line[[i]]) <= 0, na.rm = TRUE)),
+              (!is.null(xlim) && any(unlist(xlim[[i]]) < 0)))
+        zeros <- c("est", "lower", "upper", "ref_line", "vert_line", "xlim")
+        if (any(checks_ill)) {
+          message("found values equal or less than 0 in ", zeros[checks_ill])
+          stop("est, lower, upper, ref_line, vert_line and xlim should be larger than 0, if `x_trans` in \"log\", \"log2\", \"log10\".")
+        }
       }
     }
   }
@@ -209,7 +243,7 @@ forest <- function(data,
               upper = upper[sel_num],
               ref_line = ref_line[i],
               ticks_at = ticks_at[[i]],
-              is_exp = xlog[i])
+              x_trans = x_trans[i])
   })
 
   # Set X-axis breaks if missing
@@ -217,7 +251,7 @@ forest <- function(data,
     make_ticks(at = ticks_at[[i]],
                xlim = xlim[[i]],
                refline = ref_line[i],
-               is_exp = xlog[i])
+               x_trans = x_trans[i])
   })
 
   # Calculate heights
@@ -246,10 +280,16 @@ forest <- function(data,
   # Draw CI
   for(col_num in seq_along(ci_col_list)){
 
-    if(xlog[col_indx[col_num]]){
-      est[[col_num]] <- log(est[[col_num]])
-      lower[[col_num]] <- log(lower[[col_num]])
-      upper[[col_num]] <- log(upper[[col_num]])
+    # Get current CI column and group number
+    current_col <- ci_col_list[col_num]
+    current_gp <- sum(col_indx[1:col_num] == col_indx[col_num])
+
+    # Convert value is exponentiated
+    col_trans <- x_trans[col_indx[col_num]]
+    if(col_trans != "none"){
+      est[[col_num]] <- xscale(est[[col_num]], col_trans)
+      lower[[col_num]] <- xscale(lower[[col_num]], col_trans)
+      upper[[col_num]] <- xscale(upper[[col_num]], col_trans)
     }
 
     for(i in 1:nrow(data)){
@@ -277,13 +317,21 @@ forest <- function(data,
                           nudge_y = nudge_y[col_num])
       }
 
+      # Skip if CI is outside xlim
+      if(is.null(draw_ci)){
+        message("The confidence interval of row ", i, ", column ", current_col, ", group ", current_gp,
+                " is outside of the xlim.")
+        next
+      }
+
+
       gt <- gtable_add_grob(gt, draw_ci,
                             t = i + 1,
-                            l = ci_col_list[col_num],
+                            l = current_col,
                             b = i + 1,
-                            r = ci_col_list[col_num],
+                            r = current_col,
                             clip = "off",
-                            name = paste0("ci-", i, "-", col_num))
+                            name = paste0("ci-", i, "-", current_col, "-", current_gp))
     }
   }
 
@@ -297,23 +345,43 @@ forest <- function(data,
                x0 = ref_line[i],
                xlim = xlim[[i]],
                xlab = xlab[i],
-               is_exp = xlog[i])
+               x_trans = x_trans[i])
   })
 
   x_axht <- sapply(x_axis, function(x){
-    convertHeight(sum(grobHeight(x$children)) + unit(.5, "lines"),
-                  unitTo = "mm",
-                  valueOnly = TRUE)
+    ht <- Reduce(`+`, lapply(x$children, grobHeight))
+    convertHeight(ht, unitTo = "mm", valueOnly = TRUE)
   })
 
-  gt <- gtable_add_rows(gt, heights = unit(max(x_axht), "mm"))
+  gt <- gtable_add_rows(gt, heights = unit(max(x_axht), "mm") + unit(.8, "lines"))
+
+  # Prepare arrow object and row to put it
+  if(!is.null(arrow_lab)){
+    arrow_grob <- lapply(seq_along(xlim), function(i){
+      make_arrow(x0 = ref_line[i],
+                 arrow_lab = arrow_lab[[i]],
+                 arrow_gp = theme$arrow,
+                 x_trans = x_trans[i],
+                 col_width = convertWidth(gt$widths[ci_column[i]], "char", valueOnly = TRUE),
+                 xlim = xlim[[i]])
+    })
+
+    lb_ht <- sapply(arrow_grob, function(x){
+      ht <- Reduce(`+`, lapply(x$children, heightDetails))
+      convertHeight(ht, unitTo = "mm", valueOnly = TRUE)
+    })
+
+    gt <- gtable_add_rows(gt, heights = unit(max(lb_ht), "mm"))
+
+  }
 
   # Add footnote
   if(!is.null(footnote)){
     footnote_grob <- textGrob(label = footnote,
                               gp = theme$footnote,
                               x = 0,
-                              just = c("left", "top"),
+                              y = .8,
+                              just = "left",
                               check.overlap = TRUE,
                               name = "footnote")
 
@@ -321,29 +389,9 @@ forest <- function(data,
                           footnote_grob,
                           t = tot_row + 1,
                           l = 1,
-                          b = tot_row + 1, r = min(ci_column),
+                          b = nrow(gt), r = min(ci_column),
                           clip = "off",
                           name = "footnote")
-  }
-
-  # Prepare arrow object and row to put it
-  if(!is.null(arrow_lab)){
-    arrow_grob <- lapply(seq_along(xlim), function(i){
-      make_arrow(x0 = ref_line[i],
-                 arrow_lab = arrow_lab[[i]],
-                 gp = theme$xaxis,
-                 is_exp = xlog[i],
-                 xlim = xlim[[i]])
-    })
-
-    lb_ht <- sapply(arrow_grob, function(x){
-      convertHeight(max(grobHeight(x$children)) + unit(.5, "lines"),
-                    unitTo = "mm",
-                    valueOnly = TRUE)
-    })
-
-    gt <- gtable_add_rows(gt, heights = unit(max(lb_ht), "mm"))
-
   }
 
   for(j in ci_column){
@@ -353,12 +401,12 @@ forest <- function(data,
                           vert_line(x = ref_line[idx],
                                     gp = theme$refline,
                                     xlim = xlim[[idx]],
-                                    is_exp = xlog[idx]),
+                                    x_trans = x_trans[idx]),
                           t = 2,
                           l = j,
                           b = tot_row, r = j,
                           clip = "off",
-                          name = paste0("reference.line-", j))
+                          name = paste0("ref.line-", j))
 
     # Add the X-axis
     gt <- gtable_add_grob(gt, x_axis[[idx]],
@@ -374,7 +422,7 @@ forest <- function(data,
                             vert_line(x = vert_line[[idx]],
                                       gp = theme$vertline,
                                       xlim = xlim[[idx]],
-                                      is_exp = xlog[idx]),
+                                      x_trans = x_trans[idx]),
                             t = 2,
                             l = j,
                             b = tot_row, r = j,

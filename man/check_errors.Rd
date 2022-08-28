@@ -16,6 +16,7 @@ check_errors(
   xlog,
   is_summary,
   xlim,
+  x_trans,
   ticks_at,
   ticks_digits,
   title,
@@ -46,7 +47,8 @@ Provide a list of numerical vector element if different vertical line for each
 
 \item{ci_column}{Column number of the data the CI will be displayed.}
 
-\item{xlog}{If TRUE, x-axis tick marks assume values are exponential, e.g.
+\item{xlog}{\strong{This will be deprecated, please define it in \code{x_trans}}.
+If TRUE, x-axis tick marks assume values are exponential, e.g.
 for logistic regression (OR), survival estimates (HR), Poisson regression etc.
 Provide a logical vector if different conversion for each \code{ci_column} is
 desired.}
@@ -61,12 +63,25 @@ This will apply to all CI columns if provided, and will be calculated automatica
 for each column if not provided. This should be a list with the same length of
 \code{ci_column} if different \code{xlim} for different column is desired.}
 
+\item{x_trans}{Change axis scale, Allowed values are one of c("none", "log", "log2",
+"log10"). Default is \code{"none"}, no transformation will be applied.
+The formatted label will be used for \code{scale  = "log2"} or \code{"log10"}, change
+this in \code{x_trans}. Set this to \code{"log"} if x-axis tick marks assume values
+are exponential, e.g. for logistic regression (OR), survival estimates (HR), Poisson
+regression etc.}
+
 \item{ticks_at}{Set X-axis tick-marks point. This will apply to all CI columns if
 provided, and will be calculated automatically for each column if not provided.
-This should be a list if different \code{ticks_at} for different column is desired.}
+This should be a list if different \code{ticks_at} for different column is desired.
+Although many efforts have been made to automatically get a pretty ticks break,
+it will not give a perfect solution, especially if \code{'log2'} and \code{'log10'}
+defined for \code{x_trans}. Please provide this value if possible.}
 
-\item{ticks_digits}{Number of digits for the x-axis, default is 1. This should be
-a numerical vector if different rounding will be applied to different column.}
+\item{ticks_digits}{Number of digits for the x-axis, default is \code{1L}. This
+should be a numerical vector if different rounding will be applied to different
+column. If an integer is specified, for example \code{1L}, trailing zeros after
+the decimal mark will be dropped. Specify numeric, for example \code{1}, to keep
+the trailing zero after the decimal mark.}
 
 \item{title}{The text for the title.}
 

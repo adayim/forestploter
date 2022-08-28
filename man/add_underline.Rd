@@ -34,3 +34,6 @@ A \code{\link[gtable]{gtable}} object.
 \description{
 This function can be used to add underline to cells.
 }
+\seealso{
+\code{\link[grid]{gpar}} \code{\link[grid]{segmentsGrob}} \code{\link[gtable]{gtable_add_grob}}
+}

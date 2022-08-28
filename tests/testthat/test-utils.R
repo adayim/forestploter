@@ -34,7 +34,7 @@ test_that("Check make_xlim", {
   xlm <- make_xlim(lower = list(dt$low),
                    upper = list(dt$hi),
                    ref_line = 1,
-                   is_exp = TRUE)
+                   x_trans = "log")
   expect_equal(xlm, c(log(min(dt$low, na.rm = TRUE)),
                       log(max(dt$hi, na.rm = TRUE))))
 

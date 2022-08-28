@@ -1,27 +1,30 @@
-#' Create xaxis
+#' Create x-axis
 #'
-#' This function used to xais for the forest plot.
+#' This function used to x-axis for the forest plot.
 #'
+#' @inheritParams forest
 #' @param at Numerical vector, create ticks at given values.
-#' @param xlab X-axis label.
-#' @param is_exp If values is exponential.
 #' @param x0 Position of vertical line for 0 or 1.
-#' @param ticks_digits Number of digits for the x-axis, default is 1.
 #' @param gp Graphical parameters for arrow.
-#' @param xlim Limits for the x axis as a vector length 2, i.e. c(low, high)
 #'
 #' @return A grob
 #'
 #' @keywords internal
-make_xaxis <- function(at, xlab = NULL, x0 = 1, is_exp = FALSE, ticks_digits = 1, gp = gpar(), xlim){
+make_xaxis <- function(at, 
+                       xlab = NULL, 
+                       x0 = 1, 
+                       x_trans = "none", 
+                       ticks_digits = 1, 
+                       gp = gpar(), 
+                       xlim){
 
-  if(is_exp){
-    label_at <- log(round(exp(at), ticks_digits))
-    x0 <- log(x0)
-    labels <- format(round(exp(at), ticks_digits), nsmall = ticks_digits)
+  if(x_trans != "none"){
+    label_at <- xscale(round(xscale(at, scale = x_trans, type = "inv"), ticks_digits), scale = x_trans)
+    x0 <- xscale(x0, scale = x_trans)
+    labels <- xscale(at, scale = x_trans, type = "format", format_digits = ticks_digits)
   }else {
     label_at <- round(at, ticks_digits)
-    labels <- format(round(at, ticks_digits), nsmall = ticks_digits)
+    labels <- trimws(formatC(at, format="f", digits = ticks_digits, drop0trailing = is.integer(ticks_digits)))
   }
 
   maj <- linesGrob(x = unit(c(min(xlim), max(xlim)), "native"),

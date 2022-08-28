@@ -71,6 +71,7 @@ dt$`HR (95% CI)` <- ifelse(is.na(dt$se), "",
 # Define theme
 tm <- forest_theme(base_size = 10,
                    refline_col = "red",
+                   arrow_type = "closed",
                    footnote_col = "blue")
 
 p <- forest(dt[,c(1:3, 20:21)],
@@ -159,6 +160,7 @@ as group 1, `est_gp3` and `est_gp4` group 2.
 This is an example of multiple CI columns and groups:
 
 ``` r
+
 # Add blank column for the second CI column
 dt$`   ` <- paste(rep(" ", 20), collapse = " ")
 
@@ -186,7 +188,7 @@ p <- forest(dt[,c(1:2, 20, 3, 22)],
             ref_line = 1,
             arrow_lab = c("Placebo Better", "Treatment Better"),
             nudge_y = 0.2,
-            xlog = TRUE,
+            x_trans = "log",
             theme = tm)
 
 plot(p)

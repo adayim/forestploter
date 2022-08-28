@@ -16,7 +16,7 @@
 #' be passed as \code{gpar(col = "red")}.
 #' 
 #' @return A \code{\link[gtable]{gtable}} object.
-#'
+#' @seealso \code{\link[grid]{gpar}} \code{\link[grid]{editGrob}} 
 #' @export
 #'
 edit_plot <- function(plot,

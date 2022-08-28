@@ -17,27 +17,30 @@ makeci(
 )
 }
 \arguments{
-\item{est}{Point estimates, numeric}
+\item{est}{Point estimation. Can be a list for multiple columns
+and/or multiple groups. If the length of the list is larger than
+then length of \code{ci_column}, then the values reused for each column
+and considered as different groups.}
 
-\item{lower}{Lower bound}
+\item{lower}{Lower bound of the confidence interval, same as \code{est}.}
 
-\item{upper}{Upper bound}
+\item{upper}{Upper bound of the confidence interval, same as \code{est}.}
 
 \item{pch}{Numeric or character vector indicating what sort of plotting
 symbol to use. See \code{\link[grid]{pointsGrob}}.}
 
-\item{size}{Size of the point}
-
-\item{gp}{Grphical parameters.}
+\item{gp}{Graphical parameters.}
 
 \item{t_height}{The height confidence interval line end vertices. If
 value is \code{NULL} (default), no vertices will be drawn.}
 
-\item{xlim}{Limits for the x axis as a vector length 2, i.e. c(low, high)}
+\item{xlim}{Limits for the x axis as a vector of length 2, i.e. c(low, high). It
+will take the minimum and maximum of the lower and upper value if not provided.
+This will apply to all CI columns if provided, and will be calculated automatically
+for each column if not provided. This should be a list with the same length of
+\code{ci_column} if different \code{xlim} for different column is desired.}
 
-\item{nudge_y}{Offset Y coordinates.}
-
-\item{color}{Color of the point and the line}
+\item{nudge_y}{Horizontal adjustment to nudge groups by, must be within 0 to 1.}
 }
 \description{
 Create confidence interval

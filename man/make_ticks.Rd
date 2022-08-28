@@ -4,7 +4,7 @@
 \alias{make_ticks}
 \title{Set x-axis ticks}
 \usage{
-make_ticks(at = NULL, xlim, refline = 1, is_exp = FALSE)
+make_ticks(at = NULL, xlim, refline = 1, x_trans = "none")
 }
 \arguments{
 \item{at}{Numerical vector, create ticks at given values.}
@@ -15,7 +15,12 @@ This will apply to all CI columns if provided, and will be calculated automatica
 for each column if not provided. This should be a list with the same length of
 \code{ci_column} if different \code{xlim} for different column is desired.}
 
-\item{is_exp}{If values is exponential.}
+\item{x_trans}{Change axis scale, Allowed values are one of c("none", "log", "log2",
+"log10"). Default is \code{"none"}, no transformation will be applied.
+The formatted label will be used for \code{scale  = "log2"} or \code{"log10"}, change
+this in \code{x_trans}. Set this to \code{"log"} if x-axis tick marks assume values
+are exponential, e.g. for logistic regression (OR), survival estimates (HR), Poisson
+regression etc.}
 }
 \value{
 A vector

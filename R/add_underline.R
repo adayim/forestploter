@@ -16,7 +16,7 @@
 #' to \code{\link[grid]{segmentsGrob}}.
 #'
 #' @return A \code{\link[gtable]{gtable}} object.
-#' 
+#' @seealso \code{\link[grid]{gpar}} \code{\link[grid]{segmentsGrob}} \code{\link[gtable]{gtable_add_grob}} 
 #' @export
 #'
 add_underline <- function(plot,
