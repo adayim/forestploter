@@ -4,6 +4,7 @@ author: "Alimu Dayimu"
 date: "`r Sys.Date()`"
 output: 
   rmarkdown::html_vignette:
+    toc: yes
 vignette: >
   %\VignetteIndexEntry{Introduction to forestploter}
   %\VignetteEngine{knitr::rmarkdown}

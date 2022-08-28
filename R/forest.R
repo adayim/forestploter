@@ -187,8 +187,8 @@ forest <- function(data,
       stop("Estimate, lower and upper should be same length as data row number.")
 
     if(!is.null(sizes) & length(sizes) != 1){
-      sizes <- sqrt(1/sizes)
-      sizes <- sizes/max(sizes, na.rm = TRUE)
+      sizes <- sqrt(sizes)
+      # sizes <- sizes/max(sizes, na.rm = TRUE)
     }
 
     ci_col_list <- ci_column
