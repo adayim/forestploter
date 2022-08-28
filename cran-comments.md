@@ -9,7 +9,7 @@
 
 There were no ERRORs or WARNINGs. 
 
-There is one NOTE that is only found on Windows (Server 2022, R-devel 64-bit): 
+There is one NOTE aht only found on Windows (Server 2022, R-devel 64-bit): 
 
 ```
 * checking for detritus in the temp directory ... NOTE
@@ -20,4 +20,4 @@ As noted in [R-hub issue #503](https://github.com/r-hub/rhub/issues/503), this c
 
 ---
 
-This version includes 1 bug fix. 
+This version includes 3 new improvements and 2 new functions. 

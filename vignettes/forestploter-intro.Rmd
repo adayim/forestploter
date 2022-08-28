@@ -195,7 +195,7 @@ By default, all cells are left aligned. But it is possible to justify any cells 
 
 Same rule apply to change the background color by setting `core=list(bg_params=list(fill = c("#edf8e9", "#c7e9c0", "#a1d99b")))`. Change settings in `core` if you want to change graphical parameters for data, `colhead` for header. Change settings in `fg_params` to modify the text, see parameters for `textGrob()` in `grid` package. Change `bg_params` to modify settings for background graphical parameters, see `gpar()` in `grid` package. You should pass parameters as a list.
 
-Provide a single value if you want cells have the same justification or vector for each cells. As you can notice that the second example justify text by row using the provided vector, and the vector will be recycled. More details can be found [here](https://cran.r-project.org/web/packages/gridExtra/vignettes/tableGrob.html).  
+Provide a single value if you want cells have the same justification or vector for each cells. As you can notice that the second example justify text by row using the provided vector, and the vector will be recycled. More details can be found [here](https://CRAN.R-project.org/package=gridExtra/vignettes/tableGrob.html).  
 
 ```{r text-justification, out.width="80%", fig.width  = 7, fig.height = 3}
 dt <- dt[1:4, ]
@@ -346,7 +346,7 @@ ggplot2::ggsave(filename = "rplot.png", plot = p,
                 width = 7.5, height = 7.5, units = "in")
 ```
 
-Or you can get the width and height of the forestplot with `get_wh`, and use this width and height for saving. You can also use get the optimal scale for desired width and height with `get_scale`.
+Or you can get the width and height of the forestplot with `get_wh`, and use this width and height for saving. 
 
 ```{r eval=FALSE}
 # Get width and height
@@ -356,6 +356,14 @@ p
 dev.off()
 
 # Or get scale
+get_scale <- function(plot,
+                      width_wanted,
+                      height_wanted,
+                      unit = "in"){
+  h <- convertHeight(sum(plot$heights), unit, TRUE)
+  w <- convertWidth(sum(plot$widths), unit, TRUE)
+  max(c(w/width_wanted,  h/height_wanted))
+}
 p_sc <- get_scale(plot = p, width_wanted = 6, height_wanted = 4, unit = "in")
 ggplot2::ggsave(filename = "rplot.png", 
                 plot = p,
