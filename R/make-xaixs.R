@@ -1,6 +1,6 @@
-#' Create xaxis
+#' Create x-axis
 #'
-#' This function used to xais for the forest plot.
+#' This function used to x-axis for the forest plot.
 #'
 #' @inheritParams forest
 #' @param at Numerical vector, create ticks at given values.

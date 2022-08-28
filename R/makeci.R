@@ -4,7 +4,7 @@
 #' @inheritParams forest
 #' @param pch Numeric or character vector indicating what sort of plotting
 #' symbol to use. See \code{\link[grid]{pointsGrob}}.
-#' @param gp Grphical parameters.
+#' @param gp Graphical parameters.
 #' @param t_height The height confidence interval line end vertices. If 
 #' value is `NULL` (default), no vertices will be drawn.
 #'

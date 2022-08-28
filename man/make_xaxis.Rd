@@ -2,7 +2,7 @@
 % Please edit documentation in R/make-xaixs.R
 \name{make_xaxis}
 \alias{make_xaxis}
-\title{Create xaxis}
+\title{Create x-axis}
 \usage{
 make_xaxis(
   at,
@@ -24,7 +24,7 @@ be provided if different \code{xlab} for different column is desired.}
 
 \item{x_trans}{Change axis scale, Allowed values are one of c("none", "log", "log2",
 "log10"). Default is \code{"none"}, no transformation will be applied.
-The formated label will be used for \code{scale  = "log2"} or \code{"log10"}, change
+The formatted label will be used for \code{scale  = "log2"} or \code{"log10"}, change
 this in \code{x_trans}. Set this to \code{"log"} if x-axis tick marks assume values
 are exponential, e.g. for logistic regression (OR), survival estimates (HR), Poisson
 regression etc.}
@@ -47,6 +47,6 @@ for each column if not provided. This should be a list with the same length of
 A grob
 }
 \description{
-This function used to xais for the forest plot.
+This function used to x-axis for the forest plot.
 }
 \keyword{internal}

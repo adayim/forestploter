@@ -29,7 +29,7 @@ and considered as different groups.}
 \item{pch}{Numeric or character vector indicating what sort of plotting
 symbol to use. See \code{\link[grid]{pointsGrob}}.}
 
-\item{gp}{Grphical parameters.}
+\item{gp}{Graphical parameters.}
 
 \item{t_height}{The height confidence interval line end vertices. If
 value is \code{NULL} (default), no vertices will be drawn.}

@@ -4,10 +4,10 @@
 #' 
 #' @param scale axis scale. Allowed values are one of c("none", "log2", "log10",
 #'  "sqrt", "percent", "dollar", "scientific"); e.g.: .scale="log2".
-#' @param inv Inverse value back to its orignal.
+#' @param inv Inverse value back to its original.
 #' @param format logical value. If TRUE, axis tick mark labels will be formatted
 #'  when scale  = "log2" or "log10".
-#' @param format_digits Digits to keep while formating
+#' @param format_digits Digits to keep while formatting
 #' @keywords internal
 
 xscale <- function(x, 

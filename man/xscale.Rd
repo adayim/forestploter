@@ -15,9 +15,9 @@ xscale(
 \item{scale}{axis scale. Allowed values are one of c("none", "log2", "log10",
 "sqrt", "percent", "dollar", "scientific"); e.g.: .scale="log2".}
 
-\item{format_digits}{Digits to keep while formating}
+\item{format_digits}{Digits to keep while formatting}
 
-\item{inv}{Inverse value back to its orignal.}
+\item{inv}{Inverse value back to its original.}
 
 \item{format}{logical value. If TRUE, axis tick mark labels will be formatted
 when scale  = "log2" or "log10".}

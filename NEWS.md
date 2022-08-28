@@ -2,6 +2,7 @@
 
 * Added options for arrows for alignment and other controls.
 * Added `x_trans` options for different scales of x-axis.
+* Added `get_wh` and `get_scale` for saving plots.
 * `xlog` has been deprecated, should be define in `x_trans`.
 
 # forestploter 0.1.7

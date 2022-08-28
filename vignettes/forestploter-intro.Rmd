@@ -20,7 +20,7 @@ knitr::opts_chunk$set(
 
 [Forest plots](https://en.wikipedia.org/wiki/Forest_plot) are commonly used in the medical research publications, especially in [meta-analysis](https://en.wikipedia.org/wiki/Meta-analysis). And it can also be used to report the coefficients and confidence intervals (CIs) of the regression models.
 
-There are lots of packages out there can be used to create draw a forest plot. The most popular one is [forestpot](https://CRAN.R-project.org/package=forestplot). Packages specialised for the meta-analysis, like [meta](https://CRAN.R-project.org/package=meta), [metafor](https://CRAN.R-project.org/package=metafor) and [rmeta](https://CRAN.R-project.org/package=rmeta). Some other packages, like [ggforestplot](https://nightingalehealth.github.io/ggforestplot/index.html), tried to use [ggplot2](https://CRAN.R-project.org/package=ggplot2) to draw a forest plot, they are not available on the CRAN yet.
+There are lots of packages out there can be used to create draw a forest plot. The most popular one is [forestplot](https://CRAN.R-project.org/package=forestplot). Packages specialised for the meta-analysis, like [meta](https://CRAN.R-project.org/package=meta), [metafor](https://CRAN.R-project.org/package=metafor) and [rmeta](https://CRAN.R-project.org/package=rmeta). Some other packages, like [ggforestplot](https://nightingalehealth.github.io/ggforestplot/index.html), tried to use [ggplot2](https://CRAN.R-project.org/package=ggplot2) to draw a forest plot, they are not available on the CRAN yet.
 
 The main differences of the `forestploter` from the other packages are:
 
@@ -71,7 +71,7 @@ dt$`HR (95% CI)` <- ifelse(is.na(dt$se), "",
 head(dt)
 ```
 
-The data we have above will be uased as basic layout of the forest plot. The example below shows how to draw a simple forest plot. A footnote was added as a demonstration.
+The data we have above will be used as basic layout of the forest plot. The example below shows how to draw a simple forest plot. A footnote was added as a demonstration.
 
 ```{r simple-plot, out.width="80%", fig.width  = 8, fig.height = 6.5}
 p <- forest(dt[,c(1:3, 8:9)],
@@ -193,7 +193,7 @@ The `add_text` simply put the text in the plot without adding any rows to the pl
 ## Text justification and background
 By default, all cells are left aligned. But it is possible to justify any cells in the forest plot by setting parameters in `forest_theme`. Set `core=list(fg_params=list(hjust=0, x=0))` to set the contents of the table aligned to left, and set  `rowhead=list(fg_params=list(hjust=0.5, x=0.5)` to center header. Set `hjust=1` and `x=0.9` to right align text.   
 
-Same rule apply to change the background color by setting `core=list(bg_params=list(fill = c("#edf8e9", "#c7e9c0", "#a1d99b")))`. Change settings in `core` if you want to change graphical parameters for data, `colhead` for header. Change settings in `fg_params` to modify the text, see parameters for `textGrob()` in `grid` pacakge. Change `bg_params` to modify settings for background graphical parameters, see `gpar()` in `grid` pacakge. You should pass parameters as a list.
+Same rule apply to change the background color by setting `core=list(bg_params=list(fill = c("#edf8e9", "#c7e9c0", "#a1d99b")))`. Change settings in `core` if you want to change graphical parameters for data, `colhead` for header. Change settings in `fg_params` to modify the text, see parameters for `textGrob()` in `grid` package. Change `bg_params` to modify settings for background graphical parameters, see `gpar()` in `grid` package. You should pass parameters as a list.
 
 Provide a single value if you want cells have the same justification or vector for each cells. As you can notice that the second example justify text by row using the provided vector, and the vector will be recycled. More details can be found [here](https://cran.r-project.org/web/packages/gridExtra/vignettes/tableGrob.html).  
 
@@ -241,7 +241,7 @@ plot(p)
 
 Sometimes one may want to have multiple CI columns, each column may represent different outcome. If this is the case, one only need to provide a vector of the position of the columns to be drawn in the data. If the number of columns provided to draw the CI columns are same as number of `est`, one CI will be drawn into each CI columns. If the number of columns provided is less than number of `est`, the extra `est` will be considered as a group and will be drawn to the CI columns again. In the latter case, group number equals is calculated as `length(est)/length(ci_column)` and multiple columns will be drawn into one cell. As seen in the example below, the CI will be drawn in the column 3 and 5. The first and second elements in `est`, `lower` and `upper` will be drawn in column 3 and column 5.
 
-In a multiple groups example, two or more CI in one cell. The solution is simple, just provide all the values sequently to `est`, `lower` and `upper`. Which means, the first `n` elements in the `est`, `lower` and `upper` are considered as same group, same for next `n` elements. The `n` is determined by the length of `ci_column`. As it is shown in the example below, `est_gp1` and `est_gp2` will be drawn in column 3 and column 5 as normal, considered as **group 1**. The `est_gp3` and `est_gp4` will be drawn in column 3 and column 5 as normal, considered as **group 2**. 
+In a multiple groups example, two or more CI in one cell. The solution is simple, just provide all the values sequentially to `est`, `lower` and `upper`. Which means, the first `n` elements in the `est`, `lower` and `upper` are considered as same group, same for next `n` elements. The `n` is determined by the length of `ci_column`. As it is shown in the example below, `est_gp1` and `est_gp2` will be drawn in column 3 and column 5 as normal, considered as **group 1**. The `est_gp3` and `est_gp4` will be drawn in column 3 and column 5 as normal, considered as **group 2**. 
 
 This is an example of multiple CI columns and groups:
 
@@ -346,4 +346,22 @@ ggplot2::ggsave(filename = "rplot.png", plot = p,
                 width = 7.5, height = 7.5, units = "in")
 ```
 
+Or you can get the width and height of the forestplot with `get_wh`, and use this width and height for saving. You can also use get the optimal scale for desired width and height with `get_scale`.
 
+```{r eval=FALSE}
+# Get width and height
+p_wh <- get_wh(plot = p, unit = "in")
+png('rplot.png', res = 300, width = p_wh[1], height = p_wh[2], units = "in")
+p
+dev.off()
+
+# Or get scale
+p_sc <- get_scale(plot = p, width_wanted = 6, height_wanted = 4, unit = "in")
+ggplot2::ggsave(filename = "rplot.png", 
+                plot = p,
+                dpi = 300,
+                width = 6, 
+                height = 4,
+                units = "in",
+                scale = p_sc)
+```
