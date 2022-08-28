@@ -1,3 +1,7 @@
+# forestploter 0.1.9
+
+* Fix bugs in `szies`.
+
 # forestploter 0.1.8
 
 * Added options for arrows for alignment and other controls.
