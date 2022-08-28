@@ -380,7 +380,7 @@ forest <- function(data,
     footnote_grob <- textGrob(label = footnote,
                               gp = theme$footnote,
                               x = 0,
-                              y = 0.9,
+                              y = .8,
                               just = "left",
                               check.overlap = TRUE,
                               name = "footnote")
