@@ -374,3 +374,27 @@ test_that("x-scale trans", {
 
 })
 
+test_that("x-scale trans", {
+
+  dt <- dt[1:9, 1:6]
+
+  dt$se <- seq.int(0.2, 2, length.out = length(dt$est))
+
+  dt$` ` <- paste(rep(" ", 20), collapse = " ")
+  dt$`HR (95% CI)` <- ifelse(is.na(dt$se), "",
+                             sprintf("%.2f (%.2f to %.2f)",
+                                     dt$est, dt$low, dt$hi))
+
+  p <- forest(dt[,c(1:3, 7, 8:9)],
+              est = dt$est,
+              lower = dt$low,
+              upper = dt$hi,
+              sizes = dt$se,
+              ci_column = 5,
+              ticks_digits = 2L)
+
+  vdiffr::expect_doppelganger("different-sizes", p)
+
+
+
+})

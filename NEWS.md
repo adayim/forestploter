@@ -1,3 +1,7 @@
+# forestploter 0.2.0
+
+* Improve calculation of `szies`.
+
 # forestploter 0.1.9
 
 * Fix bugs in `szies`.

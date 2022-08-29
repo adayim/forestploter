@@ -12,6 +12,12 @@
 #' @param lower Lower bound of the confidence interval, same as \code{est}.
 #' @param upper Upper bound of the confidence interval, same as \code{est}.
 #' @param sizes Size of the point estimation box, can be a unit, vector or a list.
+#' The provided value will be used as the size of the point estimation in the CI,
+#' unless \code{precision = TRUE}.
+#' @param precision Convert size to precision if set to \code{"TRUE"}, default. 
+#' This will first calculate square root of the reciprocal of size, then devide 
+#' by overall maximum calculated value. The \code{sizes} for summary value will
+#'  be set to 1 if the sizes is a atomic vector or length if the sizes is a list.
 #' @param ref_line X-axis coordinates of zero line, default is 1. Provide an atomic
 #'  vector if different reference line for each \code{ci_column} is desired.
 #' @param vert_line Numerical vector, add additional vertical line at given value.
@@ -74,6 +80,7 @@ forest <- function(data,
                    lower,
                    upper,
                    sizes = 0.4,
+                   precision = TRUE,
                    ref_line = ifelse(x_trans %in% c("log", "log2", "log10"), 1, 0),
                    vert_line = NULL,
                    ci_column,
@@ -104,9 +111,6 @@ forest <- function(data,
   }
 
   # Point sizes
-  if(any(unlist(sizes) <= 0, na.rm = TRUE))
-    stop("Sizes must be larger than 0.")
-
   if(length(sizes) == 1 & !inherits(sizes, "list"))
     sizes <- rep(sizes, nrow(data))
 
@@ -140,76 +144,66 @@ forest <- function(data,
   if(length(xlab) == 1)
     xlab <- rep(xlab, length(ci_column))
 
-  if(inherits(est, "list") | inherits(lower, "list") | inherits(upper, "list")){
-
-    if(!inherits(est, "list") | !inherits(lower, "list") | !inherits(upper, "list"))
-      stop("Estimate, lower and upper must be a list if plan to plot CI for multiple columns.")
-
-    # Calculate group number
-    group_num <- length(est)/length(ci_column)
-    ci_col_list <- rep(ci_column, group_num)
-
-    # Replicate sizes to align with est and CIs
-    if(!inherits(sizes, "list"))
-      sizes <- rep(list(sizes), length(ci_col_list))
-
-    theme <- make_group_theme(theme = theme, group_num = group_num)
-
-    # Get color and pch
-    color_list <- rep(theme$ci$col, each = length(ci_column))
-    pch_list <- rep(theme$ci$pch, each = length(ci_column))
-    lty_list <- rep(theme$ci$lty, each = length(ci_column))
-    lwd_list <- rep(theme$ci$lwd, each = length(ci_column))
-
-    # Check nudge_y
-    if(nudge_y >= 1 || nudge_y < 0)
-      stop("`nudge_y` must be within 0 to 1.")
-
-    # Check nudge_y
-    if(group_num > 1 & nudge_y == 0)
-      nudge_y <- 0.1
-
-    # Create nudge_y vector
-    if(group_num > 1){
-      if((group_num %% 2) == 0){
-        rep_tm <- cumsum(c(nudge_y/2, rep(nudge_y, group_num)))
-        nudge_y <- c(rep_tm[1:(group_num/2)], -rep_tm[1:(group_num/2)])
-      }else{
-        rep_tm <- cumsum(c(0, rep(nudge_y, group_num)))
-        nudge_y <- c(0, rep_tm[2:(group_num/2)], -rep_tm[2:(group_num/2)])
-      }
-    }
-
-    nudge_y <- rep(nudge_y, each = length(ci_column))
-
-  }else{
-    if(length(unique(c(length(est), length(lower), length(upper), nrow(data)))) != 1)
-      stop("Estimate, lower and upper should be same length as data row number.")
-
-    if(!is.null(sizes) & length(sizes) != 1){
-      sizes <- sqrt(sizes)
-      # sizes <- sizes/max(sizes, na.rm = TRUE)
-    }
-
-    ci_col_list <- ci_column
-    color_list <- theme$ci$col
-    pch_list <- theme$ci$pch
-    lty_list <- theme$ci$lty
-    lwd_list <- theme$ci$lwd
-
-    group_num <- 1
-
+  if(is.atomic(est)){
     est <- list(est)
     lower <- list(lower)
     upper <- list(upper)
     sizes <- list(sizes)
-
   }
+
+  # Calculate group number
+  group_num <- length(est)/length(ci_column)
+  ci_col_list <- rep(ci_column, group_num)
+
+  theme <- make_group_theme(theme = theme, group_num = group_num)
+
+  # Get color and pch
+  color_list <- rep(theme$ci$col, each = length(ci_column))
+  pch_list <- rep(theme$ci$pch, each = length(ci_column))
+  lty_list <- rep(theme$ci$lty, each = length(ci_column))
+  lwd_list <- rep(theme$ci$lwd, each = length(ci_column))
+
+  # Check nudge_y
+  if(nudge_y >= 1 || nudge_y < 0)
+    stop("`nudge_y` must be within 0 to 1.")
+
+  # Check nudge_y
+  if(group_num > 1 & nudge_y == 0)
+    nudge_y <- 0.1
+
+  # Create nudge_y vector
+  if(group_num > 1){
+    if((group_num %% 2) == 0){
+      rep_tm <- cumsum(c(nudge_y/2, rep(nudge_y, group_num)))
+      nudge_y <- c(rep_tm[1:(group_num/2)], -rep_tm[1:(group_num/2)])
+    }else{
+      rep_tm <- cumsum(c(0, rep(nudge_y, group_num)))
+      nudge_y <- c(0, rep_tm[2:(group_num/2)], -rep_tm[2:(group_num/2)])
+    }
+  }
+
+  nudge_y <- rep(nudge_y, each = length(ci_column))
+
 
   if(group_num > 1 || is.null(is_summary)){
     if(!is.null(is_summary))
       warning("Summary CI is not supported for multiple groups and will be ignored.")
     is_summary <- rep(FALSE, nrow(data))
+  }
+
+  if(precision & length(unique(sapply(sizes, unique, USE.NAMES = FALSE))) != 1){
+    # Get the maximum reciprocal of size
+    max_sizes <- sapply(sizes, function(x){
+      x <- sqrt(1/x)
+      max(x[!is_summary], na.rm = TRUE)
+    }, USE.NAMES = FALSE)
+
+    sizes <- lapply(sizes, function(x){
+      wi <- sqrt(1/x)
+      wi <- wi/max(max_sizes, na.rm = TRUE)
+      wi[is_summary] <- 1/length(max_sizes)
+      return(wi)
+    })
   }
 
   # Positions of values in ci_column

@@ -33,6 +33,29 @@ check_errors <- function(data,
   # Check length
   if(length(unique(c(length(est), length(lower), length(upper)))) != 1)
     stop("Estimate, lower and upper should have the same length.")
+  
+  if(inherits(sizes, "list") & length(est) != length(sizes))
+    stop("sizes should have the same length as est.")
+
+  # Check size value
+  if(any(unlist(sizes) <= 0, na.rm = TRUE))
+    stop("Sizes must be larger than 0.")
+
+  # Check type
+  if(typeof(est) != typeof(lower) | typeof(est) != typeof(upper))
+    stop("Estimate, lower and upper should have the same type.")
+
+  if(inherits(est, "list") | inherits(lower, "list") | inherits(upper, "list")){
+    est_len <- vapply(est, length, FUN.VALUE = 1L)
+    lower_len <- vapply(lower, length, FUN.VALUE = 1L)
+    upper_len <- vapply(upper, length, FUN.VALUE = 1L)
+
+    if(length(unique(c(est_len, lower_len, upper_len))) != 1)
+      stop("All the elements in estimate, lower and upper should have the same length")
+    
+    if(inherits(sizes, "list") & length(unique(c(est_len, vapply(sizes, length, FUN.VALUE = 1L)))) != 1)
+      stop("All the elements in sizes should have the same length as estimate")
+  }
 
   # Check length for the summary
   if(!is.null(is_summary) && length(is_summary) != nrow(data))

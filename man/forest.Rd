@@ -10,6 +10,7 @@ forest(
   lower,
   upper,
   sizes = 0.4,
+  precision = TRUE,
   ref_line = ifelse(x_trans \%in\% c("log", "log2", "log10"), 1, 0),
   vert_line = NULL,
   ci_column,
@@ -39,7 +40,14 @@ and considered as different groups.}
 
 \item{upper}{Upper bound of the confidence interval, same as \code{est}.}
 
-\item{sizes}{Size of the point estimation box, can be a unit, vector or a list.}
+\item{sizes}{Size of the point estimation box, can be a unit, vector or a list.
+The provided value will be used as the size of the point estimation in the CI,
+unless \code{precision = TRUE}.}
+
+\item{precision}{Convert size to precision if set to \code{"TRUE"}, default.
+This will first calculate square root of the reciprocal of size, then devide
+by overall maximum calculated value. The \code{sizes} for summary value will
+be set to 1 if the sizes is a atomic vector or length if the sizes is a list.}
 
 \item{ref_line}{X-axis coordinates of zero line, default is 1. Provide an atomic
 vector if different reference line for each \code{ci_column} is desired.}
