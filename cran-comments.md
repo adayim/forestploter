@@ -1,6 +1,6 @@
 ## Test environments
 
-* local Windows install, R 4.1.0
+* local Windows install, R 4.2.1
 * Ubuntu Linux 20.04.1 LTS (on R-hub), R 4.2.0
 * Fedora Linux (on R-hub) R-devel
 * Windows (devel and release)
@@ -20,4 +20,4 @@ As noted in [R-hub issue #503](https://github.com/r-hub/rhub/issues/503), this c
 
 ---
 
-This version includes 1 bug fix. 
+This version includes 1 improvement. 

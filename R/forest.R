@@ -12,12 +12,8 @@
 #' @param lower Lower bound of the confidence interval, same as \code{est}.
 #' @param upper Upper bound of the confidence interval, same as \code{est}.
 #' @param sizes Size of the point estimation box, can be a unit, vector or a list.
-#' The provided value will be used as the size of the point estimation in the CI,
-#' unless \code{precision = TRUE}.
-#' @param precision Convert size to precision if set to \code{"TRUE"}, default. 
-#' This will first calculate square root of the reciprocal of size, then devide 
-#' by overall maximum calculated value. The \code{sizes} for summary value will
-#'  be set to 1 if the sizes is a atomic vector or length if the sizes is a list.
+#' If the value is not unique, this will first calculate square root of the 
+#' reciprocal of size, then devide by overall maximum calculated value. 
 #' @param ref_line X-axis coordinates of zero line, default is 1. Provide an atomic
 #'  vector if different reference line for each \code{ci_column} is desired.
 #' @param vert_line Numerical vector, add additional vertical line at given value.
@@ -80,7 +76,6 @@ forest <- function(data,
                    lower,
                    upper,
                    sizes = 0.4,
-                   precision = TRUE,
                    ref_line = ifelse(x_trans %in% c("log", "log2", "log10"), 1, 0),
                    vert_line = NULL,
                    ci_column,
@@ -191,7 +186,7 @@ forest <- function(data,
     is_summary <- rep(FALSE, nrow(data))
   }
 
-  if(precision & length(unique(sapply(sizes, unique, USE.NAMES = FALSE))) != 1){
+  if(length(unique(sapply(sizes, unique, USE.NAMES = FALSE))) != 1){
     # Get the maximum reciprocal of size
     max_sizes <- sapply(sizes, function(x){
       x <- sqrt(1/x)

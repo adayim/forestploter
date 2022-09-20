@@ -37,8 +37,8 @@ and considered as different groups.}
 \item{upper}{Upper bound of the confidence interval, same as \code{est}.}
 
 \item{sizes}{Size of the point estimation box, can be a unit, vector or a list.
-The provided value will be used as the size of the point estimation in the CI,
-unless \code{precision = TRUE}.}
+If the value is not unique, this will first calculate square root of the
+reciprocal of size, then devide by overall maximum calculated value.}
 
 \item{ref_line}{X-axis coordinates of zero line, default is 1. Provide an atomic
 vector if different reference line for each \code{ci_column} is desired.}
