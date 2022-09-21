@@ -12,8 +12,8 @@
 #' @param lower Lower bound of the confidence interval, same as \code{est}.
 #' @param upper Upper bound of the confidence interval, same as \code{est}.
 #' @param sizes Size of the point estimation box, can be a unit, vector or a list.
-#' If the value is not unique, this will first calculate square root of the 
-#' reciprocal of size, then devide by overall maximum calculated value. 
+#' If the value is not unique, this will first calculate square root of the
+#' reciprocal of size, then devide by overall maximum calculated value.
 #' @param ref_line X-axis coordinates of zero line, default is 1. Provide an atomic
 #'  vector if different reference line for each \code{ci_column} is desired.
 #' @param vert_line Numerical vector, add additional vertical line at given value.
@@ -105,10 +105,6 @@ forest <- function(data,
     x_trans[xlog] <- "log"
   }
 
-  # Point sizes
-  if(length(sizes) == 1 & !inherits(sizes, "list"))
-    sizes <- rep(sizes, nrow(data))
-
   # Set theme
   if(is.null(theme)){
     theme <- forest_theme()
@@ -138,11 +134,17 @@ forest <- function(data,
 
   if(length(xlab) == 1)
     xlab <- rep(xlab, length(ci_column))
+  
+    # Replicate sizes
+  if(inherits(est, "list") & length(sizes) == 1)
+    sizes <- rapply(est, function(x) ifelse(is.na(x), NA, sizes), how = "replace")
 
   if(is.atomic(est)){
     est <- list(est)
     lower <- list(lower)
     upper <- list(upper)
+    if(length(sizes) == 1)
+      sizes <- rep(sizes, nrow(data))
     sizes <- list(sizes)
   }
 
@@ -186,7 +188,7 @@ forest <- function(data,
     is_summary <- rep(FALSE, nrow(data))
   }
 
-  if(length(unique(sapply(sizes, unique, USE.NAMES = FALSE))) != 1){
+  if(length(unique(stats::na.omit(unlist(sizes)))) != 1){
     # Get the maximum reciprocal of size
     max_sizes <- sapply(sizes, function(x){
       x <- sqrt(1/x)
