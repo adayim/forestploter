@@ -20,4 +20,4 @@ As noted in [R-hub issue #503](https://github.com/r-hub/rhub/issues/503), this c
 
 ---
 
-This version includes 1 improvement. 
+This version includes 1 bug fix. 

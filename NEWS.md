@@ -1,3 +1,7 @@
+# forestploter 0.2.1
+
+* Fixed bug of point estimation not showing.
+
 # forestploter 0.2.0
 
 * Improve calculation of `szies`.
