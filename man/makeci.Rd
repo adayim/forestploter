@@ -2,18 +2,19 @@
 % Please edit documentation in R/makeci.R
 \name{makeci}
 \alias{makeci}
-\title{Create confidence interval}
+\title{Create confidence interval grob}
 \usage{
 makeci(
   est,
   lower,
   upper,
   pch,
-  size = 1,
+  sizes = 1,
   gp = gpar(),
   t_height = NULL,
   xlim = c(0, 1),
-  nudge_y = 0
+  nudge_y = 0,
+  name = NULL
 )
 }
 \arguments{
@@ -29,6 +30,10 @@ and considered as different groups.}
 \item{pch}{Numeric or character vector indicating what sort of plotting
 symbol to use. See \code{\link[grid]{pointsGrob}}.}
 
+\item{sizes}{Size of the point estimation box, can be a unit, vector or a list.
+If the value is not unique, this will first calculate square root of the
+reciprocal of size, then devide by overall maximum calculated value.}
+
 \item{gp}{Graphical parameters.}
 
 \item{t_height}{The height confidence interval line end vertices. If
@@ -41,8 +46,12 @@ for each column if not provided. This should be a list with the same length of
 \code{ci_column} if different \code{xlim} for different column is desired.}
 
 \item{nudge_y}{Horizontal adjustment to nudge groups by, must be within 0 to 1.}
+
+\item{name}{name of the grob.}
+}
+\value{
+A gTree object
 }
 \description{
-Create confidence interval
+Create confidence interval grob
 }
-\keyword{internal}

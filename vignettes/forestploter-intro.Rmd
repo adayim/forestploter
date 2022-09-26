@@ -158,10 +158,19 @@ The package has some functionality to modify the forestplot. Below is the functi
 # Change text color in row 3
 g <- edit_plot(p, row = 3, gp = gpar(col = "red", fontface = "italic"))
 
+# Change color of the CI
+g <- edit_plot(g,
+               row = c(3, 6, 11, 13),
+               col = 4,
+               part = "ci",
+               gp = gpar(col = "green"))
+
 # Bold grouping text
 g <- edit_plot(g,
                row = c(2, 5, 10, 13, 17, 20),
                gp = gpar(fontface = "bold"))
+
+
 
 # Edit background of row 5
 g <- edit_plot(g, row = 5, which = "background",

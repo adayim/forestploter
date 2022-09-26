@@ -1,6 +1,7 @@
 # forestploter 0.2.1
 
 * Fixed bug of point estimation not showing.
+* Able to change the color of the CI now.
 
 # forestploter 0.2.0
 

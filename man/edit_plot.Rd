@@ -8,7 +8,7 @@ edit_plot(
   plot,
   row = NULL,
   col = NULL,
-  part = c("body", "header"),
+  part = c("body", "header", "ci"),
   which = c("text", "background"),
   gp
 )
@@ -23,9 +23,12 @@ ignored if the \code{part} is "header".}
 \item{col}{A numeric value or vector indicating column to edit in the dataset.
 Will edit the whole column if left blank.}
 
-\item{part}{Part to edit, body (default) or header.}
+\item{part}{Part to edit, \code{"body"} (default), \code{"header"} or
+\code{"ci"} (confidence interval). This will not edit diamond shaped summary
+CI, please set it by \code{\link{forest_theme}}.}
 
-\item{which}{Which element to edit, text or background of the cell.}
+\item{which}{Which element to edit, text or background of the cell. This will
+be ignored if \code{part = "ci"}}
 
 \item{gp}{Pass \code{gpar} parameters, see \code{\link[grid]{gpar}}. It should
 be passed as \code{gpar(col = "red")}.}

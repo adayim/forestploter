@@ -82,6 +82,10 @@ test_that("Apply theme", {
   # Edit text in row 3
   g <- edit_plot(p, row = 3, gp = gpar(col = "red", fontface = "italic"))
 
+  # Edit CI
+  g <- edit_plot(g, row = 3, col = 4, part = "ci",
+                 gp = gpar(col = "red"))
+
   # Bold grouping text
   g <- edit_plot(g,
                  row = c(2, 5, 10, 13, 17, 20),

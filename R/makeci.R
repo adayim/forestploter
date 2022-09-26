@@ -1,20 +1,60 @@
 
-#' Create confidence interval
+#' Create confidence interval grob
 #'
 #' @inheritParams forest
 #' @param pch Numeric or character vector indicating what sort of plotting
 #' symbol to use. See \code{\link[grid]{pointsGrob}}.
 #' @param gp Graphical parameters.
-#' @param t_height The height confidence interval line end vertices. If 
+#' @param t_height The height confidence interval line end vertices. If
 #' value is `NULL` (default), no vertices will be drawn.
+#' @param name name of the grob.
+#' 
+#' @return A gTree object
 #'
+#' @export
+makeci <- function(est, lower, upper, pch, sizes = 1, gp = gpar(),
+                   t_height = NULL, xlim = c(0, 1), nudge_y = 0,
+                   name = NULL){
+
+  gTree(
+    est = est, lower = lower, upper = upper, pch = pch,
+    size = sizes, gp = gp, t_height = t_height,
+    xlim = xlim, nudge_y = nudge_y, name = name,
+    # vp = viewport(xscale = xlim),
+    cl = "makeci"
+  )
+
+}
+
+#' @export
+makeContext.makeci <- function(x) {
+  tbvp <- viewport(xscale = x$xlim)
+  if (is.null(x$vp))
+    x$vp <- tbvp
+  else
+    x$vp <- vpStack(x$vp, tbvp)
+  x
+}
+
+#' @export
+makeContent.makeci <- function(x) {
+
+  kids <- makeci_static(est = x$est, lower = x$lower, upper = x$upper,
+                        pch = x$pch, size = x$size, gp =  x$gp,
+                        t_height = x$t_height, xlim = x$xlim,
+                        nudge_y = x$nudge_y)
+
+  setChildren(x, kids)
+}
+
+# Main function for confidence interval
 #' @keywords internal
-makeci <- function(est, lower, upper, pch, size = 1, gp = gpar(), 
-                   t_height = NULL, xlim = c(0, 1), nudge_y = 0){
+makeci_static <- function(est, lower, upper, pch, size = 1, gp = gpar(),
+                          t_height = NULL, xlim = c(0, 1), nudge_y = 0){
 
   # Return NULL if the CI is outside
   if(upper < min(xlim) | lower > max(xlim))
-    return(NULL)
+    return(gList(nullGrob()))
 
   rec <- pointsGrob(x = unit(est, "native"),
                     y = 0.5 + nudge_y,
@@ -51,7 +91,7 @@ makeci <- function(est, lower, upper, pch, size = 1, gp = gpar(),
   } else {
     lng <- linesGrob(x=unit(c(lower, upper), "native"), y=0.5 + nudge_y,
                      gp=gp)
-    
+
     x_vert <- unit(c(lower, upper),  "native")
   }
 
@@ -65,34 +105,29 @@ makeci <- function(est, lower, upper, pch, size = 1, gp = gpar(),
                          gp = gp,
                          name = "T.end")
   }else {
-    vert <- NULL
+    vert <- nullGrob()
   }
-    
 
   # No dots if outside
   if(est > max(xlim) | est < min(xlim))
-    grobTree(gList(lng, vert),
-             vp = viewport(xscale = xlim),
-             name = "ci")
-  else
-    grobTree(gList(rec, lng, vert),
-             vp = viewport(xscale = xlim),
-             name = "ci")
+    rec <- nullGrob()
+
+  gList(rec, lng, vert)
 
 }
 
+
 # Create pooled summary diamond shape
-make_summary <- function(est, lower, upper, size = 1, gp, xlim){
+make_summary <- function(est, lower, upper, sizes = 1, gp, xlim){
 
   # Return NULL if the CI is outside
   if(upper < min(xlim) | lower > max(xlim))
     return(NULL)
 
   polygonGrob(x = unit(c(lower, est, upper, est), "native"),
-              y = unit(0.5 + c(0, 0.5 * size, 0, -0.5*size), "npc"),
+              y = unit(0.5 + c(0, 0.5 * sizes, 0, -0.5*sizes), "npc"),
               gp = gp,
               vp = viewport(xscale = xlim),
               name = "pooled.diamond")
 }
-
 

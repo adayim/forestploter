@@ -291,14 +291,14 @@ forest <- function(data,
         draw_ci <- make_summary(est = est[[col_num]][i],
                                 lower = lower[[col_num]][i],
                                 upper = upper[[col_num]][i],
-                                size = sizes[[col_num]][i],
+                                sizes = sizes[[col_num]][i],
                                 xlim = xlim[[col_indx[col_num]]],
                                 gp = theme$summary)
       }else {
         draw_ci <- makeci(est = est[[col_num]][i],
                           lower = lower[[col_num]][i],
                           upper = upper[[col_num]][i],
-                          size = sizes[[col_num]][i],
+                          sizes = sizes[[col_num]][i],
                           xlim = xlim[[col_indx[col_num]]],
                           pch = pch_list[col_num],
                           gp = gpar(lty = lty_list[col_num],
@@ -309,7 +309,7 @@ forest <- function(data,
       }
 
       # Skip if CI is outside xlim
-      if(is.null(draw_ci)){
+      if(upper[[col_num]][i] < min(xlim[[col_indx[col_num]]]) | lower[[col_num]][i] > max(xlim[[col_indx[col_num]]])){
         message("The confidence interval of row ", i, ", column ", current_col, ", group ", current_gp,
                 " is outside of the xlim.")
         next

@@ -10,8 +10,11 @@
 #' ignored if the \code{part} is "header".
 #' @param col A numeric value or vector indicating column to edit in the dataset.
 #'  Will edit the whole column if left blank.
-#' @param part Part to edit, body (default) or header.
-#' @param which Which element to edit, text or background of the cell.
+#' @param part Part to edit, \code{"body"} (default), \code{"header"} or 
+#' \code{"ci"} (confidence interval). This will not edit diamond shaped summary
+#' CI, please set it by \code{\link{forest_theme}}.
+#' @param which Which element to edit, text or background of the cell. This will
+#' be ignored if \code{part = "ci"}
 #' @param gp Pass \code{gpar} parameters, see \code{\link[grid]{gpar}}. It should
 #' be passed as \code{gpar(col = "red")}.
 #' 
@@ -22,7 +25,7 @@
 edit_plot <- function(plot,
                       row = NULL,
                       col = NULL,
-                      part = c("body", "header"),
+                      part = c("body", "header", "ci"),
                       which = c("text", "background"),
                       gp){
 
@@ -37,7 +40,8 @@ edit_plot <- function(plot,
 
   part <- switch(part,
                  body = "core",
-                 header = "colhead")
+                 header = "colhead",
+                 ci = "ci")
   which <- switch(which,
                   text = "fg",
                   background = "bg")
@@ -54,12 +58,18 @@ edit_plot <- function(plot,
     # Apply to whole body if missing row
     else
       row <- unique(l$b[which(l$name == "core-fg")])
-  }else {
+  }else if(part == "colhead"){
     # If header, add header part
     if(!is.null(row))
       row <- row + min(l$b[which(l$name == "colhead-fg")]) - 1
     else
       row <- min(l$b[which(l$name == "colhead-fg")])
+  }else{
+    if(is.null(row) | is.null(col))
+      stop("row and col must be difined for ci")
+
+    # Generate name of the ci grob
+    name_to_edit <- paste(part, apply(expand.grid(row, col), 1, paste, collapse="-"), sep = "-")
   }
 
   if(!is.null(col))
@@ -74,7 +84,10 @@ edit_plot <- function(plot,
 # Edit cell
 edit_cell <- function(plot, row, col, name="core-fg", ...){
   l <- plot$layout
-  ids <- which(l$t %in% row & l$l %in% col & l$name==name)
+  if(any(grepl("ci", name)))
+    ids <- which(grepl(paste(name, collapse = "|"), l$name))
+  else
+    ids <- which(l$t %in% row & l$l %in% col & grepl(paste(name, collapse = "|"), l$name))
   for (id in ids){
     newgrob <- editGrob(plot$grobs[id][[1]], ...)
     plot$grobs[id][[1]] <- newgrob
