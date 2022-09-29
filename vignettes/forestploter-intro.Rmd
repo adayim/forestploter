@@ -162,7 +162,7 @@ g <- edit_plot(p, row = 3, gp = gpar(col = "red", fontface = "italic"))
 g <- edit_plot(g,
                row = c(3, 6, 11, 13),
                col = 4,
-               part = "ci",
+               which = "ci",
                gp = gpar(col = "green"))
 
 # Bold grouping text
