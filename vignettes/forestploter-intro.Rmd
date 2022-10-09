@@ -21,14 +21,14 @@ knitr::opts_chunk$set(
 
 [Forest plots](https://en.wikipedia.org/wiki/Forest_plot) are commonly used in the medical research publications, especially in [meta-analysis](https://en.wikipedia.org/wiki/Meta-analysis). And it can also be used to report the coefficients and confidence intervals (CIs) of the regression models.
 
-There are lots of packages out there can be used to create draw a forest plot. The most popular one is [forestplot](https://CRAN.R-project.org/package=forestplot). Packages specialised for the meta-analysis, like [meta](https://CRAN.R-project.org/package=meta), [metafor](https://CRAN.R-project.org/package=metafor) and [rmeta](https://CRAN.R-project.org/package=rmeta). Some other packages, like [ggforestplot](https://nightingalehealth.github.io/ggforestplot/index.html), tried to use [ggplot2](https://CRAN.R-project.org/package=ggplot2) to draw a forest plot, they are not available on the CRAN yet.
+There are lots of packages out there can be used to draw a forest plot. The most popular one is [forestplot](https://CRAN.R-project.org/package=forestplot). Packages specialised for the meta-analysis, like [meta](https://CRAN.R-project.org/package=meta), [metafor](https://CRAN.R-project.org/package=metafor) and [rmeta](https://CRAN.R-project.org/package=rmeta). Some other packages, like [ggforestplot](https://nightingalehealth.github.io/ggforestplot/index.html) uses [ggplot2](https://CRAN.R-project.org/package=ggplot2) to draw a forest plot, it is not available on the CRAN yet.
 
 The main differences of the `forestploter` from the other packages are:
 
 * Focus on the forest plot.
 * Treat the forest plot as a table, elements are aligned in rows and columns. User has full control on what and how to display in the forest plot contents.
 * Graphical parameters are controlled with a theme.
-* Allow post plot editing.
+* Allowing post-hoc plot editing.
 * CIs in multiple columns and by groups.
 
 # Basic forest plot
@@ -94,18 +94,20 @@ plot(p)
 
 ## Change theme
 
-Now we will use the same data above, pretending that's what we have and add a summary point. We also want to change the graphical parameters for confidence interval and other parts of the plot. Theme of the forest plot can be adjusted with `forest_theme` function, check out the manual for more details.
+Now we will use the same data above, and add a summary point. We also want to change the graphical parameters for confidence interval and other parts of the plot. Theme of the forest plot can be adjusted with `forest_theme` function, check out the manual for more details.
 
 ```{r simple-plot-theme, out.width="80%", fig.width  = 7, fig.height = 6}
 dt_tmp <- rbind(dt[-1, ], dt[1, ])
 dt_tmp[nrow(dt_tmp), 1] <- "Overall"
-
+dt_tmp <- dt_tmp[1:11, ]
 # Define theme
 
 tm <- forest_theme(base_size = 10,
                    # Confidence interval point shape, line type/color/width
-                   ci_pch = 16,
+                   ci_pch = 15,
                    ci_col = "#762a83",
+                   ci_fill = "black",
+                   ci_alpha = 0.8,
                    ci_lty = 1,
                    ci_lwd = 1.5,
                    ci_Theight = 0.2, # Set an T end at the end of CI 
@@ -149,7 +151,7 @@ plot(pt)
 
 The package has some functionality to modify the forestplot. Below is the functions to edit various aspects of the plot:
 
-* The `edit_plot` function can be used to change the graphical parameter of text and background. For example the color or font face of some columns or rows. 
+* The `edit_plot` function can be used to change the graphical parameter of text, background and CI. For example the color or font face of some columns or rows. 
 * The `add_underline` function can be used to add a border to a specific row.
 * The `add_text` function can be used to add text to certain rows/columns. 
 * The `insert_text` function can be used to insert a row before or after a certain row and add text.
@@ -198,14 +200,14 @@ plot(g)
 
 ```
 
-The `add_text` simply put the text in the plot without adding any rows to the plot. Adding a blank row to the data before drawing a forest plot and use `add_text` function to add text to the row have the same effect as `insert_text`.
+The `add_text` function simply put the text in the plot without adding any rows to the plot. The `insert_text` function will insert a row and add text to the inserted row. This is the same as adding a blank row to the data before drawing a forest plot and use `add_text` to the row have. 
 
 ## Text justification and background
-By default, all cells are left aligned. But it is possible to justify any cells in the forest plot by setting parameters in `forest_theme`. Set `core=list(fg_params=list(hjust=0, x=0))` to set the contents of the table aligned to left, and set  `rowhead=list(fg_params=list(hjust=0.5, x=0.5)` to center header. Set `hjust=1` and `x=0.9` to right align text.   
+By default, all cells are left aligned. But it is possible to justify any cells in the forest plot by setting parameters in `forest_theme`. Set `core=list(fg_params=list(hjust=0, x=0))` to left align content, and `rowhead=list(fg_params=list(hjust=0.5, x=0.5)` to center header. Set `hjust=1` and `x=0.9` to right align text.   
 
-Same rule apply to change the background color by setting `core=list(bg_params=list(fill = c("#edf8e9", "#c7e9c0", "#a1d99b")))`. Change settings in `core` if you want to change graphical parameters for data, `colhead` for header. Change settings in `fg_params` to modify the text, see parameters for `textGrob()` in `grid` package. Change `bg_params` to modify settings for background graphical parameters, see `gpar()` in `grid` package. You should pass parameters as a list.
+Same rule apply to change the background color by setting `core=list(bg_params=list(fill = c("#edf8e9", "#c7e9c0", "#a1d99b")))`. Change settings in `core` if you want to change graphical parameters of contents, `colhead` for header. Change settings in `fg_params` to modify the text, see parameters for `textGrob()` in `grid` package. Change `bg_params` to modify settings for background graphical parameters, see `gpar()` in `grid` package. You should pass parameters as a list. More details can be found [here](https://CRAN.R-project.org/package=gridExtra/vignettes/tableGrob.html).  
 
-Provide a single value if you want cells have the same justification or vector for each cells. As you can notice that the second example justify text by row using the provided vector, and the vector will be recycled. More details can be found [here](https://CRAN.R-project.org/package=gridExtra/vignettes/tableGrob.html).  
+Provide a single value if you want cells have the same justification or vector for each cells. As you can notice that the second example justify text by row using the provided vector, and the vector will be recycled.
 
 ```{r text-justification, out.width="80%", fig.width  = 7, fig.height = 3}
 dt <- dt[1:4, ]
@@ -249,9 +251,9 @@ plot(p)
 
 # Multiple CI columns
 
-Sometimes one may want to have multiple CI columns, each column may represent different outcome. If this is the case, one only need to provide a vector of the position of the columns to be drawn in the data. If the number of columns provided to draw the CI columns are same as number of `est`, one CI will be drawn into each CI columns. If the number of columns provided is less than number of `est`, the extra `est` will be considered as a group and will be drawn to the CI columns again. In the latter case, group number equals is calculated as `length(est)/length(ci_column)` and multiple columns will be drawn into one cell. As seen in the example below, the CI will be drawn in the column 3 and 5. The first and second elements in `est`, `lower` and `upper` will be drawn in column 3 and column 5.
+Sometimes one may want to have multiple CI columns, each column may represent different outcome. If this is the case, one only needs to provide a vector of the position of the columns to be drawn in the data. If the number of columns provided to draw the CI columns are same as number of `est`, one CI will be drawn into each CI columns. If the number of columns provided is less than number of `est`, the extra `est` will be considered as a group and will be drawn to the CI columns sequentially. In the latter case, group number equals to number of `est` devided by number of `ci_column` and multiple columns will be drawn into one cell. As seen in the example below, the CI will be drawn in the column 3 and 5. The first and second elements in `est`, `lower` and `upper` will be drawn in column 3 and column 5.
 
-In a multiple groups example, two or more CI in one cell. The solution is simple, just provide all the values sequentially to `est`, `lower` and `upper`. Which means, the first `n` elements in the `est`, `lower` and `upper` are considered as same group, same for next `n` elements. The `n` is determined by the length of `ci_column`. As it is shown in the example below, `est_gp1` and `est_gp2` will be drawn in column 3 and column 5 as normal, considered as **group 1**. The `est_gp3` and `est_gp4` will be drawn in column 3 and column 5 as normal, considered as **group 2**. 
+In a multiple groups example, two or more CI in one cell. The solution is simple, provide all the values sequentially to `est`, `lower` and `upper`. Which means, the first `n` elements in the `est`, `lower` and `upper` are considered as same group, same for next `n` elements. The `n` is determined by the number of `ci_column`. As it is shown in the example below, `est_gp1` and `est_gp2` will be drawn in column 3 and column 5, considered as **group 1**. The `est_gp3` and `est_gp4` will be drawn in column 3 and column 5, considered as **group 2**. 
 
 This is an example of multiple CI columns and groups:
 

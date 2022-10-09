@@ -15,10 +15,11 @@
 #' \code{"ci"} (confidence interval). This will not edit diamond shaped summary
 #' CI, please change it with \code{\link{forest_theme}}.
 #' @param gp Pass \code{gpar} parameters, see \code{\link[grid]{gpar}}. It should
-#' be passed as \code{gpar(col = "red")}.
+#' be passed as \code{gpar(col = "red")}. For \code{which = "ci"}, please refer to
+#' \code{\link{forest_theme}} \code{ci_*} parameters for the editable elements.
 #'
 #' @return A \code{\link[gtable]{gtable}} object.
-#' @seealso \code{\link[grid]{gpar}} \code{\link[grid]{editGrob}}
+#' @seealso \code{\link[grid]{gpar}} \code{\link[grid]{editGrob}} \code{\link{forest_theme}}
 #' @export
 #'
 edit_plot <- function(plot,

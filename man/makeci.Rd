@@ -34,7 +34,8 @@ symbol to use. See \code{\link[grid]{pointsGrob}}.}
 If the value is not unique, this will first calculate square root of the
 reciprocal of size, then devide by overall maximum calculated value.}
 
-\item{gp}{Graphical parameters.}
+\item{gp}{Graphical parameters. Please refer to \code{\link{forest_theme}}
+for more details.}
 
 \item{t_height}{The height confidence interval line end vertices. If
 value is \code{NULL} (default), no vertices will be drawn.}

@@ -399,6 +399,47 @@ test_that("x-scale trans", {
 
   vdiffr::expect_doppelganger("different-sizes", p)
 
+})
 
+
+test_that("Test multiple group", {
+
+  dt <- dt[1:6, ]
+
+  tm <- forest_theme(base_size = 10,
+                     refline_lty = "solid",
+                     ci_pch = c(15, 18, 16, 17, 19),
+                     ci_col = c("#808080", "#00FF00", "royalblue3", "maroon3", "red"),
+                     ci_lwd = 2,
+                     footnote_col = "blue",
+                     legend_name = "Model:   ", legend_position = "bottom",
+                     legend_value = c("Cox  ", "Normal  ", "Clayton  ",  "Frank", "Gumbel"),
+                     vertline_lty = c("dashed", "dotdash"),
+                     vertline_col = c("#d6604d", "#A52A2A"))
+
+  p <- forest(dt[,c(1:2, 20)],
+              est = list(dt$est,
+                         dt$est_gp1,
+                         dt$est_gp2,
+                         dt$est_gp3,
+                         dt$est_gp4),
+              lower = list(dt$low,
+                           dt$low_gp1,
+                           dt$low_gp2,
+                           dt$low_gp3,
+                           dt$low_gp4),
+              upper = list(dt$hi,
+                           dt$hi_gp1,
+                           dt$hi_gp2,
+                           dt$hi_gp3,
+                           dt$hi_gp4),
+              ci_column = 3,
+              ref_line = 1,
+              arrow_lab = c("Placebo Better", "Treatment Better"),
+              nudge_y = 0.2,
+              xlim = c(0, 4),
+              theme = tm)
+
+  vdiffr::expect_doppelganger("multiple-groups", p)
 
 })

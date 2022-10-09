@@ -7,14 +7,11 @@
 legend_grob(
   name = "",
   label,
-  color,
   position = c("right", "top", "bottom"),
   hgap = unit(0.1, "lines"),
   vgap = unit(0.5, "lines"),
   pch = 15,
-  lty = 1,
-  fontsize = 12,
-  fontfamily = "",
+  gp = gpar(lty = 1, col = "black", fill = "black", fontsize = 12, fontfamily = ""),
   ...
 )
 }
@@ -22,8 +19,6 @@ legend_grob(
 \item{name}{Character string, Legend name.}
 
 \item{label}{legend labels (expressions).}
-
-\item{color}{Colors for the group}
 
 \item{position}{Position of the legend, \code{"right"}, \code{"top"},
 \code{"bottom"}.}
@@ -36,11 +31,7 @@ see \code{\link[grid]{legendGrob}} for details.}
 
 \item{pch}{Legend symbol.}
 
-\item{lty}{Line type.}
-
-\item{fontsize}{Font size of the legend.}
-
-\item{fontfamily}{Font family of the legend.}
+\item{gp}{Graphical parameters.}
 
 \item{...}{Other parameters, not used currently.}
 }

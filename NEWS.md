@@ -1,3 +1,9 @@
+# forestploter 0.2.2
+
+* Fixed a bug of not drawing groups larger than 3.
+* Able to change the color of the point estimation.
+* Able to change the transparency of the point estimation.
+
 # forestploter 0.2.1
 
 * Fixed bug of point estimation not showing.

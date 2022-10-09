@@ -9,6 +9,8 @@ forest_theme(
   base_family = "",
   ci_pch = 15,
   ci_col = "black",
+  ci_alpha = 1,
+  ci_fill = NULL,
   ci_lty = 1,
   ci_lwd = 1,
   ci_Theight = NULL,
@@ -53,6 +55,15 @@ forest plot is grouped.}
 
 \item{ci_col}{Color of the CI. A vector of color should be provided for
 the grouped forest plot. An internal color set will be if only not.}
+
+\item{ci_alpha}{Scalar value, alpha channel for transparency of point estimation.
+A small vertical line will be added to indicate the point estimation if this
+is not equals to 1.}
+
+\item{ci_fill}{Color fill the point estimation. A vector of color should be
+provided for the grouped forest plot. If this is \code{NULL} (default), the
+value will inherit from \code{"ci_col"}. This is valid only if
+\code{ci_pch} within 15:25.}
 
 \item{ci_lty}{Line type of the CI. A vector of line type should be provided
 for the grouped forest plot.}

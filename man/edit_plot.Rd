@@ -30,7 +30,8 @@ Will edit the whole column if left blank.}
 CI, please change it with \code{\link{forest_theme}}.}
 
 \item{gp}{Pass \code{gpar} parameters, see \code{\link[grid]{gpar}}. It should
-be passed as \code{gpar(col = "red")}.}
+be passed as \code{gpar(col = "red")}. For \code{which = "ci"}, please refer to
+\code{\link{forest_theme}} \code{ci_*} parameters for the editable elements.}
 }
 \value{
 A \code{\link[gtable]{gtable}} object.
@@ -40,5 +41,5 @@ This function is used to edit the graphical parameter of text and background
 of the forest plot.
 }
 \seealso{
-\code{\link[grid]{gpar}} \code{\link[grid]{editGrob}}
+\code{\link[grid]{gpar}} \code{\link[grid]{editGrob}} \code{\link{forest_theme}}
 }
