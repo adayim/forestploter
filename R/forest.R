@@ -134,7 +134,7 @@ forest <- function(data,
 
   if(length(xlab) == 1)
     xlab <- rep(xlab, length(ci_column))
-  
+
     # Replicate sizes
   if(inherits(est, "list") & length(sizes) == 1)
     sizes <- rapply(est, function(x) ifelse(is.na(x), NA, sizes), how = "replace")
@@ -156,6 +156,8 @@ forest <- function(data,
 
   # Get color and pch
   color_list <- rep(theme$ci$col, each = length(ci_column))
+  fill_list <- rep(theme$ci$fill, each = length(ci_column))
+  alpha_list <- rep(theme$ci$alpha, each = length(ci_column))
   pch_list <- rep(theme$ci$pch, each = length(ci_column))
   lty_list <- rep(theme$ci$lty, each = length(ci_column))
   lwd_list <- rep(theme$ci$lwd, each = length(ci_column))
@@ -174,9 +176,12 @@ forest <- function(data,
       rep_tm <- cumsum(c(nudge_y/2, rep(nudge_y, group_num)))
       nudge_y <- c(rep_tm[1:(group_num/2)], -rep_tm[1:(group_num/2)])
     }else{
-      rep_tm <- cumsum(c(0, rep(nudge_y, group_num)))
-      nudge_y <- c(0, rep_tm[2:(group_num/2)], -rep_tm[2:(group_num/2)])
+      rep_tm <- cumsum(c(0, rep(nudge_y, group_num %/% 2)))
+      nudge_y <- unique(c(rep_tm, - rep_tm))
     }
+
+    nudge_y <- sort(nudge_y, decreasing = TRUE)
+
   }
 
   nudge_y <- rep(nudge_y, each = length(ci_column))
@@ -303,7 +308,9 @@ forest <- function(data,
                           pch = pch_list[col_num],
                           gp = gpar(lty = lty_list[col_num],
                                     lwd = lwd_list[col_num],
-                                    col = color_list[col_num]),
+                                    col = color_list[col_num],
+                                    fill = fill_list[col_num],
+                                    alpha = alpha_list[col_num]),
                           t_height = theme$ci$t_height,
                           nudge_y = nudge_y[col_num])
       }
@@ -437,8 +444,9 @@ forest <- function(data,
 
     legend <- theme$legend
     legend$pch <- theme$ci$pch
-    legend$color <- theme$ci$col
-    legend$lty <- theme$ci$lty
+    legend$gp$col <- theme$ci$col
+    legend$gp$lty <- theme$ci$lty
+    legend$gp$fill <- theme$ci$fill
 
 
     leg_grob <- do.call(legend_grob, legend)
