@@ -64,16 +64,17 @@ makeci_static <- function(est, lower, upper, pch, size = 1, gp = gpar(),
                     y = 0.5 + nudge_y,
                     pch = pch,
                     size = unit(size, "char"),
-                    gp = rec_gp)
+                    gp = rec_gp,
+                    name = "point")
 
   # Center indication if alpha is not 1
   if(gp$alpha != 1){
-    gp$alpha <- 1
-    cent_gp <- pointsGrob(x = unit(est, "native"),
-                          y = 0.5 + nudge_y,
-                          pch = 3,
-                          size = unit(size*.6, "char"),
-                          gp = gp)
+    gp$alpha <- NULL
+    cent_gp <- segmentsGrob(x0 = unit(est, "native"), x1 = unit(est, "native"),
+                            y0 = unit(0.5 + nudge_y, "npc") - unit(size*.2, "char"),
+                            y1 = unit(0.5 + nudge_y, "npc") + unit(size*.2, "char"),
+                            gp = gp, name = "center")
+
   }else {
     cent_gp <- nullGrob()
   }    

@@ -295,6 +295,14 @@ make_group_theme <- function(theme, group_num){
     if(group_num > 1 & length(theme$ci$col) == 1)
       theme$ci$col <- col_set[1:group_num]
 
+  # If fill is given and not have the same length as group number
+    if(group_num > 1 & length(theme$ci$fill) == 1)
+      theme$ci$fill <- rep_len(theme$ci$fill, group_num)
+  
+  # If alpha is given and not have the same length as group number
+    if(group_num > 1 & length(theme$ci$alpha) == 1)
+      theme$ci$alpha <- rep_len(theme$ci$alpha, group_num)
+
     # If line type is given and not have the same length as group number
     if(group_num > 1 & length(theme$ci$lty) == 1)
       theme$ci$lty <- rep_len(theme$ci$lty, group_num)
