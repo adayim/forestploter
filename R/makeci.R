@@ -4,7 +4,8 @@
 #' @inheritParams forest
 #' @param pch Numeric or character vector indicating what sort of plotting
 #' symbol to use. See \code{\link[grid]{pointsGrob}}.
-#' @param gp Graphical parameters.
+#' @param gp Graphical parameters. Please refer to \code{\link{forest_theme}}
+#' for more details.
 #' @param t_height The height confidence interval line end vertices. If
 #' value is `NULL` (default), no vertices will be drawn.
 #' @param name name of the grob.
@@ -56,11 +57,26 @@ makeci_static <- function(est, lower, upper, pch, size = 1, gp = gpar(),
   if(upper < min(xlim) | lower > max(xlim))
     return(gList(nullGrob()))
 
+  # Point estimation
+  rec_gp <- gp
+  rec_gp$col <- gp$fill
   rec <- pointsGrob(x = unit(est, "native"),
                     y = 0.5 + nudge_y,
                     pch = pch,
                     size = unit(size, "char"),
-                    gp = gp)
+                    gp = rec_gp)
+
+  # Center indication if alpha is not 1
+  if(gp$alpha != 1){
+    gp$alpha <- 1
+    cent_gp <- pointsGrob(x = unit(est, "native"),
+                          y = 0.5 + nudge_y,
+                          pch = 3,
+                          size = unit(size*.6, "char"),
+                          gp = gp)
+  }else {
+    cent_gp <- nullGrob()
+  }    
 
   if(upper > max(xlim) | lower < min(xlim)){
     # Both side arrow
@@ -112,7 +128,7 @@ makeci_static <- function(est, lower, upper, pch, size = 1, gp = gpar(),
   if(est > max(xlim) | est < min(xlim))
     rec <- nullGrob()
 
-  gList(rec, lng, vert)
+  gList(cent_gp, lng, vert, rec)
 
 }
 

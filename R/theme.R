@@ -26,6 +26,13 @@
 #' forest plot is grouped.
 #' @param ci_col Color of the CI. A vector of color should be provided for
 #' the grouped forest plot. An internal color set will be if only not.
+#' @param ci_fill Color fill the point estimation. A vector of color should be
+#'  provided for the grouped forest plot. If this is \code{NULL} (default), the 
+#' value will inherit from \code{"ci_col"}. This is valid only if 
+#' \code{ci_pch} within 15:25.
+#' @param ci_alpha Scalar value, alpha channel for transparency of point estimation.
+#'  A small vertical line will be added to indicate the point estimation if this
+#'  is not equals to 1.
 #' @param ci_lty Line type of the CI. A vector of line type should be provided
 #' for the grouped forest plot.
 #' @param ci_lwd Line width of the CI. A vector of line type should be provided
@@ -85,6 +92,8 @@ forest_theme <- function(base_size = 12,
                          # Confidence interval
                          ci_pch = 15,
                          ci_col = "black",
+                         ci_alpha = 1,
+                         ci_fill = NULL,
                          ci_lty = 1,
                          ci_lwd = 1,
                          ci_Theight = NULL,
@@ -131,6 +140,12 @@ forest_theme <- function(base_size = 12,
 
     if (!is.unit(arrow_length)) arrow_length <- unit(arrow_length, units = "inches")
 
+    if(!is.null(ci_fill) & !all(ci_pch %in% 15:25))
+      warning("`ci_pch` is not within 15:25, `ci_fill` will be ignored.")
+
+    if(length(ci_alpha) > 1)
+      stop("`ci_alpha` must be of length 1.")
+
     # Default color set
     col_set <- c("#e41a1c","#377eb8","#4daf4a","#984ea3","#ff7f00",
                 "#ffff33","#a65628","#f781bf","#999999")
@@ -140,7 +155,7 @@ forest_theme <- function(base_size = 12,
       stop("`ci_Theight` must be of length 1.")
 
     # Recycle if one of the values
-    max_len <- list(legend_value, ci_pch, ci_col, ci_lty, ci_lwd)
+    max_len <- list(legend_value, ci_pch, ci_col, ci_fill, ci_lty, ci_lwd)
     max_len <- max(vapply(max_len, length, FUN.VALUE = 1L), na.rm = TRUE)
 
     if(max_len > 1){
@@ -150,9 +165,19 @@ forest_theme <- function(base_size = 12,
       ci_pch <- rep_len(ci_pch, max_len)
       ci_lty <- rep_len(ci_lty, max_len)
       ci_lwd <- rep_len(ci_lwd, max_len)
+      ci_alpha <- rep_len(ci_alpha, max_len)
 
       if(length(ci_col) == 1)
         ci_col <- col_set[1:max_len]
+
+      if(is.null(ci_fill)){
+        ci_fill <- ci_col
+      }else {
+        if(length(ci_fill) == 1)
+          ci_fill <- rep_len(ci_fill, max_len)
+        if(length(ci_fill) > 1 & length(ci_fill) != length(ci_col))
+          stop("`ci_fill` must be of length 1 or same length as `ci_col`.")
+      }
 
     }
 
@@ -172,7 +197,13 @@ forest_theme <- function(base_size = 12,
                         fontfamily = base_family)
 
     # Confidence interval
-    ci_gp <- list(pch = ci_pch, col = ci_col, lty = ci_lty, lwd = ci_lwd, t_height = ci_Theight)
+    ci_gp <- list(pch = ci_pch, 
+                  col = ci_col, 
+                  fill = ci_fill, 
+                  lty = ci_lty, 
+                  alpha = ci_alpha,
+                  lwd = ci_lwd, 
+                  t_height = ci_Theight)
 
     # X-axis
     xaxis_gp <- gpar(lwd = xaxis_lwd,
@@ -192,8 +223,8 @@ forest_theme <- function(base_size = 12,
                         col = footnote_col)
 
     # Legend
-    legend_gp <- list(fontsize = base_size,
-                      fontfamily = base_family,
+    legend_gp <- list(gp = gpar(fontsize = base_size,
+                                fontfamily = base_family),
                       name = legend_name,
                       position = legend_position,
                       label = legend_value)
