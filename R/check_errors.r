@@ -36,6 +36,9 @@ check_errors <- function(data,
   
   if(inherits(sizes, "list") & length(est) != length(sizes))
     stop("sizes should have the same length as est.")
+  
+  if(!is.numeric(unlist(sizes)))
+    stop("Sizes must be numeric.")
 
   # Check size value
   if(any(unlist(sizes) <= 0, na.rm = TRUE))
@@ -44,6 +47,9 @@ check_errors <- function(data,
   # Check type
   if(typeof(est) != typeof(lower) | typeof(est) != typeof(upper))
     stop("Estimate, lower and upper should have the same type.")
+  
+  if(!is.numeric(unlist(est)) | !is.numeric(unlist(lower)) | !is.numeric(unlist(upper)))
+    stop("Estimate, lower and upper must be numeric.")
 
   if(inherits(est, "list") | inherits(lower, "list") | inherits(upper, "list")){
     est_len <- vapply(est, length, FUN.VALUE = 1L)
@@ -60,6 +66,9 @@ check_errors <- function(data,
   # Check length for the summary
   if(!is.null(is_summary) && length(is_summary) != nrow(data))
     stop("is_summary should have same legnth as data rownumber.")
+  
+  if(!is.null(is_summary) && ! is.logical(is_summary))
+    stop("is_summary must be logical vector.")
 
   # Check ref_line
   if(!is.numeric(ref_line) || !length(ref_line) %in% c(1, length(ci_column)))
