@@ -291,6 +291,11 @@ forest <- function(data,
     for(i in 1:nrow(data)){
       if(is.na(est[[col_num]][i]))
         next
+      
+      if(is.na(lower[[col_num]][i]) || is.na(upper[[col_num]][i])){
+        warning("Missing lower and/or upper limit on column", current_col, " row ", i)
+        next
+      }
 
       if(is_summary[i]){
         draw_ci <- make_summary(est = est[[col_num]][i],
