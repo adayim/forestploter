@@ -17,8 +17,7 @@ add_underline(
 
 \item{row}{A numeric value or vector indicating row number to add underline.
 This is corresponding to the data row number. Remember to account for any
-text inserted. This will be ignored if the \code{part} is  "header" and the
-underline will be drawn under the header column.}
+text inserted.}
 
 \item{col}{A numeric value or vector indicating the columns to add underline.}
 
@@ -32,8 +31,9 @@ to \code{\link[grid]{segmentsGrob}}.}
 A \code{\link[gtable]{gtable}} object.
 }
 \description{
-This function can be used to add underline to cells.
+This function is a wrapper of \code{\link{add_border}} can be used to add
+underline to cells.
 }
 \seealso{
-\code{\link[grid]{gpar}} \code{\link[grid]{segmentsGrob}} \code{\link[gtable]{gtable_add_grob}}
+\code{\link[grid]{gpar}} \code{\link[grid]{segmentsGrob}} \code{\link[gtable]{gtable_add_grob}}  \code{\link{add_border}}
 }

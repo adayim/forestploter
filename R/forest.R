@@ -48,11 +48,6 @@
 #' this in \code{x_trans}. Set this to \code{"log"} if x-axis tick marks assume values
 #'  are exponential, e.g. for logistic regression (OR), survival estimates (HR), Poisson
 #'  regression etc.
-#' @param xlog \strong{This will be deprecated, please define it in \code{x_trans}}.
-#' If TRUE, x-axis tick marks assume values are exponential, e.g.
-#' for logistic regression (OR), survival estimates (HR), Poisson regression etc.
-#' Provide a logical vector if different conversion for each \code{ci_column} is
-#' desired.
 #' @param xlab X-axis labels, it will be put under the x-axis. An atomic vector should
 #' be provided if different \code{xlab} for different column is desired.
 #' @param footnote Footnote for the forest plot, will be aligned at left bottom
@@ -85,7 +80,6 @@ forest <- function(data,
                    ticks_digits = 1L,
                    arrow_lab = NULL,
                    x_trans = "none",
-                   xlog = FALSE,
                    xlab = NULL,
                    footnote = NULL,
                    title = NULL,
@@ -94,16 +88,9 @@ forest <- function(data,
 
   check_errors(data = data, est = est, lower = lower, upper = upper, sizes = sizes,
                ref_line = ref_line, vert_line = vert_line, ci_column = ci_column,
-               xlog = xlog, is_summary = is_summary, xlim = xlim, ticks_at = ticks_at,
+               is_summary = is_summary, xlim = xlim, ticks_at = ticks_at,
                ticks_digits = ticks_digits, arrow_lab = arrow_lab, xlab = xlab,
                title = title, x_trans = x_trans)
-
-  # put message
-  if(any(xlog)){
-    message("xlog will be deprecated soon, please use the `x_trans` instead.")
-    x_trans <- rep("none", length(xlog))
-    x_trans[xlog] <- "log"
-  }
 
   # Set theme
   if(is.null(theme)){

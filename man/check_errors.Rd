@@ -13,7 +13,6 @@ check_errors(
   ref_line,
   vert_line,
   ci_column,
-  xlog,
   is_summary,
   xlim,
   x_trans,
@@ -48,12 +47,6 @@ Provide a list of numerical vector element if different vertical line for each
 \code{ci_column} is desired.}
 
 \item{ci_column}{Column number of the data the CI will be displayed.}
-
-\item{xlog}{\strong{This will be deprecated, please define it in \code{x_trans}}.
-If TRUE, x-axis tick marks assume values are exponential, e.g.
-for logistic regression (OR), survival estimates (HR), Poisson regression etc.
-Provide a logical vector if different conversion for each \code{ci_column} is
-desired.}
 
 \item{is_summary}{A logical vector indicating if the value is a summary value,
 which will have a diamond shape for the estimate. Can not be used with multiple

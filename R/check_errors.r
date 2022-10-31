@@ -14,7 +14,6 @@ check_errors <- function(data,
                          ref_line,
                          vert_line,
                          ci_column,
-                         xlog ,
                          is_summary,
                          xlim,
                          x_trans,
@@ -73,10 +72,6 @@ check_errors <- function(data,
   # Check ref_line
   if(!is.numeric(ref_line) || !length(ref_line) %in% c(1, length(ci_column)))
     stop("ref_line should be of length 1 or the same length as ci_column.")
-
-  # Check the xlog
-  if(!is.logical(xlog) || !length(xlog) %in% c(1, length(ci_column)))
-    stop("xlog must be logical and of length 1 or the same length as ci_column.")
   
   # Check the x_trans
   if(!all(x_trans %in% c("none", "log", "log2", "log10")) || !length(x_trans) %in% c(1, length(ci_column)))

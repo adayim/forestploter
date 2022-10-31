@@ -58,18 +58,18 @@ test_that("check_errors works", {
                       lower = dt$low,
                       upper = dt$hi,
                       ref_line = 1,
-                      xlog = c(T, F),
+                      x_trans = c("log", "none"),
                       ci_column = 3),
-               "xlog must be logical and of length 1 or the same length as ci_column.")
+               "x_trans must be in \"none\", \"log\", \"log2\", \"log10\" and of length 1 or the same length as ci_column.")
 
   expect_error(forest(dt[,c(1:3, 20:21)],
                       est = dt$est,
                       lower = dt$low,
                       upper = dt$hi,
                       ref_line = 1,
-                      xlog = c(1, 0),
+                      x_trans = "log5",
                       ci_column = 3),
-               "xlog must be logical and of length 1 or the same length as ci_column.")
+               "x_trans must be in \"none\", \"log\", \"log2\", \"log10\" and of length 1 or the same length as ci_column.")
 
   expect_error(forest(dt[,c(1:3, 20:21)],
                       est = dt$est,

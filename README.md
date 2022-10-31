@@ -98,7 +98,7 @@ plot(p)
 Sometimes one may want to change the color or font face of some columns.
 Or one may want to insert text into certain rows. Or may want an
 underline to separate by group. The function `edit_plot`, `add_text`,
-`insert_text` and `add_underline` can achieve these. Below is how to do
+`insert_text` and `add_border` can achieve these. Below is how to do
 this:
 
 ``` r
@@ -118,7 +118,10 @@ g <- insert_text(g,
                  gp = gpar(fontface = "bold"))
 
 # Add underline at the bottom of the header
-g <- add_underline(g, part = "header")
+g <- add_border(g, part = "header", row = 1, where = "top")
+g <- add_border(g, part = "header", row = 2, where = "bottom")
+g <- add_border(g, part = "header", row = 1, col = 2:3, 
+                gp = gpar(lwd = 2))
 
 # Edit background of row 5
 g <- edit_plot(g, row = 5, which = "background",
@@ -130,7 +133,7 @@ g <- insert_text(g,
                  row = 10,
                  just = "left",
                  gp = gpar(cex = 0.6, col = "green", fontface = "italic"))
-
+g <- add_border(g, row = 10, col = 1:3, where = "top")
 plot(g)
 ```
 

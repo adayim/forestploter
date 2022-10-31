@@ -19,7 +19,6 @@ forest(
   ticks_digits = 1L,
   arrow_lab = NULL,
   x_trans = "none",
-  xlog = FALSE,
   xlab = NULL,
   footnote = NULL,
   title = NULL,
@@ -85,12 +84,6 @@ The formatted label will be used for \code{scale  = "log2"} or \code{"log10"}, c
 this in \code{x_trans}. Set this to \code{"log"} if x-axis tick marks assume values
 are exponential, e.g. for logistic regression (OR), survival estimates (HR), Poisson
 regression etc.}
-
-\item{xlog}{\strong{This will be deprecated, please define it in \code{x_trans}}.
-If TRUE, x-axis tick marks assume values are exponential, e.g.
-for logistic regression (OR), survival estimates (HR), Poisson regression etc.
-Provide a logical vector if different conversion for each \code{ci_column} is
-desired.}
 
 \item{xlab}{X-axis labels, it will be put under the x-axis. An atomic vector should
 be provided if different \code{xlab} for different column is desired.}

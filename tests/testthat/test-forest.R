@@ -99,7 +99,11 @@ test_that("Apply theme", {
                    gp = gpar(fontface = "bold"))
 
   # Add underline at the bottom of the header
-  g <- add_underline(g, part = "header")
+  g <- add_border(g, part = "header", row = 1, where = "top")
+  g <- add_border(g, part = "header", row = 2, col = 2:3,
+                  where = "top",
+                  gp = gpar(lwd = 1, col = "red"))
+  g <- add_border(g, part = "header", row = 2, where = "bottom")
 
   # Edit background of row 5
   g <- edit_plot(g, row = 5, which = "background",
@@ -118,6 +122,8 @@ test_that("Apply theme", {
                 col = 2:4,
                 just = "left",
                 gp = gpar(cex = 1, col = "red", fontface = "italic"))
+
+  g <- add_border(g, row = 10, col = 1:3, where = "top")
 
   vdiffr::expect_doppelganger("Edit plot with theme", g)
 
@@ -196,7 +202,7 @@ test_that("Multiple column and Multi parameters", {
               ci_column = c(3, 5),
               ref_line = c(1, 0),
               vert_line = list(c(0.3, 1.4), c(0.6, 2)),
-              xlog = c(T, F),
+              x_trans = c("log", "none"),
               arrow_lab = list(c("L1", "R1"), c("L2", "R2")),
               xlim = list(c(0, 3), c(-1, 3)),
               ticks_at = list(c(0.1, 0.5, 1, 2.5), c(-1, 0, 2)),
@@ -260,7 +266,7 @@ test_that("Summary CI", {
 })
 
 
-# Check error for xlog
+# Check error for log trans
 test_that("forestplot check ERRORS", {
 
   dt$low[3] <- -dt$low[3]
@@ -270,7 +276,7 @@ test_that("forestplot check ERRORS", {
                       upper = dt$hi,
                       sizes = dt$se,
                       ref_line = 1,
-                      xlog = TRUE,
+                      x_trans = "log",
                       ci_column = 4),
                "est, lower, upper, ref_line, vert_line and xlim should be larger than 0")
 

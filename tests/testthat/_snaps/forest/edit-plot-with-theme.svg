@@ -1807,19 +1807,24 @@
 <line x1='491.21' y1='493.00' x2='405.05' y2='493.00' style='stroke-width: 0.45;' />
 <polyline points='488.09,494.80 491.21,493.00 488.09,491.20 ' style='stroke-width: 0.45;' />
 <text x='319.33' y='77.24' text-anchor='middle' style='font-size: 12.00px; font-weight: bold; font-family: sans;' textLength='88.72px' lengthAdjust='spacingAndGlyphs'>Treatment group</text>
-</g>
-<defs>
-  <clipPath id='cpMTM1LjcyfDU4NC4yOHw4MC4wN3w5OC4yOQ=='>
-    <rect x='135.72' y='80.07' width='448.55' height='18.22' />
-  </clipPath>
-</defs>
-<g clip-path='url(#cpMTM1LjcyfDU4NC4yOHw4MC4wN3w5OC4yOQ==)'>
-<line x1='135.72' y1='98.29' x2='584.28' y2='98.29' style='stroke-width: 1.50;' />
-</g>
-<g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1NzYuMDA=)'>
+<line x1='135.72' y1='66.14' x2='267.13' y2='66.14' style='stroke-width: 1.50;' />
+<line x1='267.13' y1='66.14' x2='324.05' y2='66.14' style='stroke-width: 1.50;' />
+<line x1='324.05' y1='66.14' x2='371.53' y2='66.14' style='stroke-width: 1.50;' />
+<line x1='371.53' y1='66.14' x2='491.21' y2='66.14' style='stroke-width: 1.50;' />
+<line x1='491.21' y1='66.14' x2='584.28' y2='66.14' style='stroke-width: 1.50;' />
+<line x1='267.13' y1='80.07' x2='324.05' y2='80.07' style='stroke-width: 0.75; stroke: #FF0000;' />
+<line x1='324.05' y1='80.07' x2='371.53' y2='80.07' style='stroke-width: 0.75; stroke: #FF0000;' />
+<line x1='135.72' y1='98.29' x2='267.13' y2='98.29' style='stroke-width: 1.50;' />
+<line x1='267.13' y1='98.29' x2='324.05' y2='98.29' style='stroke-width: 1.50;' />
+<line x1='324.05' y1='98.29' x2='371.53' y2='98.29' style='stroke-width: 1.50;' />
+<line x1='371.53' y1='98.29' x2='491.21' y2='98.29' style='stroke-width: 1.50;' />
+<line x1='491.21' y1='98.29' x2='584.28' y2='98.29' style='stroke-width: 1.50;' />
 <text x='138.56' y='244.55' style='font-size: 7.20px; font-style: italic; fill: #00FF00; font-family: sans;' textLength='176.12px' lengthAdjust='spacingAndGlyphs'>This is a long text. Age and gender summarised above.</text>
 <text x='138.56' y='254.92' style='font-size: 7.20px; font-style: italic; fill: #00FF00; font-family: sans;' textLength='35.62px' lengthAdjust='spacingAndGlyphs'>BMI is next</text>
 <text x='269.97' y='281.40' style='font-size: 12.00px; font-style: italic; fill: #FF0000; font-family: sans;' textLength='293.54px' lengthAdjust='spacingAndGlyphs'>This is a long text. Age and gender summarised above.</text>
 <text x='269.97' y='298.68' style='font-size: 12.00px; font-style: italic; fill: #FF0000; font-family: sans;' textLength='59.36px' lengthAdjust='spacingAndGlyphs'>BMI is next</text>
+<line x1='135.72' y1='236.76' x2='267.13' y2='236.76' style='stroke-width: 1.50;' />
+<line x1='267.13' y1='236.76' x2='324.05' y2='236.76' style='stroke-width: 1.50;' />
+<line x1='324.05' y1='236.76' x2='371.53' y2='236.76' style='stroke-width: 1.50;' />
 </g>
 </svg>
