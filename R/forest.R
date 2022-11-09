@@ -113,6 +113,16 @@ forest <- function(data,
   if(!is.null(ticks_at) && !inherits(ticks_at, "list"))
     ticks_at <- rep(list(ticks_at), length(ci_column))
 
+  # ticks digits to accomodate ticks_at
+  if(ticks_digits == 1L & !is.null(ticks_at)){
+    if(is.list(ticks_at))
+      ticks_digits <- sapply(ticks_at, function(x){
+        max(nchar(gsub(".*\\.|^[^.]+$", "", as.character(x))))
+      })
+    else
+      ticks_digits <- max(nchar(gsub(".*\\.|^[^.]+$", "", as.character(ticks_digits))))
+  }
+
   if(length(ci_column) != length(ticks_digits))
     ticks_digits <- rep(ticks_digits, length(ci_column))
 

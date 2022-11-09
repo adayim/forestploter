@@ -1990,7 +1990,7 @@
 <line x1='432.36' y1='499.10' x2='432.36' y2='505.10' style='stroke-width: 0.45;' />
 <text x='333.46' y='514.54' text-anchor='middle' style='font-size: 10.00px; font-family: sans;' textLength='13.90px' lengthAdjust='spacingAndGlyphs'>0.1</text>
 <text x='382.91' y='514.54' text-anchor='middle' style='font-size: 10.00px; font-family: sans;' textLength='13.90px' lengthAdjust='spacingAndGlyphs'>0.5</text>
-<text x='404.21' y='514.54' text-anchor='middle' style='font-size: 10.00px; font-family: sans;' textLength='13.90px' lengthAdjust='spacingAndGlyphs'>1.0</text>
+<text x='404.21' y='514.54' text-anchor='middle' style='font-size: 10.00px; font-family: sans;' textLength='5.56px' lengthAdjust='spacingAndGlyphs'>1</text>
 <text x='432.36' y='514.54' text-anchor='middle' style='font-size: 10.00px; font-family: sans;' textLength='13.90px' lengthAdjust='spacingAndGlyphs'>2.5</text>
 <text x='404.21' y='526.54' text-anchor='middle' style='font-size: 10.00px; font-family: sans;' textLength='15.01px' lengthAdjust='spacingAndGlyphs'>OR</text>
 <line x1='367.22' y1='494.26' x2='367.22' y2='50.85' style='stroke-width: 0.75; stroke: #333333; stroke-dasharray: 4.00,4.00;' />
@@ -2006,9 +2006,9 @@
 <line x1='485.45' y1='499.10' x2='485.45' y2='505.10' style='stroke-width: 0.45;' />
 <line x1='501.48' y1='499.10' x2='501.48' y2='505.10' style='stroke-width: 0.45;' />
 <line x1='533.54' y1='499.10' x2='533.54' y2='505.10' style='stroke-width: 0.45;' />
-<text x='485.45' y='514.54' text-anchor='middle' style='font-size: 10.00px; font-family: sans;' textLength='17.23px' lengthAdjust='spacingAndGlyphs'>-1.0</text>
-<text x='501.48' y='514.54' text-anchor='middle' style='font-size: 10.00px; font-family: sans;' textLength='13.90px' lengthAdjust='spacingAndGlyphs'>0.0</text>
-<text x='533.54' y='514.54' text-anchor='middle' style='font-size: 10.00px; font-family: sans;' textLength='13.90px' lengthAdjust='spacingAndGlyphs'>2.0</text>
+<text x='485.45' y='514.54' text-anchor='middle' style='font-size: 10.00px; font-family: sans;' textLength='8.89px' lengthAdjust='spacingAndGlyphs'>-1</text>
+<text x='501.48' y='514.54' text-anchor='middle' style='font-size: 10.00px; font-family: sans;' textLength='5.56px' lengthAdjust='spacingAndGlyphs'>0</text>
+<text x='533.54' y='514.54' text-anchor='middle' style='font-size: 10.00px; font-family: sans;' textLength='5.56px' lengthAdjust='spacingAndGlyphs'>2</text>
 <text x='501.48' y='526.54' text-anchor='middle' style='font-size: 10.00px; font-family: sans;' textLength='20.57px' lengthAdjust='spacingAndGlyphs'>Beta</text>
 <line x1='511.09' y1='494.26' x2='511.09' y2='50.85' style='stroke-width: 0.75; stroke: #333333; stroke-dasharray: 4.00,4.00;' />
 <line x1='533.54' y1='494.26' x2='533.54' y2='50.85' style='stroke-width: 0.75; stroke: #333333; stroke-dasharray: 4.00,4.00;' />
