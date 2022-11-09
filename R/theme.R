@@ -167,8 +167,13 @@ forest_theme <- function(base_size = 12,
       ci_lwd <- rep_len(ci_lwd, max_len)
       ci_alpha <- rep_len(ci_alpha, max_len)
 
-      if(length(ci_col) == 1)
-        ci_col <- col_set[1:max_len]
+      if(length(ci_col) == 1){
+        # Provide color if multiple color and not differentiated with fill
+        if(is.null(ci_fill) & max_len > 1)
+          ci_col <- col_set[1:max_len]
+        else
+          ci_col <- rep_len(ci_col, max_len)
+      }
 
       if(is.null(ci_fill)){
         ci_fill <- ci_col
@@ -178,7 +183,6 @@ forest_theme <- function(base_size = 12,
         if(length(ci_fill) > 1 & length(ci_fill) != length(ci_col))
           stop("`ci_fill` must be of length 1 or same length as `ci_col`.")
       }
-
     }
 
 
@@ -258,7 +262,7 @@ forest_theme <- function(base_size = 12,
 
     # Table header
     colhead <- list(fg_params = list(hjust = 0, x = 0.05,
-                                    fontface=2L,
+                                    fontface = 2L,
                                     fontsize = base_size,
                                     fontfamily = base_family),
                    bg_params = list(fill = "white"),
@@ -292,8 +296,13 @@ make_group_theme <- function(theme, group_num){
                "#ffff33","#a65628","#f781bf","#999999")
 
   # If color is given and not have the same length as group number
-    if(group_num > 1 & length(theme$ci$col) == 1)
-      theme$ci$col <- col_set[1:group_num]
+    if(group_num > 1){
+      # If colors for all groups are the same then use default color
+      if(length(unique(c(theme$ci$col, theme$ci$fill))) == 1)
+        theme$ci$col <- col_set[1:group_num]
+      else
+        theme$ci$col <- rep_len(theme$ci$col, group_num)
+    }
 
   # If fill is given and not have the same length as group number
     if(group_num > 1 & length(theme$ci$fill) == 1)
