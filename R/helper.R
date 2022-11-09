@@ -61,10 +61,4 @@ getCorners <- function(x) {
          yb=grobY(x, 270), yt=grobY(x, 90))
   }
 
-# Cehck if same length
-same_len <- function(...){
-  lst <- list(...)
-  len <- vapply(lst, length, FUN.VALUE = 1L)
-  length(unique(len)) == 1
-}
 

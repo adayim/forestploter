@@ -1,3 +1,9 @@
+# forestploter 0.2.3
+
+* Fixed a bug of legend point estimation color not changing.
+* There's a new function `add_border` to add border to any cell at any side.
+* Digitis to keep now respect `ticks_digits`.
+
 # forestploter 0.2.2
 
 * Fixed a bug of not drawing groups larger than 3.

@@ -10,6 +10,8 @@
 status](https://www.r-pkg.org/badges/version/forestploter)](https://CRAN.R-project.org/package=forestploter)
 [![CRAN
 download](https://cranlogs.r-pkg.org/badges/grand-total/forestploter)](https://cran.r-project.org/package=forestploter)
+[![Codecov test
+coverage](https://codecov.io/gh/adayim/forestploter/branch/main/graph/badge.svg)](https://app.codecov.io/gh/adayim/forestploter?branch=main)
 <!-- badges: end -->
 
 The goal of `forestploter` is to create a publication-ready forest plot

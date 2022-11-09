@@ -354,8 +354,7 @@ test_that("x-scale trans", {
               ci_column = 4,
               vert_line = 6,
               ticks_at = c(0.1, 0.25, 1, 2, 6, 8),
-              x_trans = "log2",
-              ticks_digits = 1L)
+              x_trans = "log2")
 
   vdiffr::expect_doppelganger("x-scale log2", p)
 

@@ -27,7 +27,8 @@ Will edit the whole column if left blank.}
 
 \item{which}{Which element to edit, \code{"text"}, \code{"background"} or
 \code{"ci"} (confidence interval). This will not edit diamond shaped summary
-CI, please change it with \code{\link{forest_theme}}.}
+CI, please change it with \code{\link{forest_theme}}. Also, change in \code{ci} will
+not have any impact on the legend.}
 
 \item{gp}{Pass \code{gpar} parameters, see \code{\link[grid]{gpar}}. It should
 be passed as \code{gpar(col = "red")}. For \code{which = "ci"}, please refer to

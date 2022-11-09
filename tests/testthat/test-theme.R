@@ -30,6 +30,13 @@ test_that("Set theme", {
                                'lty' = c(1, 1), 'alpha' = c(1, 1),
                                'lwd' = c(1, 1), 't_height' = NULL))
 
+  tm <- forest_theme(legend_value = c("Gp1", "Gp2"), ci_fill = "black")
+  expect_identical(tm$ci$col, tm$ci$fill)
+  expect_identical(tm$ci$col, c("black", "black"))
+
+  tm <- make_group_theme(tm, 2)
+  expect_identical(tm$ci$col, c("#e41a1c", "#377eb8"))
+
 })
 
 test_that("Test errors", {

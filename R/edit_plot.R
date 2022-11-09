@@ -13,7 +13,8 @@
 #' @param part Part to edit, \code{"body"} (default) or \code{"header"}.
 #' @param which Which element to edit, \code{"text"}, \code{"background"} or
 #' \code{"ci"} (confidence interval). This will not edit diamond shaped summary
-#' CI, please change it with \code{\link{forest_theme}}.
+#' CI, please change it with \code{\link{forest_theme}}. Also, change in `ci` will
+#' not have any impact on the legend.
 #' @param gp Pass \code{gpar} parameters, see \code{\link[grid]{gpar}}. It should
 #' be passed as \code{gpar(col = "red")}. For \code{which = "ci"}, please refer to
 #' \code{\link{forest_theme}} \code{ci_*} parameters for the editable elements.

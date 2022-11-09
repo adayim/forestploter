@@ -19,6 +19,7 @@ knitr::opts_chunk$set(
 [![R-CMD-check](https://github.com/adayim/forestploter/workflows/R-CMD-check/badge.svg)](https://github.com/adayim/forestploter/actions)
 [![CRAN status](https://www.r-pkg.org/badges/version/forestploter)](https://CRAN.R-project.org/package=forestploter)
 [![CRAN download](https://cranlogs.r-pkg.org/badges/grand-total/forestploter)](https://cran.r-project.org/package=forestploter)
+[![Codecov test coverage](https://codecov.io/gh/adayim/forestploter/branch/main/graph/badge.svg)](https://app.codecov.io/gh/adayim/forestploter?branch=main)
 <!-- badges: end -->
 
 The goal of `forestploter` is to create a publication-ready forest plot with little effort. This package provide some extra displays compared to other packages. The dataset will be used as a basic layout for the forest plot. Width of the column to draw the confidence interval can be controlled with the string length of the column. Can use space to control this. The elements in the plot are put in the row and columns, think the plot as a table.
