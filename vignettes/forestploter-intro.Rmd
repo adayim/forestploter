@@ -153,7 +153,7 @@ The package has some functionality to modify the forestplot. Below is the functi
 
 * The `edit_plot` function can be used to change the graphical parameter of text, background and CI. For example the color or font face of some columns or rows. 
 * The `add_border` function can be used to add a border to a specific cell.
-* The `add_text` function can be used to add text to certain rows/columns. 
+* The `add_text` function can be used to add text to certain rows/columns. If you want a complicated text align, you can leave some rows and/or columns blank and use this function to add the text.
 * The `insert_text` function can be used to insert a row before or after a certain row and add text.
 
 ```{r edit-plot, out.width="80%", fig.width  = 8, fig.height = 7.5}

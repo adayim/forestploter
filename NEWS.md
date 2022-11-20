@@ -2,7 +2,7 @@
 
 * Fixed a bug of legend point estimation color not changing.
 * There's a new function `add_border` to add border to any cell at any side.
-* Digitis to keep now respect `ticks_digits`.
+* Digitis rounding now respect `ticks_digits`.
 
 # forestploter 0.2.2
 

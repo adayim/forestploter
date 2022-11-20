@@ -52,10 +52,14 @@ legend_grob <- function(name = "",
     ncol <- 1
   }
 
+  # LegendGrob
   leg_grob <- legendGrob(label, pch = pch, ncol = ncol,
                          do.lines = TRUE, byrow = by_row,
                          hgap = hgap, vgap = vgap,
                          gp = gp)
+
+  # Change legendGrob point color
+  leg_grob <- edit_leg_point(leg_grob, gp$fill)
 
   u0 <- unit(0, "npc")
   u1 <- unit(0.02, "npc")
@@ -73,6 +77,23 @@ legend_grob <- function(name = "",
              grob = leg_grob,
              side = "bottom")
   }
+}
+
+# Edit legendGrob point color
+edit_leg_point <- function(leg, gp_col){
+  # Find the point path
+  lst <- grid.grep("point", leg, grep = TRUE, global = TRUE)
+  # Extract name of the gPath
+  g_paths <- sapply(lst, function(x){
+    paste(sub(".*?::",'', x$path), x$name, sep = "::")
+  })
+  
+  for(i in seq_along(g_paths)){
+    leg <- editGrob(leg, 
+                    gPath = g_paths[i],
+                    gp = gpar(col = gp_col[i]))
+  }
+  return(leg)
 }
 
 
