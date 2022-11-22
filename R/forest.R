@@ -12,8 +12,11 @@
 #' @param lower Lower bound of the confidence interval, same as \code{est}.
 #' @param upper Upper bound of the confidence interval, same as \code{est}.
 #' @param sizes Size of the point estimation box, can be a unit, vector or a list.
-#' If the value is not unique, this will first calculate square root of the
-#' reciprocal of size, then devide by overall maximum calculated value.
+#' If the value is not unique, this 
+#' @param sizes_trans A logical scalar. If `TRUE` (deafault), `size` will be 
+#' transformed by calculating square root of the reciprocal of size, then 
+#' devide by overall maximum calculated value. This will be ignored if the value
+#' of `sizes` is unique.
 #' @param ref_line X-axis coordinates of zero line, default is 1. Provide an atomic
 #'  vector if different reference line for each \code{ci_column} is desired.
 #' @param vert_line Numerical vector, add additional vertical line at given value.
@@ -71,6 +74,7 @@ forest <- function(data,
                    lower,
                    upper,
                    sizes = 0.4,
+                   sizes_trans = TRUE,
                    ref_line = ifelse(x_trans %in% c("log", "log2", "log10"), 1, 0),
                    vert_line = NULL,
                    ci_column,
@@ -90,7 +94,7 @@ forest <- function(data,
                ref_line = ref_line, vert_line = vert_line, ci_column = ci_column,
                is_summary = is_summary, xlim = xlim, ticks_at = ticks_at,
                ticks_digits = ticks_digits, arrow_lab = arrow_lab, xlab = xlab,
-               title = title, x_trans = x_trans)
+               title = title, x_trans = x_trans, sizes_trans = sizes_trans)
 
   # Set theme
   if(is.null(theme)){
@@ -190,7 +194,8 @@ forest <- function(data,
     is_summary <- rep(FALSE, nrow(data))
   }
 
-  if(length(unique(stats::na.omit(unlist(sizes)))) != 1){
+  # Transform sizes if not unique and transformation is required.
+  if(length(unique(stats::na.omit(unlist(sizes)))) != 1 & sizes_trans){
     # Get the maximum reciprocal of size
     max_sizes <- sapply(sizes, function(x){
       x <- sqrt(1/x)

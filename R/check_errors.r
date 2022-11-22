@@ -11,6 +11,7 @@ check_errors <- function(data,
                          lower,
                          upper,
                          sizes,
+                         sizes_trans,
                          ref_line,
                          vert_line,
                          ci_column,
@@ -22,6 +23,9 @@ check_errors <- function(data,
                          title,
                          arrow_lab,
                          xlab){
+  
+  if(length(sizes_trans) != 1 | !is.logical(sizes_trans))
+    stop("`sizes_trans` must be a logical scalar.")
 
   if(!is.numeric(ci_column))
     stop("ci_column must be numeric atomic vector.")

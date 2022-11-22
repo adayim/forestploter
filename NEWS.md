@@ -1,5 +1,9 @@
 # forestploter 0.2.3
 
+* Able to suppress transformation of `sizes` by setting `sizes_trans`.
+
+# forestploter 0.2.3
+
 * Fixed a bug of legend point estimation color not changing.
 * There's a new function `add_border` to add border to any cell at any side.
 * Digitis rounding now respect `ticks_digits`.
