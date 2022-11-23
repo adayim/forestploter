@@ -13,7 +13,8 @@ insert_text(
   just = c("center", "left", "right"),
   before = TRUE,
   gp = gpar(),
-  padding = unit(1, "mm")
+  padding = unit(1, "mm"),
+  parse = FALSE
 )
 }
 \arguments{
@@ -38,6 +39,9 @@ added. The text will span over the column if a vector is given.}
 settings of the text. See \code{\link[grid]{gpar}}.}
 
 \item{padding}{Padding of the text, default is \code{unit(1, "mm")}}
+
+\item{parse}{Logical, behaviour for parsing text as plotmath, see
+\code{\link[plotmath]{grDevices}}}
 }
 \value{
 A \code{\link[gtable]{gtable}} object.

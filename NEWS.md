@@ -1,6 +1,7 @@
 # forestploter 0.2.3
 
 * Able to suppress transformation of `sizes` by setting `sizes_trans`.
+* `add_text` and `insert_text` can parse math symbol. 
 
 # forestploter 0.2.3
 

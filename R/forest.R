@@ -13,7 +13,7 @@
 #' @param upper Upper bound of the confidence interval, same as \code{est}.
 #' @param sizes Size of the point estimation box, can be a unit, vector or a list.
 #' If the value is not unique, this 
-#' @param sizes_trans A logical scalar. If `TRUE` (deafault), `size` will be 
+#' @param sizes_trans A logical scalar. If `TRUE` (default), `size` will be 
 #' transformed by calculating square root of the reciprocal of size, then 
 #' devide by overall maximum calculated value. This will be ignored if the value
 #' of `sizes` is unique.

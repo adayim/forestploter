@@ -31,8 +31,7 @@ and considered as different groups.}
 symbol to use. See \code{\link[grid]{pointsGrob}}.}
 
 \item{sizes}{Size of the point estimation box, can be a unit, vector or a list.
-If the value is not unique, this will first calculate square root of the
-reciprocal of size, then devide by overall maximum calculated value.}
+If the value is not unique, this}
 
 \item{gp}{Graphical parameters. Please refer to \code{\link{forest_theme}}
 for more details.}

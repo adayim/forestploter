@@ -19,6 +19,8 @@
 #' @param gp An object of class \code{"gpar"}, this is the graphical parameter
 #'  settings of the text. See \code{\link[grid]{gpar}}.
 #' @param padding Padding of the text, default is \code{unit(1, "mm")}
+#' @param parse Logical, behaviour for parsing text as plotmath, see 
+#' \code{\link[plotmath]{grDevices}} 
 #' 
 #' @return A \code{\link[gtable]{gtable}} object.
 #' @seealso \code{\link[grid]{gpar}} \code{\link[grid]{textGrob}} \code{\link[gtable]{gtable_add_grob}} 
@@ -32,7 +34,11 @@ insert_text <- function(plot,
                         just = c("center", "left", "right"),
                         before = TRUE,
                         gp = gpar(),
-                        padding = unit(1, "mm")){
+                        padding = unit(1, "mm"),
+                        parse = FALSE){
+
+  if(parse)
+    text <- tryCatch(parse(text = text), error = function(e) text)
 
   if(!inherits(plot, "forestplot"))
     stop("plot must be a forestplot object.")
