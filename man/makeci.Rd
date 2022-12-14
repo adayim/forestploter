@@ -31,7 +31,7 @@ and considered as different groups.}
 symbol to use. See \code{\link[grid]{pointsGrob}}.}
 
 \item{sizes}{Size of the point estimation box, can be a unit, vector or a list.
-If the value is not unique, this}
+Values will be used as it is, no transformation will be applied.}
 
 \item{gp}{Graphical parameters. Please refer to \code{\link{forest_theme}}
 for more details.}

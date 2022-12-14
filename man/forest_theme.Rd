@@ -25,8 +25,8 @@ forest_theme(
   vertline_lwd = 1,
   vertline_lty = "dashed",
   vertline_col = "grey20",
-  summary_fill = "#4575b4",
   summary_col = "#4575b4",
+  summary_fill = summary_col,
   footnote_cex = 0.6,
   footnote_fontface = "plain",
   footnote_col = "black",
@@ -101,9 +101,9 @@ given.}
 
 \item{vertline_col}{Line color for the extra vertical line. Works same as \code{vertline_lwd}.}
 
-\item{summary_fill}{Color for filling the summary diamond shape.}
-
 \item{summary_col}{Color for borders of the summary diamond shape.}
+
+\item{summary_fill}{Color for filling the summary diamond shape.}
 
 \item{footnote_cex}{Multiplier applied to font size for footnote.}
 

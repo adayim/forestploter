@@ -10,7 +10,8 @@ edit_plot(
   col = NULL,
   part = c("body", "header"),
   which = c("text", "background", "ci"),
-  gp
+  gp = gpar(),
+  ...
 )
 }
 \arguments{
@@ -33,6 +34,12 @@ not have any impact on the legend.}
 \item{gp}{Pass \code{gpar} parameters, see \code{\link[grid]{gpar}}. It should
 be passed as \code{gpar(col = "red")}. For \code{which = "ci"}, please refer to
 \code{\link{forest_theme}} \code{ci_*} parameters for the editable elements.}
+
+\item{...}{Other parameters to be passed to the grobs. For the \code{"text"}, please
+see \code{\link[grid]{textGrob}} for details and \code{\link[grid]{rectGrob}}
+for \code{"background"}. This will be ignored if \code{which = "ci"} as changing
+parameters for the confidence interval are not allowed except for the graphical
+parameters.}
 }
 \value{
 A \code{\link[gtable]{gtable}} object.
@@ -43,4 +50,5 @@ of the forest plot.
 }
 \seealso{
 \code{\link[grid]{gpar}} \code{\link[grid]{editGrob}} \code{\link{forest_theme}}
+\code{\link[grid]{textGrob}} \code{\link[grid]{rectGrob}}
 }
