@@ -18,6 +18,7 @@ Imports:
     gridExtra,
     gtable
 Suggests: 
+    gridtext,
     rmarkdown,
     knitr,
     vdiffr,

@@ -20,7 +20,7 @@
 #'  settings of the text. See \code{\link[grid]{gpar}}.
 #' @param padding Padding of the text, default is \code{unit(1, "mm")}
 #' @param parse Logical, behaviour for parsing text as plotmath, see 
-#' \code{\link[plotmath]{grDevices}} 
+#' \code{\link[grDevices]{plotmath}} 
 #' 
 #' @return A \code{\link[gtable]{gtable}} object.
 #' @seealso \code{\link[grid]{gpar}} \code{\link[grid]{textGrob}} \code{\link[gtable]{gtable_add_grob}} 

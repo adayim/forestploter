@@ -41,7 +41,7 @@ settings of the text. See \code{\link[grid]{gpar}}.}
 \item{padding}{Padding of the text, default is \code{unit(1, "mm")}}
 
 \item{parse}{Logical, behaviour for parsing text as plotmath, see
-\code{\link[plotmath]{grDevices}}}
+\code{\link[grDevices]{plotmath}}}
 }
 \value{
 A \code{\link[gtable]{gtable}} object.
