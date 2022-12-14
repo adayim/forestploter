@@ -18,9 +18,15 @@
 #' @param gp Pass \code{gpar} parameters, see \code{\link[grid]{gpar}}. It should
 #' be passed as \code{gpar(col = "red")}. For \code{which = "ci"}, please refer to
 #' \code{\link{forest_theme}} \code{ci_*} parameters for the editable elements.
+#' @param ... Other parameters to be passed to the grobs. For the \code{"text"}, please
+#' see \code{\link[grid]{textGrob}} for details and \code{\link[grid]{rectGrob}}
+#' for \code{"background"}. This will be ignored if \code{which = "ci"} as changing
+#' parameters for the confidence interval are not allowed except for the graphical
+#' parameters.
 #'
 #' @return A \code{\link[gtable]{gtable}} object.
-#' @seealso \code{\link[grid]{gpar}} \code{\link[grid]{editGrob}} \code{\link{forest_theme}}
+#' @seealso \code{\link[grid]{gpar}} \code{\link[grid]{editGrob}} \code{\link{forest_theme}} 
+#' \code{\link[grid]{textGrob}} \code{\link[grid]{rectGrob}}
 #' @export
 #'
 edit_plot <- function(plot,
@@ -28,7 +34,10 @@ edit_plot <- function(plot,
                       col = NULL,
                       part = c("body", "header"),
                       which = c("text", "background", "ci"),
-                      gp){
+                      gp = gpar(),
+                      ...){
+  
+  dots <- list(...)
 
   if(!inherits(plot, "forestplot"))
     stop("plot must be a forestplot object.")
@@ -88,7 +97,10 @@ edit_plot <- function(plot,
   else
     col <- 2:max(l$r)
 
-  edit_cell(plot = plot, row = row, col = col, name = name_to_edit, gp = gp)
+  if(which != "ci")
+    edit_cell(plot = plot, row = row, col = col, name = name_to_edit, gp = gp, ...)
+  else
+    edit_cell(plot = plot, row = row, col = col, name = name_to_edit, gp = gp)
 
 }
 
@@ -103,5 +115,5 @@ edit_cell <- function(plot, row, col, name="core-fg", ...){
     newgrob <- editGrob(plot$grobs[id][[1]], ...)
     plot$grobs[id][[1]] <- newgrob
   }
-  plot
+  return(plot)
 }
