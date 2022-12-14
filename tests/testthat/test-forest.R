@@ -205,8 +205,8 @@ test_that("Multiple column and Multi parameters", {
               x_trans = c("log", "none"),
               arrow_lab = list(c("L1", "R1"), c("L2", "R2")),
               xlim = list(c(0, 3), c(-1, 3)),
-              ticks_at = list(c(0.1, 0.5, 1, 2.5), c(-1, 0, 2)),
-              ticks_digits = 1,
+              ticks_at = list(c(0.1, 0.5, 1, 2.5), c(-1.0, 0, 1.5, 2.0)),
+              ticks_digits = list(1, 1L),
               xlab = c("OR", "Beta"),
               nudge_y = 0.2,
               theme = tm)

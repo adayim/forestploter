@@ -12,11 +12,7 @@
 #' @param lower Lower bound of the confidence interval, same as \code{est}.
 #' @param upper Upper bound of the confidence interval, same as \code{est}.
 #' @param sizes Size of the point estimation box, can be a unit, vector or a list.
-#' If the value is not unique, this 
-#' @param sizes_trans A logical scalar. If `TRUE` (default), `size` will be 
-#' transformed by calculating square root of the reciprocal of size, then 
-#' devide by overall maximum calculated value. This will be ignored if the value
-#' of `sizes` is unique.
+#' Values will be used as it is, no transformation will be applied.
 #' @param ref_line X-axis coordinates of zero line, default is 1. Provide an atomic
 #'  vector if different reference line for each \code{ci_column} is desired.
 #' @param vert_line Numerical vector, add additional vertical line at given value.
@@ -74,7 +70,6 @@ forest <- function(data,
                    lower,
                    upper,
                    sizes = 0.4,
-                   sizes_trans = TRUE,
                    ref_line = ifelse(x_trans %in% c("log", "log2", "log10"), 1, 0),
                    vert_line = NULL,
                    ci_column,
@@ -94,7 +89,7 @@ forest <- function(data,
                ref_line = ref_line, vert_line = vert_line, ci_column = ci_column,
                is_summary = is_summary, xlim = xlim, ticks_at = ticks_at,
                ticks_digits = ticks_digits, arrow_lab = arrow_lab, xlab = xlab,
-               title = title, x_trans = x_trans, sizes_trans = sizes_trans)
+               title = title, x_trans = x_trans)
 
   # Set theme
   if(is.null(theme)){
@@ -117,15 +112,18 @@ forest <- function(data,
   if(!is.null(ticks_at) && !inherits(ticks_at, "list"))
     ticks_at <- rep(list(ticks_at), length(ci_column))
 
-  # ticks digits to accomodate ticks_at
-  if(ticks_digits == 1L & !is.null(ticks_at)){
-    if(is.list(ticks_at))
-      ticks_digits <- sapply(ticks_at, function(x){
-        max(nchar(gsub(".*\\.|^[^.]+$", "", as.character(x))))
-      })
-    else
-      ticks_digits <- max(nchar(gsub(".*\\.|^[^.]+$", "", as.character(ticks_digits))))
+  # ticks digits to accommodate ticks_at
+  if(length(ticks_digits) == 1 & !is.list(ticks_digits)){
+    if(ticks_digits == 1L & !is.null(ticks_at)){
+      if(is.list(ticks_at))
+        ticks_digits <- sapply(ticks_at, function(x){
+          max(nchar(gsub(".*\\.|^[^.]+$", "", as.character(x))))
+        })
+      else
+        ticks_digits <- max(nchar(gsub(".*\\.|^[^.]+$", "", as.character(ticks_digits))))
+    }
   }
+  
 
   if(length(ci_column) != length(ticks_digits))
     ticks_digits <- rep(ticks_digits, length(ci_column))
@@ -195,20 +193,20 @@ forest <- function(data,
   }
 
   # Transform sizes if not unique and transformation is required.
-  if(length(unique(stats::na.omit(unlist(sizes)))) != 1 & sizes_trans){
-    # Get the maximum reciprocal of size
-    max_sizes <- sapply(sizes, function(x){
-      x <- sqrt(1/x)
-      max(x[!is_summary], na.rm = TRUE)
-    }, USE.NAMES = FALSE)
-
-    sizes <- lapply(sizes, function(x){
-      wi <- sqrt(1/x)
-      wi <- wi/max(max_sizes, na.rm = TRUE)
-      wi[is_summary] <- 1/length(max_sizes)
-      return(wi)
-    })
-  }
+  # if(length(unique(stats::na.omit(unlist(sizes)))) != 1 & sizes_trans & group_num == 1){
+  #   # Get the maximum reciprocal of size
+  #   max_sizes <- sapply(sizes, function(x){
+  #     x <- sqrt(x)
+  #     max(x[!is_summary], na.rm = TRUE)
+  #   }, USE.NAMES = FALSE)
+  #
+  #   sizes <- lapply(sizes, function(x){
+  #     wi <- sqrt(x)
+  #     wi <- wi/max(max_sizes, na.rm = TRUE)
+  #     wi[is_summary] <- 1/length(max_sizes)
+  #     return(wi)
+  #   })
+  # }
 
   # Positions of values in ci_column
   gp_list <- rep_len(1:(length(lower)/group_num), length(lower))
@@ -346,7 +344,7 @@ forest <- function(data,
   x_axis <- lapply(seq_along(xlim), function(i){
     make_xaxis(at = ticks_at[[i]],
                gp = theme$xaxis,
-               ticks_digits = ticks_digits[i],
+               ticks_digits = ticks_digits[[i]],
                x0 = ref_line[i],
                xlim = xlim[[i]],
                xlab = xlab[i],
