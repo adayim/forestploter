@@ -11,7 +11,6 @@ check_errors <- function(data,
                          lower,
                          upper,
                          sizes,
-                         sizes_trans,
                          ref_line,
                          vert_line,
                          ci_column,
@@ -23,9 +22,6 @@ check_errors <- function(data,
                          title,
                          arrow_lab,
                          xlab){
-  
-  if(length(sizes_trans) != 1 | !is.logical(sizes_trans))
-    stop("`sizes_trans` must be a logical scalar.")
 
   if(!is.numeric(ci_column))
     stop("ci_column must be numeric atomic vector.")
@@ -86,8 +82,11 @@ check_errors <- function(data,
     stop("xlab must be of length 1 or the same length as ci_column.")
 
   # Check tick_digits
-  if(!is.numeric(ticks_digits) || !length(ticks_digits) %in% c(1, length(ci_column)))
-      stop("ticks_digits must be numeric of length 1 or same length as ci_column.")
+  if(!length(ticks_digits) %in% c(1, length(ci_column)))
+      stop("ticks_digits must be length of 1 or same length as ci_column.")
+  
+  if(!is.numeric(unlist(ticks_digits)))
+      stop("ticks_digits must be numeric.")
 
   # If only one CI column
   if(length(ci_column) == 1){

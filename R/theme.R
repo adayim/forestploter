@@ -113,8 +113,8 @@ forest_theme <- function(base_size = 12,
                          vertline_lty = "dashed",
                          vertline_col = "grey20",
                          # summary
-                         summary_fill = "#4575b4",
                          summary_col = "#4575b4",
+                         summary_fill = summary_col,
                          # Footnote
                          footnote_cex = 0.6,
                          footnote_fontface = "plain",
