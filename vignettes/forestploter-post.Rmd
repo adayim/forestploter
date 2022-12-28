@@ -23,7 +23,7 @@ knitr::opts_chunk$set(
 
 # Principle
 
-The layout of the forest plot is determined by the dataset provided. All the elements of the forestplot are placed in the cells. This makes it very easy to edit any elements in the plot given the row and columns of the elements. The graphical parameters of the element can further be editted in the particular cell. Here, we will start with a simple meta analysis forest plot.   
+The layout of the forest plot is determined by the dataset provided. All the elements of the forestplot are placed in the cells. This makes it very easy to edit any elements in the plot given the row and columns. The graphical parameters of the element can further be editted in the particular cell. Here, we will start with a simple meta analysis forest plot.   
 
 The plotting steps demenstrated in this vignette may not necessarily be the optimal. There are other R packages out there are better at the plot demenstrated here. Please choose the best one that suits you. Our final plot is shown in the below.
 
@@ -98,7 +98,7 @@ The package has some functionality to modify the forestplot. Below is the functi
 * The `add_grob` function can be used to add different grobs.
 
 ## Edit plot
-Below is to make the total row text to bold and change the color of the diamond shape. Add a background to the total row. After that, align texts in the last six columns to the center. 
+Below is to make the total row text to bold and change the color of the diamond shape. Then change the background color of the total row. After that, align texts in the last six columns to the center. 
 ```{r edit-metaplot, out.width="95%", fig.width  = 10.6, fig.height = 3.6}
 # Change fontface
 g <- edit_plot(p, row = 9, 
@@ -117,7 +117,7 @@ g <- edit_plot(g, col = 1:7,
 # Align texts to center
 g <- edit_plot(g, col = 9:14, 
                which = "text",
-               gp = gpar(),
+               # gp = gpar(),
                hjust = unit(0.5, "npc"),
                x = unit(0.5, "npc"))
 g
@@ -132,7 +132,7 @@ For the text align, `hjust = unit(0, "npc")` and `x = unit(0, "npc")` to align l
 In this step, we want to add some text to the header and total number of events in the data.
 
 ```{r text-metaplot, out.width="95%", fig.width  = 10.6, fig.height = 3.6}
-# Add or insert some text to header
+# Add or insert some text to header on top of CI columns
 g <- add_text(g, text = "IV, Random, 95% CI",
               part = "header", 
               col = 7:8,
@@ -143,6 +143,7 @@ g <- insert_text(g, text = "Odds ratio",
                  col = 7:8,
                  gp = gpar(fontface = "bold"))
 
+# Group outcomes
 g <- add_text(g, text = "Caffeine",
               part = "header",
               row = 1,
@@ -155,6 +156,7 @@ g <- add_text(g, text = "Decaf",
               col = 4:5,
               gp = gpar(fontface = "bold"))
 
+# Add text on the top of risk of bias data
 g <- add_text(g, text = "Risk of Bias",
               part = "header", 
               row = 1,
@@ -185,7 +187,7 @@ g
 ```
 
 ## Add borders
-The next step we will add some borders at header.
+The next step we will add some borders at header. The default is to add border at the bottom of the cell(s).
 ```{r border-metaplot, out.width="95%", fig.width  = 10.6, fig.height = 3.6}
 # Add or insert some text to header
 g <- add_border(g, 
@@ -205,7 +207,7 @@ g
 
 
 ## Add grobs
-In the next step, we will add a rounded rectangle border with dashed line around the risk table. Then draw circle grob with different color at the bottom of the text.
+In the next step, we will add a rounded rectangle border with dashed line around the risk of bias data. Then draw circle grob with different color at the bottom of the text.
 ```{r grob-metaplot, out.width="95%", fig.width  = 10.6, fig.height = 3.6}
 g <- add_grob(g, 
               row = 1:c(nrow(dt_fig) - 1), 
@@ -216,6 +218,7 @@ g <- add_grob(g,
               gp = gpar(lty = "dotted",
                         col = "#bdbdbd"))
 
+# Draw circle grob, you can also draw a `pointsGrob`
 cols <- c("#eeee00", "#00cc00", "#cc0000")
 symb <- c("?", "+", "-")
 for(i in seq_along(symb)){
