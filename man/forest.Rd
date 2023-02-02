@@ -23,6 +23,7 @@ forest(
   footnote = NULL,
   title = NULL,
   nudge_y = 0,
+  clip = FALSE,
   theme = NULL
 )
 }
@@ -94,6 +95,9 @@ with the arrow and/or x-axis.}
 \item{title}{The text for the title.}
 
 \item{nudge_y}{Horizontal adjustment to nudge groups by, must be within 0 to 1.}
+
+\item{clip}{Should drawing be clipped to the specified cells. Set \code{FALSE}
+(default) to avoid text being clipped.}
 
 \item{theme}{Theme of the forest plot, see \code{\link{forest_theme}} for
 details.}
