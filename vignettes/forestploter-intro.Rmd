@@ -33,7 +33,7 @@ The main differences of the `forestploter` from the other packages are:
 
 # Basic forest plot
 
-The layout of the forest plot is determined by the dataset provided. 
+The layout of the forest plot is determined by the dataset provided. Please check out the other vignette if you want change the text or backgroud, add or insert text, add borders to cells, edit color of the CI in some cells. 
 
 ## Simple forest plot
 
@@ -148,8 +148,9 @@ plot(pt)
 ```
 
 
-## Text justification and background
-By default, all cells are left aligned. But it is possible to justify any cells in the forest plot by setting parameters in `forest_theme`. Set `core=list(fg_params=list(hjust=0, x=0))` to left align content, and `rowhead=list(fg_params=list(hjust=0.5, x=0.5)` to center header. Set `hjust=1` and `x=0.9` to right align text. You can also change the justification of text by with `edit_plot`, see details in another vignette.   
+## Text justification and background with theme
+By default, all cells are left aligned. But it is possible to justify any cells in the forest plot by setting parameters in `forest_theme`. Set `core=list(fg_params=list(hjust=0, x=0))` to left align content, and `rowhead=list(fg_params=list(hjust=0.5, x=0.5)` to center header. Set `hjust=1` and `x=0.9` to right align text. **You can also change the justification of text by with `edit_plot`, see details in another vignette.** 
+
 
 Same rule apply to change the background color by setting `core=list(bg_params=list(fill = c("#edf8e9", "#c7e9c0", "#a1d99b")))`. Change settings in `core` if you want to change graphical parameters of contents, `colhead` for header. Change settings in `fg_params` to modify the text, see parameters for `textGrob()` in `grid` package. Change `bg_params` to modify settings for background graphical parameters, see `gpar()` in `grid` package. You should pass parameters as a list. More details can be found [here](https://CRAN.R-project.org/package=gridExtra/vignettes/tableGrob.html).  
 

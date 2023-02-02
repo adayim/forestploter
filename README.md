@@ -109,7 +109,7 @@ g <- edit_plot(p, row = 3, gp = gpar(col = "red", fontface = "italic"))
 
 # Bold grouping text
 g <- edit_plot(g,
-               row = c(2, 5, 10, 13, 17, 20),
+               row = c(2, 5, 8, 11, 15, 18),
                gp = gpar(fontface = "bold"))
 
 # Insert text at top
