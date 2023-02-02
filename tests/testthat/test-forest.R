@@ -294,7 +294,7 @@ test_that("forestplot check ERRORS", {
 # Check arrow
 test_that("check arrow", {
 
-  dt <- dt[1:9, ]
+  dt <- dt[1:10, ]
   tm <- forest_theme(arrow_cex = .5,
                      arrow_label_just = "end",
                      xaxis_cex = .5,
@@ -335,7 +335,7 @@ test_that("check arrow", {
 
 test_that("x-scale trans", {
 
-  dt <- dt[1:9, ]
+  dt <- dt[1:10, ]
   dt$hi <- dt$hi * 3
 
   dt$hi[9] <- 8
@@ -385,7 +385,7 @@ test_that("x-scale trans", {
 
 test_that("x-scale trans", {
 
-  dt <- dt[1:9, 1:6]
+  dt <- dt[1:10, 1:6]
 
   dt$se <- seq.int(0.2, 2, length.out = length(dt$est))
 
