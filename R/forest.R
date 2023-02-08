@@ -54,8 +54,6 @@
 #' with the arrow and/or x-axis.
 #' @param title The text for the title.
 #' @param nudge_y Horizontal adjustment to nudge groups by, must be within 0 to 1.
-#' @param clip Should drawing be clipped to the specified cells. Set \code{FALSE}
-#' (default) to avoid text being clipped. 
 #' @param theme Theme of the forest plot, see \code{\link{forest_theme}} for
 #' details.
 #'
@@ -85,7 +83,6 @@ forest <- function(data,
                    footnote = NULL,
                    title = NULL,
                    nudge_y = 0,
-                   clip = FALSE,
                    theme = NULL){
 
   check_errors(data = data, est = est, lower = lower, upper = upper, sizes = sizes,
@@ -274,8 +271,7 @@ forest <- function(data,
   }
 
   # Do not clip text
-  if(!clip)
-    gt$layout$clip <- "off"
+  gt$layout$clip <- "off"
 
   # Column index
   col_indx <- rep_len(1:length(ci_column), length(ci_col_list))

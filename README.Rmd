@@ -43,7 +43,7 @@ devtools::install_github("adayim/forestploter")
 
 The column names of the provided data will be used as the header. This is a basic example which shows you how to create a `forestplot`:
 
-```{r example, dpi=300, fig.width  = 12, fig.height = 6, out.height = '40%'}
+```{r example, dpi=300, fig.width  = 12, fig.height = 5.5, out.height = '40%'}
 library(grid)
 library(forestploter)
 
@@ -95,7 +95,7 @@ plot(p)
 ## Editing plot
 Sometimes one may want to change the color or font face of some columns. Or one may want to insert text into certain rows. Or may want an underline to separate by group. The function `edit_plot`, `add_text`, `insert_text` and `add_border` can achieve these. Below is how to do this:
 
-```{r edit, dpi=300, fig.width  = 12, fig.height = 7, out.height = '40%'}
+```{r edit, dpi=300, fig.width  = 12, fig.height = 6, out.height = '40%'}
 # Edit text in row 3
 g <- edit_plot(p, row = 3, gp = gpar(col = "red", fontface = "italic"))
 
@@ -142,7 +142,7 @@ For a more complex example, you may want to draw CI by groups. The solution is s
 
 This is an example of multiple CI columns and groups:
 
-```{r multiple,  dpi=300, fig.width  = 12, fig.height = 8, out.height = '80%'}
+```{r multiple,  dpi=300, fig.width  = 12, fig.height = 7, out.height = '80%'}
 
 # Add blank column for the second CI column
 dt$`   ` <- paste(rep(" ", 20), collapse = " ")

@@ -1,4 +1,4 @@
-# forestploter 0.2.4
+# forestploter 1.0.0
 
 * New function `add_grob`.
 * `add_text` and `insert_text` can parse math symbol. 
