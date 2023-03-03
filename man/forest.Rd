@@ -25,7 +25,7 @@ forest(
   nudge_y = 0,
   fn_ci = makeci,
   fn_summary = make_summary,
-  index_var = NULL,
+  index_args = NULL,
   theme = NULL,
   ...
 )
@@ -113,7 +113,7 @@ accept arguments \code{"est", "lower", "upper", "sizes", "xlim", "gp"}.
 Please refer to the \code{\link{make_summary}} function for the details of
 these parameters.}
 
-\item{index_var}{A character vector, name of the arguments used for indexing
+\item{index_args}{A character vector, name of the arguments used for indexing
 the row and coloumn. This should be the name of the arguments that is working
 the same way as \code{est}, \code{lower} and \code{upper}. Check out the
 examples in the \code{\link{make_boxplot}}.}

@@ -28,7 +28,7 @@
 make_boxplot <- function(est, lower, upper, lowhinge, uphinge,
                          hinge_height = 3,
                          pch, sizes = 1, gp = gpar(),
-                         gp_box = gpar(),
+                         gp_box = gp,
                          t_height = NULL, xlim = c(0, 1), nudge_y = 0){
 
   gTree(

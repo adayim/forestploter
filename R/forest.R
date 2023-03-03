@@ -66,7 +66,7 @@
 #'  accept arguments \code{"est", "lower", "upper", "sizes", "xlim", "gp"}.
 #' Please refer to the \code{\link{make_summary}} function for the details of
 #'  these parameters. 
-#' @param index_var A character vector, name of the arguments used for indexing
+#' @param index_args A character vector, name of the arguments used for indexing
 #'  the row and coloumn. This should be the name of the arguments that is working
 #' the same way as \code{est}, \code{lower} and \code{upper}. Check out the 
 #' examples in the \code{\link{make_boxplot}}. 
@@ -104,7 +104,7 @@ forest <- function(data,
                    nudge_y = 0,
                    fn_ci = makeci,
                    fn_summary = make_summary,
-                   index_var = NULL,
+                   index_args = NULL,
                    theme = NULL,
                    ...){
 
@@ -337,13 +337,23 @@ forest <- function(data,
         next
       }
 
+      dot_pass <- dot_args
+      if(!is.null(index_args)){
+        for(ind_v in index_args){
+          if(!is.list(dot_pass[[ind_v]]))
+            dot_pass[[ind_v]] <- list(dot_pass[[ind_v]])
+          dot_pass[[ind_v]] <- dot_pass[[ind_v]][[col_num]][i]
+        }
+      }
+
       if(is_summary[i]){
         # Update graphical parameters
         g_par <- theme$summary
-        if ("gp" %in% names(dot_args)) {
-          g_par <- modifyList(list(dot_args$gp), g_par)
-          dot_args$gp <- NULL
+        if ("gp" %in% names(dot_pass)) {
+          g_par <- modifyList(list(dot_pass$gp), g_par)
+          dot_pass$gp <- NULL
         }
+
         draw_ci <- do.call(fn_summary, c(
           list(est = est[[col_num]][i],
                lower = lower[[col_num]][i],
@@ -351,7 +361,7 @@ forest <- function(data,
                sizes = sizes[[col_num]][i],
                xlim = xlim[[col_indx[col_num]]],
                gp = g_par),
-          dot_args
+          dot_pass
         ))
 
       }else {
@@ -362,18 +372,9 @@ forest <- function(data,
                       fill = fill_list[col_num],
                       alpha = alpha_list[col_num])
 
-        if ("gp" %in% names(dot_args)) {
-          g_par <- modifyList(dot_args$gp, g_par)
-          dot_args$gp <- NULL
-        }
-
-        dot_pass <- dot_args
-        if(!is.null(index_var)){
-          for(ind_v in index_var){
-            if(!is.list(dot_pass[[ind_v]]))
-              dot_pass[[ind_v]] <- list(dot_pass[[ind_v]])
-            dot_pass[[ind_v]] <- dot_pass[[ind_v]][[col_num]][i]
-          }
+        if ("gp" %in% names(dot_pass)) {
+          g_par <- modifyList(dot_pass$gp, g_par)
+          dot_pass$gp <- NULL
         }
 
         draw_ci <- do.call(fn_ci, c(

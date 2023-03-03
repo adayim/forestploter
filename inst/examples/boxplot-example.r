@@ -30,7 +30,7 @@ p <- forest(dat[,c(1, 7)],
             lowhinge = dat$q1,
             uphinge = dat$q3,
             hinge_height = 0.2,
-            index_var = c("lowhinge", "uphinge"),
+            index_args = c("lowhinge", "uphinge"),
             gp_box = gpar(fill = "black", alpha = 0.4),
             theme = tm
 )
@@ -57,7 +57,7 @@ p <- forest(dat,
             lowhinge = list(dat_oj$q1, dat_vc$q1),
             uphinge = list(dat_oj$q3, dat_vc$q3),
             hinge_height = 0.2,
-            index_var = c("lowhinge", "uphinge"),
+            index_args = c("lowhinge", "uphinge"),
             theme = tm
 )
 
