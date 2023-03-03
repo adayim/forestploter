@@ -1,3 +1,8 @@
+# forestploter 1.1.0
+
+* New function `make_boxplot` to draw boxplot inside the plot.
+* `forest` now accepts custom CI functions and Summary functions.
+
 # forestploter 1.0.0
 
 * New function `add_grob`.

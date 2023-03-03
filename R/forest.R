@@ -54,12 +54,31 @@
 #' with the arrow and/or x-axis.
 #' @param title The text for the title.
 #' @param nudge_y Horizontal adjustment to nudge groups by, must be within 0 to 1.
+#' @param fn_ci Name of the function to draw confidence interval, default is 
+#' \code{\link{makeci}}. You can specify your own drawing function to draw the 
+#' confidence interval, but the function needs to accept arguments \code{
+#' "est", "lower", "upper", "sizes", "xlim", "pch", "gp", "t_height", "nudge_y"}.
+#' Please refer to the \code{\link{makeci}} function for the details of these
+#' parameters. 
+#' @param fn_summary Name of the function to draw summary confidence interval, 
+#' default is \code{\link{make_summary}}. You can specify your own drawing 
+#' function to draw the summary confidence interval, but the function needs to
+#'  accept arguments \code{"est", "lower", "upper", "sizes", "xlim", "gp"}.
+#' Please refer to the \code{\link{make_summary}} function for the details of
+#'  these parameters. 
+#' @param index_var A character vector, name of the arguments used for indexing
+#'  the row and coloumn. This should be the name of the arguments that is working
+#' the same way as \code{est}, \code{lower} and \code{upper}. Check out the 
+#' examples in the \code{\link{make_boxplot}}. 
 #' @param theme Theme of the forest plot, see \code{\link{forest_theme}} for
 #' details.
+#' @param ... Other arguments passed on to the \code{fn_ci} and \code{fn_summary}.
+#'  
 #'
 #' @return A \code{\link[gtable]{gtable}} object.
 #' @seealso \code{\link[gtable]{gtable}} \code{\link[gridExtra]{tableGrob}}
-#'  \code{\link{forest_theme}}
+#'  \code{\link{forest_theme}} \code{\link{make_boxplot}} 
+#' \code{\link{makeci}}  \code{\link{make_summary}}
 #' @example inst/examples/forestplot-example.R
 #' @export
 #'
@@ -83,7 +102,25 @@ forest <- function(data,
                    footnote = NULL,
                    title = NULL,
                    nudge_y = 0,
-                   theme = NULL){
+                   fn_ci = makeci,
+                   fn_summary = make_summary,
+                   index_var = NULL,
+                   theme = NULL,
+                   ...){
+
+  dot_args <- list(...)
+
+  # Check arguments
+  args_ci <- names(formals(fn_ci))
+  if(!all(c("est", "lower", "upper", "sizes", "xlim", "pch", "gp", "t_height", "nudge_y") %in% args_ci))
+    stop("arguments \"est\", \"lower\", \"upper\", \"sizes\", \"xlim\", \"pch\", \"gp\", \"t_height\" and \"nudge_y\" must be provided in the function `fn_ci`.")
+
+  args_summary <- names(formals(fn_summary))
+  if(any(unlist(is_summary))){
+    if(!all(c("est", "lower", "upper", "sizes", "xlim", "gp") %in% args_summary))
+    stop("arguments \"est\", \"lower\", \"upper\", \"sizes\", \"xlim\",and \"gp\" must be provided in the function `fn_summary`.")
+  }
+
 
   check_errors(data = data, est = est, lower = lower, upper = upper, sizes = sizes,
                ref_line = ref_line, vert_line = vert_line, ci_column = ci_column,
@@ -123,7 +160,7 @@ forest <- function(data,
         ticks_digits <- max(nchar(gsub(".*\\.|^[^.]+$", "", as.character(ticks_digits))))
     }
   }
-  
+
 
   if(length(ci_column) != length(ticks_digits))
     ticks_digits <- rep(ticks_digits, length(ci_column))
@@ -301,26 +338,56 @@ forest <- function(data,
       }
 
       if(is_summary[i]){
-        draw_ci <- make_summary(est = est[[col_num]][i],
-                                lower = lower[[col_num]][i],
-                                upper = upper[[col_num]][i],
-                                sizes = sizes[[col_num]][i],
-                                xlim = xlim[[col_indx[col_num]]],
-                                gp = theme$summary)
+        # Update graphical parameters
+        g_par <- theme$summary
+        if ("gp" %in% names(dot_args)) {
+          g_par <- modifyList(list(dot_args$gp), g_par)
+          dot_args$gp <- NULL
+        }
+        draw_ci <- do.call(fn_summary, c(
+          list(est = est[[col_num]][i],
+               lower = lower[[col_num]][i],
+               upper = upper[[col_num]][i],
+               sizes = sizes[[col_num]][i],
+               xlim = xlim[[col_indx[col_num]]],
+               gp = g_par),
+          dot_args
+        ))
+
       }else {
-        draw_ci <- makeci(est = est[[col_num]][i],
-                          lower = lower[[col_num]][i],
-                          upper = upper[[col_num]][i],
-                          sizes = sizes[[col_num]][i],
-                          xlim = xlim[[col_indx[col_num]]],
-                          pch = pch_list[col_num],
-                          gp = gpar(lty = lty_list[col_num],
-                                    lwd = lwd_list[col_num],
-                                    col = color_list[col_num],
-                                    fill = fill_list[col_num],
-                                    alpha = alpha_list[col_num]),
-                          t_height = theme$ci$t_height,
-                          nudge_y = nudge_y[col_num])
+        # Update graphical parameters
+        g_par <- gpar(lty = lty_list[col_num],
+                      lwd = lwd_list[col_num],
+                      col = color_list[col_num],
+                      fill = fill_list[col_num],
+                      alpha = alpha_list[col_num])
+
+        if ("gp" %in% names(dot_args)) {
+          g_par <- modifyList(dot_args$gp, g_par)
+          dot_args$gp <- NULL
+        }
+
+        dot_pass <- dot_args
+        if(!is.null(index_var)){
+          for(ind_v in index_var){
+            if(!is.list(dot_pass[[ind_v]]))
+              dot_pass[[ind_v]] <- list(dot_pass[[ind_v]])
+            dot_pass[[ind_v]] <- dot_pass[[ind_v]][[col_num]][i]
+          }
+        }
+
+        draw_ci <- do.call(fn_ci, c(
+          list(est = est[[col_num]][i],
+               lower = lower[[col_num]][i],
+               upper = upper[[col_num]][i],
+               sizes = sizes[[col_num]][i],
+               xlim = xlim[[col_indx[col_num]]],
+               pch = pch_list[col_num],
+               gp = g_par,
+               t_height = theme$ci$t_height,
+               nudge_y = nudge_y[col_num]),
+          dot_pass
+        ))
       }
 
       # Skip if CI is outside xlim
