@@ -54,30 +54,30 @@
 #' with the arrow and/or x-axis.
 #' @param title The text for the title.
 #' @param nudge_y Horizontal adjustment to nudge groups by, must be within 0 to 1.
-#' @param fn_ci Name of the function to draw confidence interval, default is 
-#' \code{\link{makeci}}. You can specify your own drawing function to draw the 
+#' @param fn_ci Name of the function to draw confidence interval, default is
+#' \code{\link{makeci}}. You can specify your own drawing function to draw the
 #' confidence interval, but the function needs to accept arguments \code{
 #' "est", "lower", "upper", "sizes", "xlim", "pch", "gp", "t_height", "nudge_y"}.
 #' Please refer to the \code{\link{makeci}} function for the details of these
-#' parameters. 
-#' @param fn_summary Name of the function to draw summary confidence interval, 
-#' default is \code{\link{make_summary}}. You can specify your own drawing 
+#' parameters.
+#' @param fn_summary Name of the function to draw summary confidence interval,
+#' default is \code{\link{make_summary}}. You can specify your own drawing
 #' function to draw the summary confidence interval, but the function needs to
 #'  accept arguments \code{"est", "lower", "upper", "sizes", "xlim", "gp"}.
 #' Please refer to the \code{\link{make_summary}} function for the details of
-#'  these parameters. 
+#'  these parameters.
 #' @param index_args A character vector, name of the arguments used for indexing
 #'  the row and coloumn. This should be the name of the arguments that is working
-#' the same way as \code{est}, \code{lower} and \code{upper}. Check out the 
-#' examples in the \code{\link{make_boxplot}}. 
+#' the same way as \code{est}, \code{lower} and \code{upper}. Check out the
+#' examples in the \code{\link{make_boxplot}}.
 #' @param theme Theme of the forest plot, see \code{\link{forest_theme}} for
 #' details.
 #' @param ... Other arguments passed on to the \code{fn_ci} and \code{fn_summary}.
-#'  
+#'
 #'
 #' @return A \code{\link[gtable]{gtable}} object.
 #' @seealso \code{\link[gtable]{gtable}} \code{\link[gridExtra]{tableGrob}}
-#'  \code{\link{forest_theme}} \code{\link{make_boxplot}} 
+#'  \code{\link{forest_theme}} \code{\link{make_boxplot}}
 #' \code{\link{makeci}}  \code{\link{make_summary}}
 #' @example inst/examples/forestplot-example.R
 #' @export
@@ -120,7 +120,6 @@ forest <- function(data,
     if(!all(c("est", "lower", "upper", "sizes", "xlim", "gp") %in% args_summary))
     stop("arguments \"est\", \"lower\", \"upper\", \"sizes\", \"xlim\",and \"gp\" must be provided in the function `fn_summary`.")
   }
-
 
   check_errors(data = data, est = est, lower = lower, upper = upper, sizes = sizes,
                ref_line = ref_line, vert_line = vert_line, ci_column = ci_column,
@@ -182,6 +181,19 @@ forest <- function(data,
     if(length(sizes) == 1)
       sizes <- rep(sizes, nrow(data))
     sizes <- list(sizes)
+  }
+
+  # Check index_var
+  if(!is.null(index_args)){
+    for(ind_v in index_args){
+      if(!is.list(dot_args[[ind_v]]))
+        dot_args[[ind_v]] <- list(dot_args[[ind_v]])
+
+      est_len <- vapply(est, length, FUN.VALUE = 1L)
+      arg_len <- vapply(dot_args[[ind_v]], length, FUN.VALUE = 1L)
+      if(length(dot_args[[ind_v]]) != length(est) || length(unique(c(est_len, arg_len))) != 1)
+        stop("index_args should have the same length as est.")
+    }
   }
 
   # Calculate group number
@@ -340,8 +352,6 @@ forest <- function(data,
       dot_pass <- dot_args
       if(!is.null(index_args)){
         for(ind_v in index_args){
-          if(!is.list(dot_pass[[ind_v]]))
-            dot_pass[[ind_v]] <- list(dot_pass[[ind_v]])
           dot_pass[[ind_v]] <- dot_pass[[ind_v]][[col_num]][i]
         }
       }
