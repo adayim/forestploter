@@ -41,7 +41,7 @@ p
 dat_oj <- dat[c(1, 3, 5),]
 dat_vc <- dat[c(2, 4, 6), ]
 
-dat <- data.frame(Dpse = c(0.5, 1, 2))
+dat <- data.frame(Dose = c(0.5, 1, 2))
 dat$Box <- paste(rep(" ", 20), collapse = " ")
 
 # Draw plot
