@@ -10,7 +10,7 @@ make_boxplot(
   upper,
   lowhinge,
   uphinge,
-  hinge_height = 3,
+  hinge_height = 0.2,
   pch,
   sizes = 1,
   gp = gpar(),
@@ -33,7 +33,7 @@ is missing.}
 \item{uphinge}{Ppper hinge, a standard whisker will be drawn if this
 is missing.}
 
-\item{hinge_height}{Height of the hinge.}
+\item{hinge_height}{Height of the hinge, default is 0.2.}
 
 \item{pch}{Numeric or character vector indicating what sort of plotting
 symbol to use. See \code{\link[grid]{pointsGrob}}.}

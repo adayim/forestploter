@@ -71,3 +71,44 @@ test_that("Box plot with groups", {
 })
 
 
+test_that("Inside xlim box plot single", {
+
+  df <- structure(list(Var = c("A", "B", "C", "D", "E", "F", "G", "H"),
+                       est1 = c(50, 30, 80, 80, 80, 80, 80, NA),
+                       est2 = c(50, 20, 80, 80, 80, 80, 80, 75),
+                       up1 = c(70, 40, 250, 150, 100, 100, 310, NA),
+                       up2 = c(55, 25, 85, 85, 85, 85, 85, 80),
+                       lw1 = c(30, 20, 10, 5, 50, 70, 5, NA),
+                       lw2 = c(45, 15, 75, 75, 75, 75, 75, 70),
+                       lhg1 = c(0, 0, 30, 30, 50, 70, 0, 0),
+                       lhg2 = rep(NA, 8),
+                       uhg1 = c(0, 0, 110, 100, 100, 100, 0, 0),
+                       uhg2 = rep(NA, 8)),
+                  class = "data.frame", row.names = c(NA, -8L))
+  df$Box <- paste(rep(" ", 20), collapse = " ")
+  df$blk <- paste(rep(" ", 5), collapse = " ")
+  df$Box2 <- paste(rep(" ", 20), collapse = " ")
+
+  tm <- forest_theme(ci_Theight = 0.2)
+
+  p <- forest(df[ , c(1, 12:14)],
+              est = list(df$est1, df$est2),
+              lower = list(df$lw1, df$lw2),
+              upper = list(df$up1, df$up2),
+              sizes = 0.35,
+              fn_ci = make_boxplot,
+              ci_column = c(2, 4),
+              lowhinge = list(df$lhg1, df$lhg2),
+              uphinge = list(df$uhg1, df$uhg2),
+              xlim = list(c(10, 200), c(30, 85)),
+              x_trans = c("none", "log2"),
+              hinge_height = 0.2,
+              is_summary=c(rep(F, nrow(df)-1), T),
+              index_args= c("lowhinge", "uphinge"),
+              theme=tm)
+
+  vdiffr::expect_doppelganger("xlim-boxplot-single", p)
+
+})
+
+

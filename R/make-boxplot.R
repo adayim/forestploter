@@ -6,15 +6,15 @@
 #' @param lower Lower whisker.
 #' @param upper Upper whisker.
 #' @param lowhinge Lower hinge, a standard whisker will be drawn if this
-#' is missing. 
+#' is missing.
 #' @param uphinge Ppper hinge, a standard whisker will be drawn if this
-#' is missing. 
-#' @param hinge_height Height of the hinge.
+#' is missing.
+#' @param hinge_height Height of the hinge, default is 0.2.
 #' @param pch Numeric or character vector indicating what sort of plotting
 #' symbol to use. See \code{\link[grid]{pointsGrob}}.
 #' @param gp Graphical parameters of \code{\link[grid]{gpar}}. Please refer
 #'  to \code{\link{forest_theme}} for more details.
-#' @param gp_box Graphical parameters passed to the hinge, this will be 
+#' @param gp_box Graphical parameters passed to the hinge, this will be
 #' passed to \code{\link[grid]{rectGrob}}. This does not support multiple groups.
 #' @param t_height Height of the whisker end vertices. If value is `NULL` (default),
 #'  no vertices will be drawn.
@@ -28,7 +28,7 @@
 #'
 #' @export
 make_boxplot <- function(est, lower, upper, lowhinge, uphinge,
-                         hinge_height = 3,
+                         hinge_height = 0.2,
                          pch, sizes = 1, gp = gpar(),
                          gp_box = gp,
                          t_height = NULL, xlim = c(0, 1), nudge_y = 0){
@@ -45,7 +45,7 @@ make_boxplot <- function(est, lower, upper, lowhinge, uphinge,
 
 #' @export
 makeContext.make_boxplot <- function(x) {
-  tbvp <- viewport(xscale = x$xlim)
+  tbvp <- viewport(xscale = x$xlim, clip = "on")
   if (is.null(x$vp))
     x$vp <- tbvp
   else
@@ -135,33 +135,19 @@ boxplot_static <- function(est, lower, upper, pch,
   }
 
   # Plot hinge
-  if((is.na(uphinge) | is.na(lowhinge)) || (lowhinge > max(xlim) | uphinge < min(xlim))){
+  if((is.na(uphinge) | is.na(lowhinge)) | (lowhinge > max(xlim) | uphinge < min(xlim))){
     hinge_rect <- nullGrob()
   }else{
-    if(uphinge > max(xlim) | lowhinge < min(xlim)){
-      if(uphinge > max(xlim) & lowhinge > min(xlim)){
-        est <- est - (uphinge - max(xlim))
-        hinge_width <- max(xlim) - lowhinge
-      }
+    hinge_width <- uphinge - lowhinge
 
-      if(lowhinge < min(xlim) & uphinge < max(xlim)){
-        est <- est - (min(xlim) - lowhinge)
-        hinge_width <- uphinge - min(xlim)
-      }
-
-      if(uphinge > max(xlim) & lowhinge < min(xlim))
-        hinge_width <- max(xlim) - min(xlim)
-
-    }else {
-      hinge_width <- uphinge - lowhinge
-    }
-
-    hinge_rect <- rectGrob(x = unit(est, "native"), y = unit(0.5 + nudge_y, "npc"),
-                         width = unit(hinge_width, "native"),
-                         height = unit(hinge_height, "char"),
-                         gp = gp_box,
-                         name = "hinge")
-  } 
+    hinge_rect <- rectGrob(x = unit(lowhinge, "native"),
+                           y = unit(0.5 + nudge_y, "npc"),
+                           just = "left",
+                           width = unit(hinge_width, "native"),
+                           height = unit(hinge_height, "char"),
+                           gp = gp_box,
+                           name = "hinge")
+  }
 
 
   # No dots if outside

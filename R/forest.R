@@ -338,6 +338,15 @@ forest <- function(data,
       est[[col_num]] <- xscale(est[[col_num]], col_trans)
       lower[[col_num]] <- xscale(lower[[col_num]], col_trans)
       upper[[col_num]] <- xscale(upper[[col_num]], col_trans)
+
+      # Transform other indexing arguments
+      if(!is.null(index_args)){
+        for(ind_v in index_args){
+          if(any(unlist(dot_args[[ind_v]][[col_num]]) <= 0, na.rm = TRUE) & col_trans %in% c("log", "log2", "log10"))
+            stop(ind_v, " should be larger than 0, if `x_trans` in \"log\", \"log2\", \"log10\".")
+          dot_args[[ind_v]][[col_num]] <- xscale(dot_args[[ind_v]][[col_num]], col_trans)
+        }
+      }
     }
 
     for(i in 1:nrow(data)){
@@ -364,6 +373,8 @@ forest <- function(data,
           dot_pass$gp <- NULL
         }
 
+        dot_pass <- dot_pass[names(dot_pass) %in% args_summary]
+
         draw_ci <- do.call(fn_summary, c(
           list(est = est[[col_num]][i],
                lower = lower[[col_num]][i],
@@ -386,6 +397,8 @@ forest <- function(data,
           g_par <- modifyList(dot_pass$gp, g_par)
           dot_pass$gp <- NULL
         }
+
+        dot_pass <- dot_pass[names(dot_pass) %in% args_ci]
 
         draw_ci <- do.call(fn_ci, c(
           list(est = est[[col_num]][i],
