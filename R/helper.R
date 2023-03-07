@@ -46,12 +46,18 @@ vert_line <- function(x, gp = grid::gpar(), xlim, x_trans = "none"){
   if(x_trans != "none")
     x <- xscale(x, scale = x_trans)
 
-  segmentsGrob(x0 = unit(x,"native"),
-               x1 = unit(x,"native"),
-               y0 = unit(0.01,"npc"),
-               y1 = unit(.99,"npc"),
-               gp = gp,
-               vp = viewport(xscale = xlim))
+  out_indx <- x > max(xlim) | x < min(xlim)
+  if(all(out_indx)){
+    return(nullGrob())
+  }else{
+    segmentsGrob(x0 = unit(x[!out_indx],"native"),
+                x1 = unit(x[!out_indx],"native"),
+                y0 = unit(0.01,"npc"),
+                y1 = unit(.99,"npc"),
+                gp = gp,
+                vp = viewport(xscale = xlim))
+  }
+    
 }
 
 
