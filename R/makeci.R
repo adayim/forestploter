@@ -4,8 +4,8 @@
 #' @inheritParams forest
 #' @param pch Numeric or character vector indicating what sort of plotting
 #' symbol to use. See \code{\link[grid]{pointsGrob}}.
-#' @param gp Graphical parameters. Please refer to \code{\link{forest_theme}}
-#' for more details.
+#' @param gp Graphical parameters of \code{\link[grid]{gpar}}. Please refer
+#'  to \code{\link{forest_theme}} for more details.
 #' @param t_height The height confidence interval line end vertices. If
 #' value is `NULL` (default), no vertices will be drawn.
 #' @param name name of the grob.
@@ -134,7 +134,15 @@ makeci_static <- function(est, lower, upper, pch, size = 1, gp = gpar(),
 }
 
 
-# Create pooled summary diamond shape
+#' Create pooled summary diamond shape
+#'
+#' @inheritParams forest
+#' @param gp Graphical parameters of \code{\link[grid]{gpar}}.
+#'  Please refer to \code{\link{forest_theme}} for more details.
+#' 
+#' @return A gTree object
+#'
+#' @export
 make_summary <- function(est, lower, upper, sizes = 1, gp, xlim){
 
   # Return NULL if the CI is outside

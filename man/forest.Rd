@@ -23,7 +23,11 @@ forest(
   footnote = NULL,
   title = NULL,
   nudge_y = 0,
-  theme = NULL
+  fn_ci = makeci,
+  fn_summary = make_summary,
+  index_args = NULL,
+  theme = NULL,
+  ...
 )
 }
 \arguments{
@@ -95,8 +99,29 @@ with the arrow and/or x-axis.}
 
 \item{nudge_y}{Horizontal adjustment to nudge groups by, must be within 0 to 1.}
 
+\item{fn_ci}{Name of the function to draw confidence interval, default is
+\code{\link{makeci}}. You can specify your own drawing function to draw the
+confidence interval, but the function needs to accept arguments \code{
+"est", "lower", "upper", "sizes", "xlim", "pch", "gp", "t_height", "nudge_y"}.
+Please refer to the \code{\link{makeci}} function for the details of these
+parameters.}
+
+\item{fn_summary}{Name of the function to draw summary confidence interval,
+default is \code{\link{make_summary}}. You can specify your own drawing
+function to draw the summary confidence interval, but the function needs to
+accept arguments \code{"est", "lower", "upper", "sizes", "xlim", "gp"}.
+Please refer to the \code{\link{make_summary}} function for the details of
+these parameters.}
+
+\item{index_args}{A character vector, name of the arguments used for indexing
+the row and coloumn. This should be the name of the arguments that is working
+the same way as \code{est}, \code{lower} and \code{upper}. Check out the
+examples in the \code{\link{make_boxplot}}.}
+
 \item{theme}{Theme of the forest plot, see \code{\link{forest_theme}} for
 details.}
+
+\item{...}{Other arguments passed on to the \code{fn_ci} and \code{fn_summary}.}
 }
 \value{
 A \code{\link[gtable]{gtable}} object.
@@ -155,5 +180,6 @@ plot(p)
 }
 \seealso{
 \code{\link[gtable]{gtable}} \code{\link[gridExtra]{tableGrob}}
-\code{\link{forest_theme}}
+\code{\link{forest_theme}} \code{\link{make_boxplot}}
+\code{\link{makeci}}  \code{\link{make_summary}}
 }
