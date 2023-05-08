@@ -1,6 +1,6 @@
 Package: forestploter
 Title: Create Flexible Forest Plot
-Version: 1.1.0
+Version: 1.1.1
 Authors@R: person(given="Alimu", 
                  family = "Dayimu",
                  email = "ad938@cam.ac.uk",
@@ -12,7 +12,7 @@ URL: https://github.com/adayim/forestploter
 BugReports: https://github.com/adayim/forestploter/issues
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3
 Imports: 
     grid,
     gridExtra,

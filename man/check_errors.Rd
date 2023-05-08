@@ -71,10 +71,11 @@ Although many efforts have been made to automatically get a pretty ticks break,
 it will not give a perfect solution, especially if \code{'log2'} and \code{'log10'}
 defined for \code{x_trans}. Please provide this value if possible.}
 
-\item{ticks_digits}{Number of digits for the x-axis, default is \code{1L}. This
-should be a numerical vector if different rounding will be applied to different
+\item{ticks_digits}{Number of digits for the x-axis, default is \code{NULL} to calculate
+an integer based on \code{ticks_at} if provided or \code{lower} and \code{upper} if not.
+This should be a numerical vector if different rounding will be applied to different
 column. If an integer is specified, for example \code{1L}, trailing zeros after
-the decimal mark will be dropped. Specify numeric, for example \code{1}, to keep
+the decimal mark will be dropped. Specify numeric, for example  \code{1}, to keep
 the trailing zero after the decimal mark.}
 
 \item{title}{The text for the title.}

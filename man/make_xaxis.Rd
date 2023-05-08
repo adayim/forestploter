@@ -29,10 +29,11 @@ this in \code{x_trans}. Set this to \code{"log"} if x-axis tick marks assume val
 are exponential, e.g. for logistic regression (OR), survival estimates (HR), Poisson
 regression etc.}
 
-\item{ticks_digits}{Number of digits for the x-axis, default is \code{1L}. This
-should be a numerical vector if different rounding will be applied to different
+\item{ticks_digits}{Number of digits for the x-axis, default is \code{NULL} to calculate
+an integer based on \code{ticks_at} if provided or \code{lower} and \code{upper} if not.
+This should be a numerical vector if different rounding will be applied to different
 column. If an integer is specified, for example \code{1L}, trailing zeros after
-the decimal mark will be dropped. Specify numeric, for example \code{1}, to keep
+the decimal mark will be dropped. Specify numeric, for example  \code{1}, to keep
 the trailing zero after the decimal mark.}
 
 \item{gp}{Graphical parameters for arrow.}

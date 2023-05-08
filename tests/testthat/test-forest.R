@@ -72,7 +72,7 @@ test_that("Apply theme", {
               arrow_lab = c("Placebo Better", "Treatment Better"),
               xlim = c(0, 4),
               ticks_at = c(0.5, 1, 2, 3),
-              ticks_digits = 1,
+              ticks_digits = 1L,
               footnote = "This is only a demo",
               theme = tm)
 
@@ -257,7 +257,7 @@ test_that("Summary CI", {
               arrow_lab = c("Placebo Better", "Treatment Better"),
               xlim = c(0, 4),
               ticks_at = c(0.5, 1, 2, 3),
-              ticks_digits = 1,
+              ticks_digits = 1L,
               title = "This is a title",
               footnote = "This is the demo data. Please feel free to change\nanything you want.",
               theme = tm)

@@ -1,3 +1,7 @@
+# forestploter 1.1.1
+
+* Improved `ticks_digits` auto calculation.
+
 # forestploter 1.1.0
 
 * New function `make_boxplot` to draw boxplot inside the plot.
