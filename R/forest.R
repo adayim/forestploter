@@ -33,11 +33,12 @@
 #' Although many efforts have been made to automatically get a pretty ticks break,
 #' it will not give a perfect solution, especially if \code{'log2'} and \code{'log10'}
 #' defined for \code{x_trans}. Please provide this value if possible.
-#' @param ticks_digits Number of digits for the x-axis, default is \code{1L}. This
-#' should be a numerical vector if different rounding will be applied to different
-#' column. If an integer is specified, for example \code{1L}, trailing zeros after
-#' the decimal mark will be dropped. Specify numeric, for example \code{1}, to keep
-#' the trailing zero after the decimal mark.
+#' @param ticks_digits Number of digits for the x-axis, default is \code{NULL} to calculate
+#' an integer based on \code{ticks_at} if provided or \code{lower} and \code{upper} if not.
+#'  This should be a numerical vector if different rounding will be applied to different
+#'  column. If an integer is specified, for example \code{1L}, trailing zeros after 
+#' the decimal mark will be dropped. Specify numeric, for example  \code{1}, to keep
+#'  the trailing zero after the decimal mark.
 #' @param arrow_lab Labels for the arrows, string vector of length two (left and
 #' right). The theme of arrow will inherit from the x-axis. This should be a list
 #' if different arrow labels for each column is desired.
@@ -95,7 +96,7 @@ forest <- function(data,
                    is_summary = NULL,
                    xlim = NULL,
                    ticks_at = NULL,
-                   ticks_digits = 1L,
+                   ticks_digits = NULL,
                    arrow_lab = NULL,
                    x_trans = "none",
                    xlab = NULL,
@@ -148,22 +149,6 @@ forest <- function(data,
   if(!is.null(ticks_at) && !inherits(ticks_at, "list"))
     ticks_at <- rep(list(ticks_at), length(ci_column))
 
-  # ticks digits to accommodate ticks_at
-  if(length(ticks_digits) == 1 & !is.list(ticks_digits)){
-    if(ticks_digits == 1L & !is.null(ticks_at)){
-      if(is.list(ticks_at))
-        ticks_digits <- sapply(ticks_at, function(x){
-          max(nchar(gsub(".*\\.|^[^.]+$", "", as.character(x))))
-        })
-      else
-        ticks_digits <- max(nchar(gsub(".*\\.|^[^.]+$", "", as.character(ticks_digits))))
-    }
-  }
-
-
-  if(length(ci_column) != length(ticks_digits))
-    ticks_digits <- rep(ticks_digits, length(ci_column))
-
   if(!is.null(arrow_lab) && !inherits(arrow_lab, "list"))
     arrow_lab <- rep(list(arrow_lab), length(ci_column))
 
@@ -209,6 +194,38 @@ forest <- function(data,
   pch_list <- rep(theme$ci$pch, each = length(ci_column))
   lty_list <- rep(theme$ci$lty, each = length(ci_column))
   lwd_list <- rep(theme$ci$lwd, each = length(ci_column))
+
+  # Positions of values in ci_column
+  gp_list <- rep_len(1:(length(lower)/group_num), length(lower))
+
+  # ticks digits to accommodate ticks_at
+  if(is.null(ticks_digits)){
+    # Use ticks at if provided
+    if(!is.null(ticks_at)){
+      if(is.list(ticks_at))
+        ticks_digits <- sapply(ticks_at, function(x){
+          max(nchar(gsub(".*\\.|^[^.]+$", "", as.character(x))))
+        })
+      else
+        ticks_digits <- max(nchar(gsub(".*\\.|^[^.]+$", "", as.character(ticks_digits))))
+    }else{
+      # Use values if not
+      if(length(ci_column) > 1)
+        ticks_digits <- sapply(seq_along(ci_column), function(i){
+          sel_num <- gp_list == i
+          vals <- na.omit(unlist(c(lower[sel_num], upper[sel_num])))
+          max(nchar(gsub(".*\\.|^[^.]+$", "", as.character(vals))))
+        })
+      else{
+        vals <- na.omit(unlist(c(lower, upper)))
+        ticks_digits <- max(nchar(gsub(".*\\.|^[^.]+$", "", as.character(vals))))
+      }
+    }
+    ticks_digits <- as.integer(ticks_digits)
+  }
+
+  if(length(ci_column) != length(ticks_digits))
+    ticks_digits <- rep(ticks_digits, length(ci_column))
 
   # Check nudge_y
   if(nudge_y >= 1 || nudge_y < 0)
@@ -256,9 +273,6 @@ forest <- function(data,
   #     return(wi)
   #   })
   # }
-
-  # Positions of values in ci_column
-  gp_list <- rep_len(1:(length(lower)/group_num), length(lower))
 
   # Check exponential
   if(any(x_trans %in% c("log", "log2", "log10"))){
