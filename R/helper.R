@@ -74,7 +74,10 @@ count_zeros <- function(x) {
   lead0 <- -log10(abs(x) - floor(abs(x)))
   lead0 <- floor(lead0) - (lead0 %% 1 < .Machine$double.eps ^ 0.5) 
   lead0[is.na(lead0)] <- 0
-  max(lead0) + 1
+  if(all(x > 0))
+    0
+  else
+    max(lead0) + 1
 }
 
 # Count decimal places

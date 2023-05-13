@@ -20,7 +20,13 @@ make_ticks <- function(at = NULL,
       ticks_at <- pretty(xlim)
     }else {
       pt_cut <- pretty(range(c(xlim, log(refline))))
-      pt_cut <- round(exp(pt_cut), 1) # Keep 1 digits
+
+      if(all(exp(pt_cut) >= 1)){
+        pt_cut <- round(exp(pt_cut))
+      }else{
+        pt_cut <- round(exp(pt_cut), 1) # Keep 1 digits
+      }
+
       ticks_at <- log(unique(pt_cut)) # avoid any duplicate
       # Limit values inside xlim
       ticks_at <- ticks_at[exp(ticks_at) <= max(exp(xlim))]
