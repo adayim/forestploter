@@ -200,35 +200,6 @@ forest <- function(data,
   # Positions of values in ci_column
   gp_list <- rep_len(1:(length(lower)/group_num), length(lower))
 
-  # ticks digits auto calculation if missing
-  if(is.null(ticks_digits)){
-    # Use ticks at if provided
-    if(!is.null(ticks_at)){
-      if(is.list(ticks_at))
-        ticks_digits <- sapply(ticks_at, function(x){
-          max(nchar(gsub(".*\\.|^[^.]+$", "", as.character(x))))
-        })
-      else
-        ticks_digits <- max(nchar(gsub(".*\\.|^[^.]+$", "", as.character(ticks_digits))))
-    }else{
-      # Use values if not
-      if(length(ci_column) > 1)
-        ticks_digits <- sapply(seq_along(ci_column), function(i){
-          sel_num <- gp_list == i
-          vals <- na.omit(unlist(c(lower[sel_num], upper[sel_num])))
-          max(nchar(gsub(".*\\.|^[^.]+$", "", as.character(vals))))
-        })
-      else{
-        vals <- na.omit(unlist(c(lower, upper)))
-        ticks_digits <- max(nchar(gsub(".*\\.|^[^.]+$", "", as.character(vals))))
-      }
-    }
-    ticks_digits <- as.integer(ticks_digits)
-  }
-
-  if(length(ci_column) != length(ticks_digits))
-    ticks_digits <- rep(ticks_digits, length(ci_column))
-
   # Check nudge_y
   if(nudge_y >= 1 || nudge_y < 0)
     stop("`nudge_y` must be within 0 to 1.")
@@ -260,22 +231,6 @@ forest <- function(data,
     is_summary <- rep(FALSE, nrow(data))
   }
 
-  # Transform sizes if not unique and transformation is required.
-  # if(length(unique(stats::na.omit(unlist(sizes)))) != 1 & sizes_trans & group_num == 1){
-  #   # Get the maximum reciprocal of size
-  #   max_sizes <- sapply(sizes, function(x){
-  #     x <- sqrt(x)
-  #     max(x[!is_summary], na.rm = TRUE)
-  #   }, USE.NAMES = FALSE)
-  #
-  #   sizes <- lapply(sizes, function(x){
-  #     wi <- sqrt(x)
-  #     wi <- wi/max(max_sizes, na.rm = TRUE)
-  #     wi[is_summary] <- 1/length(max_sizes)
-  #     return(wi)
-  #   })
-  # }
-
   # Check exponential
   if(any(x_trans %in% c("log", "log2", "log10"))){
     for(i in seq_along(x_trans)){
@@ -296,6 +251,18 @@ forest <- function(data,
     }
   }
 
+  # ticks digits auto calculation if missing
+  if(is.null(ticks_digits) & !is.null(ticks_at)){
+    if(is.list(ticks_at))
+      ticks_digits <- sapply(ticks_at, function(x){
+        max(count_decimal(x))
+      })
+    else
+      ticks_digits <- max(count_decimal(ticks_digits))
+    
+    ticks_digits <- as.integer(ticks_digits)
+  }
+
   # Set xlim to minimum and maximum value of the CI
   xlim <- lapply(seq_along(ci_column), function(i){
     sel_num <- gp_list == i
@@ -314,6 +281,21 @@ forest <- function(data,
                refline = ref_line[i],
                x_trans = x_trans[i])
   })
+
+  # ticks digits auto calculation if missing
+  if(is.null(ticks_digits)){
+    if(is.list(ticks_at))
+      ticks_digits <- sapply(ticks_at, function(x){
+        count_zeros(x)
+      }, USE.NAMES = FALSE)
+    else{
+      ticks_digits <- count_zeros(ticks_at)
+    }
+    ticks_digits <- as.integer(ticks_digits)
+  }
+
+  if(length(ci_column) != length(ticks_digits))
+    ticks_digits <- rep(ticks_digits, length(ci_column))
 
   # Calculate heights
   col_height <- apply(data, 1, function(x){

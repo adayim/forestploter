@@ -68,3 +68,18 @@ getCorners <- function(x) {
   }
 
 
+# Count leading zeros between the decimal point and first nonzero digit
+count_zeros <- function(x) {   
+  # ref: https://stackoverflow.com/a/35559346/5714545
+  lead0 <- -log10(abs(x) - floor(abs(x)))
+  lead0 <- floor(lead0) - (lead0 %% 1 < .Machine$double.eps ^ 0.5) 
+  lead0[is.na(lead0)] <- 0
+  max(lead0) + 1
+}
+
+# Count decimal places
+count_decimal <- function(x) {
+  ifelse(abs(x - round(x)) > .Machine$double.eps^0.5,
+         nchar(sub('^\\d+\\.', '', sub('0+$', '', as.character(x)))),
+         0)
+}
