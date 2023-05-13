@@ -206,21 +206,21 @@ forest <- function(data,
     if(!is.null(ticks_at)){
       if(is.list(ticks_at))
         ticks_digits <- sapply(ticks_at, function(x){
-          max(nchar(gsub(".*\\.|^[^.]+$", "", as.character(x))))
+          max(count_decimal(x))
         })
       else
-        ticks_digits <- max(nchar(gsub(".*\\.|^[^.]+$", "", as.character(ticks_digits))))
+        ticks_digits <- max(count_decimal(ticks_digits))
     }else{
       # Use values if not
       if(length(ci_column) > 1)
         ticks_digits <- sapply(seq_along(ci_column), function(i){
           sel_num <- gp_list == i
           vals <- na.omit(unlist(c(lower[sel_num], upper[sel_num])))
-          max(nchar(gsub(".*\\.|^[^.]+$", "", as.character(vals))))
+          calculate_digits(vals)
         })
       else{
         vals <- na.omit(unlist(c(lower, upper)))
-        ticks_digits <- max(nchar(gsub(".*\\.|^[^.]+$", "", as.character(vals))))
+        ticks_digits <- calculate_digits(vals)
       }
     }
     ticks_digits <- as.integer(ticks_digits)

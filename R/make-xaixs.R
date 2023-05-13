@@ -10,21 +10,22 @@
 #' @return A grob
 #'
 #' @keywords internal
-make_xaxis <- function(at, 
-                       xlab = NULL, 
-                       x0 = 1, 
-                       x_trans = "none", 
-                       ticks_digits = 1, 
-                       gp = gpar(), 
+make_xaxis <- function(at,
+                       xlab = NULL,
+                       x0 = 1,
+                       x_trans = "none",
+                       ticks_digits = 1,
+                       gp = gpar(),
                        xlim){
 
   if(x_trans != "none"){
-    label_at <- xscale(round(xscale(at, scale = x_trans, type = "inv"), ticks_digits), scale = x_trans)
-    x0 <- xscale(x0, scale = x_trans)
+    # label_at <- xscale(xscale(at, scale = x_trans, type = "inv", format_digits = ticks_digits), scale = x_trans)
+    x0 <- xscale(x0, scale = x_trans, format_digits = 0)
     labels <- xscale(at, scale = x_trans, type = "format", format_digits = ticks_digits)
+    label_at <- xscale(as.numeric(labels), scale = x_trans, type = "scale", format_digits = NULL)
   }else {
-    label_at <- round(at, ticks_digits)
     labels <- trimws(formatC(at, format="f", digits = ticks_digits, drop0trailing = is.integer(ticks_digits)))
+    label_at <- as.numeric(labels)
   }
 
   maj <- linesGrob(x = unit(c(min(xlim), max(xlim)), "native"),
@@ -34,8 +35,8 @@ make_xaxis <- function(at,
 
   maj_cord <- getCorners(maj)
 
-  tick <- segmentsGrob(x0 = unit(at, "native"), y0 = maj_cord$yb,
-                       x1 = unit(at, "native"), y1 = maj_cord$yb - unit(.5, "lines"),
+  tick <- segmentsGrob(x0 = unit(label_at, "native"), y0 = maj_cord$yb,
+                       x1 = unit(label_at, "native"), y1 = maj_cord$yb - unit(.5, "lines"),
                        gp = gp,
                        name = "tick")
 
