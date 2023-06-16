@@ -1,6 +1,7 @@
 # forestploter 1.1.1
 
 * Improved `ticks_digits` auto calculation.
+* Remove self righteousness cell height adjustment. 
 
 # forestploter 1.1.0
 

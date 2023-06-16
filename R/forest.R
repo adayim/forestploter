@@ -297,25 +297,7 @@ forest <- function(data,
   if(length(ci_column) != length(ticks_digits))
     ticks_digits <- rep(ticks_digits, length(ci_column))
 
-  # Calculate heights
-  col_height <- apply(data, 1, function(x){
-                        max(convertHeight(stringHeight(x), "mm", valueOnly = TRUE))
-                      })
-  col_height <- unit(col_height, "mm")
-
-  # Add increase heights for multiple groups
-  if(group_num > 1){
-    heights <- group_num*0.7*col_height + theme$tab_theme$core$padding[2]
-    # Convert data to plot
-    gt <- tableGrob(data,
-                    theme = theme$tab_theme,
-                    heights = heights,
-                    rows = NULL)
-  }else{
-    gt <- tableGrob(data,
-                    theme = theme$tab_theme,
-                    rows = NULL)
-  }
+  gt <- tableGrob(data, theme = theme$tab_theme, rows = NULL)
 
   # Do not clip text
   gt$layout$clip <- "off"
