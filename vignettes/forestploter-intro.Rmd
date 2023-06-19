@@ -266,7 +266,7 @@ p <- forest(dt[,c(1, 19, 23, 21, 20, 24, 22)],
 
 plot(p)
 ```
-It is obvious that the forst can print whatever you got for the table. You can use your imagination and put whatever you want in a cell.
+It is obvious that the forst can print whatever you got for the table. You can use your imagination and put whatever you want in a cell. Please checkout the other vignette to modify the alignment of the text.
 
 
 # Different parameters for different CI columns
