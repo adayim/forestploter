@@ -222,13 +222,13 @@ dt$`CVD outcome` <- paste(rep(" ", 20), collapse = " ")
 dt$`COPD outcome` <- paste(rep(" ", 20), collapse = " ")
 
 # Generate point estimation and 95% CI. Paste two CIs together and separate by line break.
-dt$ci1 <- paste(sprintf("%.1f (%.1f, %.1f)", dt$est_gp1, dt$low_gp1, dt$low_gp2),
-                sprintf("%.1f (%.1f, %.1f)", dt$est_gp3, dt$low_gp3, dt$low_gp3),
+dt$ci1 <- paste(sprintf("%.1f (%.1f, %.1f)", dt$est_gp1, dt$low_gp1, dt$hi_gp2),
+                sprintf("%.1f (%.1f, %.1f)", dt$est_gp3, dt$low_gp3, dt$hi_gp3),
                 sep = "\n")
 dt$ci1[grepl("NA", dt$ci1)] <- "" # Any NA to blank
 
-dt$ci2 <- paste(sprintf("%.1f (%.1f, %.1f)", dt$est_gp2, dt$low_gp2, dt$low_gp2),
-                sprintf("%.1f (%.1f, %.1f)", dt$est_gp4, dt$low_gp4, dt$low_gp4),
+dt$ci2 <- paste(sprintf("%.1f (%.1f, %.1f)", dt$est_gp2, dt$low_gp2, dt$hi_gp2),
+                sprintf("%.1f (%.1f, %.1f)", dt$est_gp4, dt$low_gp4, dt$hi_gp4),
                 sep = "\n")
 dt$ci2[grepl("NA", dt$ci2)] <- ""
 
