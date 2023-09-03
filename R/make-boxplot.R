@@ -7,7 +7,7 @@
 #' @param upper Upper whisker.
 #' @param lowhinge Lower hinge, a standard whisker will be drawn if this
 #' is missing.
-#' @param uphinge Ppper hinge, a standard whisker will be drawn if this
+#' @param uphinge Upper hinge, a standard whisker will be drawn if this
 #' is missing.
 #' @param hinge_height Height of the hinge, default is 0.2.
 #' @param pch Numeric or character vector indicating what sort of plotting

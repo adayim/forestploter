@@ -33,7 +33,7 @@ The main differences of the `forestploter` from the other packages are:
 
 # Basic forest plot
 
-The layout of the forest plot is determined by the dataset provided. Please check out the other vignette if you want change the text or backgroud, add or insert text, add borders to cells, edit color of the CI in some cells. 
+The layout of the forest plot is determined by the dataset provided. Please check out the other vignette if you want change the text or background, add or insert text, add borders to cells, edit color of the CI in some cells. 
 
 ## Simple forest plot
 
@@ -199,7 +199,7 @@ plot(p)
 
 # Multiple CI columns
 
-Sometimes one may want to have multiple CI columns, each column may represent different outcome. If this is the case, one only needs to provide a vector of the position of the columns to be drawn in the data. If the number of columns provided to draw the CI columns are same as number of `est`, one CI will be drawn into each CI columns. If the number of columns provided is less than number of `est`, the extra `est` will be considered as a group and will be drawn to the CI columns sequentially. In the latter case, group number equals to number of `est` devided by number of `ci_column` and multiple columns will be drawn into one cell. As seen in the example below, the CI will be drawn in the column 3 and 5. The first and second elements in `est`, `lower` and `upper` will be drawn in column 3 and column 5.
+Sometimes one may want to have multiple CI columns, each column may represent different outcome. If this is the case, one only needs to provide a vector of the position of the columns to be drawn in the data. If the number of columns provided to draw the CI columns are same as number of `est`, one CI will be drawn into each CI columns. If the number of columns provided is less than number of `est`, the extra `est` will be considered as a group and will be drawn to the CI columns sequentially. In the latter case, group number equals to number of `est` divided by number of `ci_column` and multiple columns will be drawn into one cell. As seen in the example below, the CI will be drawn in the column 3 and 5. The first and second elements in `est`, `lower` and `upper` will be drawn in column 3 and column 5.
 
 In a multiple groups example, two or more CI in one cell. The solution is simple, provide all the values sequentially to `est`, `lower` and `upper`. Which means, the first `n` elements in the `est`, `lower` and `upper` are considered as same group, same for next `n` elements. The `n` is determined by the number of `ci_column`. As it is shown in the example below, `est_gp1` and `est_gp2` will be drawn in column 3 and column 5, considered as **group 1**. The `est_gp3` and `est_gp4` will be drawn in column 3 and column 5, considered as **group 2**. 
 
@@ -266,7 +266,7 @@ p <- forest(dt[,c(1, 19, 23, 21, 20, 24, 22)],
 
 plot(p)
 ```
-It is obvious that the forst can print whatever you got for the table. You can use your imagination and put whatever you want in a cell. Please checkout the other vignette to modify the alignment of the text.
+It is obvious that the `forest` use whatever you provided as the skeleton of the forest plot. You can use your imagination and put whatever you want in a cell, including linebreaks. Please checkout the other vignette to modify the alignment of the text.
 
 
 # Different parameters for different CI columns
@@ -307,7 +307,7 @@ plot(p)
 ```
 
 # Custom CIs
-It is possible to pass custom CI drawing function to `forest`. The `fn_ci` accepts CI drawing function for normal confidence interval and `fn_summary` for summary CI. Other parameters for the those functions can be passed via `forest`. If you need to row values as `est` and `lower` to those functions, you need to define the name of the parameters you have passed via `index_args`. This is an advanced technique and not the purpose of this vignette to show how to create a function to draw CI, but you can find some tutorial [here](https://www.stat.auckland.ac.nz/~paul/RG3e/chapter8.html) if you are interested. Below is an example of the useage for a box plot CI with the built in `make_boxplot` function. 
+It is possible to pass custom CI drawing function to `forest`. The `fn_ci` accepts CI drawing function for normal confidence interval and `fn_summary` for summary CI. Other parameters for the those functions can be passed via `forest`. If you need to row values as `est` and `lower` to those functions, you need to define the name of the parameters you have passed via `index_args`. This is an advanced technique and not the purpose of this vignette to show how to create a function to draw CI, but you can find some tutorial [here](https://www.stat.auckland.ac.nz/~paul/RG3e/chapter8.html) if you are interested. Below is an example of the usage for a box plot CI with the built in `make_boxplot` function. 
 
 ```{r custom-ci, out.width="70%", fig.width  = 3, fig.height = 3}
 # Function to calculate Box plot values
@@ -395,13 +395,13 @@ ggplot2::ggsave(filename = "rplot.png",
 
 # FAQs
 
-**Q: The whisker/CI plot area is too narrow, pelase help!**
+**Q: The whisker/CI plot area is too narrow, please help!**
 
-**A:** I have to admit that vignettes were not well written, but you should be able to get the idea if you looked the vignette creafully and checked the examples. Increase the widths by having more blank space in the column that the CI to be drawn. Please checkout the first example on how to do this. 
+**A:** I have to admit that vignettes were not well written, but you should be able to get the idea if you looked the vignette carefully and checked the examples. Increase the widths by having more blank space in the column that the CI to be drawn. Please checkout the first example on how to do this. 
 
 **Q: Can I modify the width and height of each row and columns?**
 
-**A:** Yes, althoug the content in of the data decide the heights and widths of the rows and columns, you can also modify these after you have finished plotting. See [this here for details](https://github.com/adayim/forestploter/issues/30#issuecomment-1459038988). You can also use `core = list(padding = unit(c(4, 3), "mm"))` in the `forest_theme` to add some paddings to width and height of each cell.
+**A:** Yes, although the content in of the data decide the heights and widths of the rows and columns, you can also modify these after you have finished plotting. See [this here for details](https://github.com/adayim/forestploter/issues/30#issuecomment-1459038988). You can also use `core = list(padding = unit(c(4, 3), "mm"))` in the `forest_theme` to add some padding to width and height of each cell.
 
 **Q: How should I use weight for sizes?**
 

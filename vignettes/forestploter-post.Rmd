@@ -25,7 +25,7 @@ knitr::opts_chunk$set(
 
 The layout of the forest plot is determined by the dataset provided. All the elements of the forestplot are placed in the cells. This makes it very easy to edit any elements in the plot given the row and columns. The graphical parameters of the element can further be editted in the particular cell. Here, we will start with a simple meta analysis forest plot.   
 
-The plotting steps demenstrated in this vignette may not necessarily be the optimal. There are other R packages out there are better at the plot demenstrated here. Please choose the best one that suits you. Our final plot is shown in the below.
+The plotting steps demonstrate in this vignette may not necessarily be the optimal. There are other R packages out there are better at the plot demonstrate here. Please choose the best one that suits you. Our final plot is shown in the below.
 
 ```{r final-plot, out.width = '95%', echo = FALSE}
 knitr::include_graphics("img/metaplot.png")

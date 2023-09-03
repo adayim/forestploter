@@ -10,8 +10,8 @@
 #' \code{"header"}.
 #' @param order Order in which the grobs should be plotted. Use \code{'top'} 
 #' (default) to draw the grob above everything, \code{'text'} on the top of text 
-#' given by plot data but below eveything else, \code{'backgroud'} plot on the 
-#' top of backgroud but below everything else, \code{'back'} below everything.
+#' given by plot data but below everything else, \code{'background'} plot on the 
+#' top of background but below everything else, \code{'bottom'} below everything.
 #' @param gb_fn Grob function
 #' @param ... Other parameters to be passed to \code{gb_fn}.
 #'
@@ -23,7 +23,7 @@ add_grob <- function(plot,
                      row = NULL,
                      col = NULL,
                      part = c("body", "header"),
-                     order = c("top", "text", "backgroud", "back"),
+                     order = c("top", "text", "background", "bottom"),
                      gb_fn,
                      ...){
   
@@ -77,7 +77,7 @@ add_grob <- function(plot,
   # Get the order of the grob
   if(order == "top")
     z <- Inf
-  if(order == "back")
+  if(order == "bottom")
     z <- -Inf
   if(order == "text"){
     if(part == "header")
@@ -86,7 +86,7 @@ add_grob <- function(plot,
       z <- max(l$z[which(l$name == "core-fg")])
   }
 
-  if(order == "backgroud"){
+  if(order == "background"){
     if(part == "header")
       z <- max(l$z[which(l$name == "colhead-bg")])
     else
