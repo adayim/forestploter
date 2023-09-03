@@ -68,7 +68,7 @@
 #' Please refer to the \code{\link{make_summary}} function for the details of
 #'  these parameters.
 #' @param index_args A character vector, name of the arguments used for indexing
-#'  the row and coloumn. This should be the name of the arguments that is working
+#'  the row and column. This should be the name of the arguments that is working
 #' the same way as \code{est}, \code{lower} and \code{upper}. Check out the
 #' examples in the \code{\link{make_boxplot}}.
 #' @param theme Theme of the forest plot, see \code{\link{forest_theme}} for

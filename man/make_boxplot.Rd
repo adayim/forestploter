@@ -30,7 +30,7 @@ make_boxplot(
 \item{lowhinge}{Lower hinge, a standard whisker will be drawn if this
 is missing.}
 
-\item{uphinge}{Ppper hinge, a standard whisker will be drawn if this
+\item{uphinge}{Upper hinge, a standard whisker will be drawn if this
 is missing.}
 
 \item{hinge_height}{Height of the hinge, default is 0.2.}
