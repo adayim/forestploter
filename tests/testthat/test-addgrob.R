@@ -45,7 +45,7 @@ test_that("Add grob", {
   g <- add_grob(p,
                 row = 1:c(nrow(dt_fig) - 1),
                 col = 9:14,
-                order = "backgroud",
+                order = "background",
                 gb_fn = roundrectGrob,
                 r = unit(0.05, "snpc"),
                 gp = gpar(lty = "dotted",
