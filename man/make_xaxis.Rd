@@ -11,6 +11,7 @@ make_xaxis(
   x_trans = "none",
   ticks_digits = 1,
   gp = gpar(),
+  xlab_gp = NULL,
   xlim
 )
 }
@@ -37,6 +38,8 @@ the decimal mark will be dropped. Specify numeric, for example  \code{1}, to kee
 the trailing zero after the decimal mark.}
 
 \item{gp}{Graphical parameters for arrow.}
+
+\item{xlab_gp}{Graphical parameters for xlab.}
 
 \item{xlim}{Limits for the x axis as a vector of length 2, i.e. c(low, high). It
 will take the minimum and maximum of the lower and upper value if not provided.

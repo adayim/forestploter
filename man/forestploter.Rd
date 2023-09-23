@@ -3,6 +3,7 @@
 \docType{package}
 \name{forestploter}
 \alias{forestploter}
+\alias{forestploter-package}
 \title{Create Forest Plot}
 \description{
 This package uses gtable and gridExtra to overlay forest plots.

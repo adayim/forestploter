@@ -42,6 +42,9 @@ forest_theme(
   arrow_fill = "black",
   arrow_col = arrow_fill,
   arrow_cex = xaxis_cex,
+  xlab_adjust = c("refline", "center"),
+  xlab_cex = 1,
+  xlab_fontface = "plain",
   ...
 )
 }
@@ -137,6 +140,12 @@ See \code{\link[grid]{arrow}}.}
 \item{arrow_col}{Line and text color of the arrow, same as \code{arrow_fill} by default.}
 
 \item{arrow_cex}{Multiplier applied to font size for arrow label, same as \code{xaxis_cex} by default.}
+
+\item{xlab_adjust}{Control the alignment of xlab to reference line (default) or center of the x-axis.}
+
+\item{xlab_cex}{Multiplier applied to font size for xlab}
+
+\item{xlab_fontface}{The font face for xlab, default is \code{'bold'}.}
 
 \item{...}{Other parameters passed to table. See \code{\link[gridExtra]{tableGrob}}
 for details.}

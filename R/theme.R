@@ -75,7 +75,7 @@
 #' @param arrow_fill Filling color of the arrow head, default is \code{"black"}.
 #' @param arrow_col Line and text color of the arrow, same as \code{arrow_fill} by default.
 #' @param arrow_cex Multiplier applied to font size for arrow label, same as \code{xaxis_cex} by default.
-#' @param xlab_just Control the alignment of xlab to reference line (default) or center of the x-axis.
+#' @param xlab_adjust Control the alignment of xlab to reference line (default) or center of the x-axis.
 #' @param xlab_cex Multiplier applied to font size for xlab
 #' @param xlab_fontface The font face for xlab, default is \code{'bold'}. 
 #' @param ... Other parameters passed to table. See \code{\link[gridExtra]{tableGrob}}

@@ -2,6 +2,8 @@
 
 * Improved `ticks_digits` auto calculation.
 * Remove self righteousness cell height adjustment. 
+* Able to change the fontsize and alignment of the `xlab`.
+* Miss seplled `backgroud` parameter in `add_grob`.
 
 # forestploter 1.1.0
 
