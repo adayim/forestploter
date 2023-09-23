@@ -6,6 +6,7 @@
 #' @param at Numerical vector, create ticks at given values.
 #' @param x0 Position of vertical line for 0 or 1.
 #' @param gp Graphical parameters for arrow.
+#' @param xlab_gp Graphical parameters for xlab.
 #'
 #' @return A grob
 #'
@@ -16,6 +17,7 @@ make_xaxis <- function(at,
                        x_trans = "none",
                        ticks_digits = 1,
                        gp = gpar(),
+                       xlab_gp = NULL,
                        xlim){
 
   labels <- trimws(xscale(at, scale = x_trans, type = "format", format_digits = ticks_digits))
@@ -42,10 +44,15 @@ make_xaxis <- function(at,
                   name = "label")
 
   if(!is.null(xlab)){
+    if(xlab_gp$just != "refline"){
+      x_pos <- unit(0.5, "npc")
+    }else{
+      x_pos <- unit(x0, "native")
+    }
     xlab_gb <- textGrob(xlab,
-                        x = unit(x0, "native"),
+                        x = x_pos,
                         y = maj_cord$yb - unit(2, "lines"),
-                        gp = gp,
+                        gp = xlab_gp$gp,
                         check.overlap=TRUE,
                         name = "xlab")
 

@@ -75,6 +75,9 @@
 #' @param arrow_fill Filling color of the arrow head, default is \code{"black"}.
 #' @param arrow_col Line and text color of the arrow, same as \code{arrow_fill} by default.
 #' @param arrow_cex Multiplier applied to font size for arrow label, same as \code{xaxis_cex} by default.
+#' @param xlab_just Control the alignment of xlab to reference line (default) or center of the x-axis.
+#' @param xlab_cex Multiplier applied to font size for xlab
+#' @param xlab_fontface The font face for xlab, default is \code{'bold'}. 
 #' @param ... Other parameters passed to table. See \code{\link[gridExtra]{tableGrob}}
 #'  for details.
 #'
@@ -134,6 +137,10 @@ forest_theme <- function(base_size = 12,
                          arrow_col = arrow_fill,
                          arrow_cex = xaxis_cex,
                          # legend_lwd = 0.6,
+                         # X-lab
+                         xlab_adjust = c("refline", "center"),
+                         xlab_cex = 1,
+                         xlab_fontface = "plain",
                          ...){
 
     legend_position <- match.arg(legend_position, c("right", "top", "bottom", "none"))
@@ -241,15 +248,22 @@ forest_theme <- function(base_size = 12,
                                fontfamily = title_fontfamily))
 
     # Arrow
-    arrow <- list(type = match.arg(arrow_type),
-                  label_just = match.arg(arrow_label_just),
-                  length = arrow_length,
-                  gp = gpar(fontsize = base_size,
-                            fontfamily = base_family,
-                            lwd = arrow_lwd,
-                            fill = arrow_fill,
-                            col = arrow_col,
-                            cex = arrow_cex))
+    arrow_gp <- list(type = match.arg(arrow_type),
+                    label_just = match.arg(arrow_label_just),
+                    length = arrow_length,
+                    gp = gpar(fontsize = base_size,
+                              fontfamily = base_family,
+                              lwd = arrow_lwd,
+                              fill = arrow_fill,
+                              col = arrow_col,
+                              cex = arrow_cex))
+    
+    # Arrow
+    xlab_gp <- list(just = match.arg(xlab_adjust),
+                    gp = gpar(fontsize = base_size,
+                              fontfamily = base_family,
+                              fontface = xlab_fontface,
+                              cex = xlab_cex))
 
     # Table body
     core <- list(fg_params = list(hjust = 0,
@@ -279,9 +293,10 @@ forest_theme <- function(base_size = 12,
                 xaxis = xaxis_gp,
                 footnote = footnote_gp,
                 title  = title_gp,
-                arrow = arrow,
+                arrow = arrow_gp,
                 refline = refline_gp,
                 vertline = vertline_gp,
+                xlab = xlab_gp,
                 summary = sum_gp,
                 tab_theme  = tab_theme))
 

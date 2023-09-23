@@ -418,6 +418,7 @@ forest <- function(data,
   x_axis <- lapply(seq_along(xlim), function(i){
     make_xaxis(at = ticks_at[[i]],
                gp = theme$xaxis,
+               xlab_gp = theme$xlab,
                ticks_digits = ticks_digits[[i]],
                x0 = ref_line[i],
                xlim = xlim[[i]],
