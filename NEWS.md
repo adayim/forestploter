@@ -1,3 +1,7 @@
+# forestploter 1.1.2
+
+* Draw reference line and other vertical lines under whiskers.
+
 # forestploter 1.1.1
 
 * Improved `ticks_digits` auto calculation.

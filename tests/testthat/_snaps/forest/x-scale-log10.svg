@@ -119,6 +119,8 @@
 <text x='490.51' y='313.40' style='font-size: 12.00px; font-family: sans;' textLength='98.07px' lengthAdjust='spacingAndGlyphs'>1.47 (0.45 to 5.00)</text>
 <text x='490.51' y='346.93' style='font-size: 12.00px; font-family: sans;' textLength='104.75px' lengthAdjust='spacingAndGlyphs'>1.19 (0.50 to 20.00)</text>
 <text x='490.51' y='363.69' style='font-size: 12.00px; font-family: sans;' textLength='98.07px' lengthAdjust='spacingAndGlyphs'>1.63 (0.02 to 9.74)</text>
+<line x1='404.29' y1='366.27' x2='404.29' y2='202.00' style='stroke-width: 0.75; stroke: #333333; stroke-dasharray: 4.00,4.00;' />
+<line x1='445.01' y1='366.27' x2='445.01' y2='202.00' style='stroke-width: 0.75; stroke: #333333; stroke-dasharray: 4.00,4.00;' />
 <polyline points='353.14,208.70 464.55,208.70 ' style='stroke-width: 0.75;' />
 <polygon points='418.32,210.50 421.92,210.50 421.92,206.90 418.32,206.90 ' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
 <polyline points='343.36,242.22 458.42,242.22 ' style='stroke-width: 0.75;' />
@@ -135,7 +137,6 @@
 <polyline points='343.36,359.56 461.88,359.56 ' style='stroke-width: 0.75;' />
 <polyline points='346.47,357.76 343.36,359.56 346.47,361.36 ' style='stroke-width: 0.75;' />
 <polygon points='414.88,361.36 418.48,361.36 418.48,357.76 414.88,357.76 ' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
-<line x1='404.29' y1='366.27' x2='404.29' y2='202.00' style='stroke-width: 0.75; stroke: #333333; stroke-dasharray: 4.00,4.00;' />
 <polyline points='343.36,368.22 484.71,368.22 ' style='stroke-width: 0.45;' />
 <line x1='346.02' y1='368.22' x2='346.02' y2='375.42' style='stroke-width: 0.45;' />
 <line x1='386.75' y1='368.22' x2='386.75' y2='375.42' style='stroke-width: 0.45;' />
@@ -149,6 +150,5 @@
 <text x='445.01' y='386.74' text-anchor='middle' style='font-size: 12.00px; font-family: sans;' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>5</text>
 <text x='472.81' y='386.74' text-anchor='middle' style='font-size: 12.00px; font-family: sans;' textLength='13.35px' lengthAdjust='spacingAndGlyphs'>15</text>
 <text x='480.09' y='386.74' text-anchor='middle' style='font-size: 12.00px; font-family: sans;' textLength='13.35px' lengthAdjust='spacingAndGlyphs'>20</text>
-<line x1='445.01' y1='366.27' x2='445.01' y2='202.00' style='stroke-width: 0.75; stroke: #333333; stroke-dasharray: 4.00,4.00;' />
 </g>
 </svg>

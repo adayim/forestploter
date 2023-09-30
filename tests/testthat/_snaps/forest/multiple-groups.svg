@@ -58,6 +58,7 @@
 <text x='369.45' y='277.68' style='font-size: 10.00px; font-family: sans;' textLength='108.34px' lengthAdjust='spacingAndGlyphs'>                                       </text>
 <text x='369.45' y='293.06' style='font-size: 10.00px; font-family: sans;' textLength='108.34px' lengthAdjust='spacingAndGlyphs'>                                       </text>
 <text x='369.45' y='308.45' style='font-size: 10.00px; font-family: sans;' textLength='108.34px' lengthAdjust='spacingAndGlyphs'>                                       </text>
+<line x1='393.39' y1='311.78' x2='393.39' y2='221.31' style='stroke-width: 0.75; stroke: #333333;' />
 <polyline points='367.43,221.93 471.39,221.93 ' style='stroke-width: 1.50; stroke: #808080;' />
 <polygon points='417.61,223.73 421.21,223.73 421.21,220.13 417.61,220.13 ' style='stroke-width: 1.50; stroke: none; fill: #808080;' />
 <polyline points='365.51,252.70 448.16,252.70 ' style='stroke-width: 1.50; stroke: #808080;' />
@@ -101,7 +102,6 @@
 <polyline points='428.21,311.16 483.15,311.16 ' style='stroke-width: 1.50; stroke: #FF0000;' />
 <polyline points='480.03,312.96 483.15,311.16 480.03,309.36 ' style='stroke-width: 1.50; stroke: #FF0000;' />
 <circle cx='457.32' cy='311.16' r='1.80' style='stroke-width: 1.50; stroke: #FF0000; fill: #FF0000;' />
-<line x1='393.39' y1='311.78' x2='393.39' y2='221.31' style='stroke-width: 0.75; stroke: #333333;' />
 <polyline points='363.47,312.95 483.15,312.95 ' style='stroke-width: 0.45;' />
 <line x1='363.47' y1='312.95' x2='363.47' y2='318.95' style='stroke-width: 0.45;' />
 <line x1='393.39' y1='312.95' x2='393.39' y2='318.95' style='stroke-width: 0.45;' />

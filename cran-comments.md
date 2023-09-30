@@ -11,4 +11,4 @@ There were no ERRORs or WARNINGs.
 
 ---
 
-This version includes 1 bug fix and 6 improvement. 
+This version includes 1 bug fix improvement. 

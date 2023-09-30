@@ -210,6 +210,7 @@
 <text x='495.87' y='379.59' style='font-size: 10.00px; font-family: sans;' textLength='81.73px' lengthAdjust='spacingAndGlyphs'>1.66 (0.29 to 3.02)</text>
 <text x='495.87' y='410.37' style='font-size: 10.00px; font-family: sans;' textLength='81.73px' lengthAdjust='spacingAndGlyphs'>2.54 (0.89 to 4.20)</text>
 <text x='495.87' y='425.75' style='font-size: 10.00px; font-family: sans;' textLength='81.73px' lengthAdjust='spacingAndGlyphs'>1.11 (0.04 to 2.19)</text>
+<line x1='401.45' y1='426.93' x2='401.45' y2='125.36' style='stroke-width: 0.75; stroke: #FF0000; stroke-dasharray: 4.00,4.00;' />
 <polyline points='375.49,129.98 479.45,129.98 ' style='stroke-width: 0.75;' />
 <line x1='375.49' y1='131.52' x2='375.49' y2='128.44' style='stroke-width: 0.75;' />
 <line x1='479.45' y1='131.52' x2='479.45' y2='128.44' style='stroke-width: 0.75;' />
@@ -267,7 +268,6 @@
 <line x1='437.04' y1='423.85' x2='437.04' y2='420.77' style='stroke-width: 0.75;' />
 <polygon points='403.31,423.86 406.41,423.86 406.41,420.76 403.31,420.76 ' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
 <text x='135.72' y='440.45' style='font-size: 6.00px; fill: #0000FF; font-family: sans;' textLength='51.70px' lengthAdjust='spacingAndGlyphs'>This is only a demo</text>
-<line x1='401.45' y1='426.93' x2='401.45' y2='125.36' style='stroke-width: 0.75; stroke: #FF0000; stroke-dasharray: 4.00,4.00;' />
 <polyline points='371.53,430.25 491.21,430.25 ' style='stroke-width: 0.45;' />
 <line x1='386.49' y1='430.25' x2='386.49' y2='436.25' style='stroke-width: 0.45;' />
 <line x1='401.45' y1='430.25' x2='401.45' y2='436.25' style='stroke-width: 0.45;' />

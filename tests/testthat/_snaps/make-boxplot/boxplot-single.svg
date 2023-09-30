@@ -46,6 +46,7 @@
 <text x='320.41' y='296.64' style='font-size: 12.00px; font-family: sans;' textLength='130.01px' lengthAdjust='spacingAndGlyphs'>                                       </text>
 <text x='320.41' y='313.40' style='font-size: 12.00px; font-family: sans;' textLength='130.01px' lengthAdjust='spacingAndGlyphs'>                                       </text>
 <text x='320.41' y='330.17' style='font-size: 12.00px; font-family: sans;' textLength='130.01px' lengthAdjust='spacingAndGlyphs'>                                       </text>
+<line x1='318.77' y1='333.41' x2='318.77' y2='234.85' style='stroke-width: 0.75; stroke: #333333; stroke-dasharray: 4.00,4.00;' />
 </g>
 <defs>
   <clipPath id='cpMzEzLjM0fDQ1NC42OXwyMzMuODR8MjUwLjYx'>
@@ -130,7 +131,6 @@
 <polygon points='412.46,327.84 416.06,327.84 416.06,324.24 412.46,324.24 ' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
 </g>
 <g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1NzYuMDA=)'>
-<line x1='318.77' y1='333.41' x2='318.77' y2='234.85' style='stroke-width: 0.75; stroke: #333333; stroke-dasharray: 4.00,4.00;' />
 <polyline points='313.34,334.69 454.69,334.69 ' style='stroke-width: 0.45;' />
 <line x1='318.77' y1='334.69' x2='318.77' y2='341.89' style='stroke-width: 0.45;' />
 <line x1='355.57' y1='334.69' x2='355.57' y2='341.89' style='stroke-width: 0.45;' />

@@ -483,6 +483,8 @@ forest <- function(data,
                           t = 2,
                           l = j,
                           b = tot_row, r = j,
+                          # Make sure reference line is below the whisker
+                          z = max(gt$layout$z[grepl("core-", gt$layout$name)]),
                           clip = "off",
                           name = paste0("ref.line-", j))
 
@@ -504,6 +506,7 @@ forest <- function(data,
                             t = 2,
                             l = j,
                             b = tot_row, r = j,
+                            z = max(gt$layout$z[grepl("core-", gt$layout$name)]),
                             clip = "off",
                             name = paste0("vert.line-", j))
 

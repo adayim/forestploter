@@ -216,6 +216,8 @@
 <text x='488.65' y='394.98' style='font-size: 10.00px; font-family: sans;' textLength='52.78px' lengthAdjust='spacingAndGlyphs'>                   </text>
 <text x='488.65' y='410.37' style='font-size: 10.00px; font-family: sans;' textLength='52.78px' lengthAdjust='spacingAndGlyphs'>                   </text>
 <text x='488.65' y='425.75' style='font-size: 10.00px; font-family: sans;' textLength='52.78px' lengthAdjust='spacingAndGlyphs'>                   </text>
+<line x1='348.20' y1='426.93' x2='348.20' y2='125.36' style='stroke-width: 0.75; stroke: #00FF00; stroke-dasharray: 4.00,4.00;' />
+<line x1='501.48' y1='426.93' x2='501.48' y2='125.36' style='stroke-width: 0.75; stroke: #00FF00; stroke-dasharray: 4.00,4.00;' />
 <polyline points='322.79,128.44 405.78,128.44 ' style='stroke-width: 1.12; stroke: #E41A1C;' />
 <line x1='322.79' y1='129.98' x2='322.79' y2='126.90' style='stroke-width: 1.12; stroke: #E41A1C;' />
 <line x1='405.78' y1='129.98' x2='405.78' y2='126.90' style='stroke-width: 1.12; stroke: #E41A1C;' />
@@ -440,7 +442,6 @@
 <line x1='488.06' y1='425.39' x2='488.06' y2='422.31' style='stroke-width: 1.12; stroke: #377EB8; stroke-dasharray: 1.50,4.50;' />
 <line x1='518.83' y1='425.39' x2='518.83' y2='422.31' style='stroke-width: 1.12; stroke: #377EB8; stroke-dasharray: 1.50,4.50;' />
 <polygon points='502.45,425.65 506.05,425.65 506.05,422.05 502.45,422.05 ' style='stroke-width: 1.12; stroke: none; stroke-dasharray: 1.50,4.50; fill: #377EB8;' />
-<line x1='348.20' y1='426.93' x2='348.20' y2='125.36' style='stroke-width: 0.75; stroke: #00FF00; stroke-dasharray: 4.00,4.00;' />
 <polyline points='318.28,430.25 437.96,430.25 ' style='stroke-width: 0.45;' />
 <line x1='318.28' y1='430.25' x2='318.28' y2='436.25' style='stroke-width: 0.45;' />
 <line x1='348.20' y1='430.25' x2='348.20' y2='436.25' style='stroke-width: 0.45;' />
@@ -458,7 +459,6 @@
 <text x='351.80' y='466.76' style='font-size: 10.00px; font-family: sans;' textLength='75.04px' lengthAdjust='spacingAndGlyphs'>Treatment Better</text>
 <line x1='437.96' y1='455.08' x2='351.80' y2='455.08' style='stroke-width: 0.45;' />
 <polyline points='434.85,456.88 437.96,455.08 434.85,453.28 ' style='stroke-width: 0.45;' />
-<line x1='501.48' y1='426.93' x2='501.48' y2='125.36' style='stroke-width: 0.75; stroke: #00FF00; stroke-dasharray: 4.00,4.00;' />
 <polyline points='485.45,430.25 549.57,430.25 ' style='stroke-width: 0.45;' />
 <line x1='485.45' y1='430.25' x2='485.45' y2='436.25' style='stroke-width: 0.45;' />
 <line x1='501.48' y1='430.25' x2='501.48' y2='436.25' style='stroke-width: 0.45;' />
