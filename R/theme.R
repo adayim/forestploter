@@ -346,6 +346,17 @@ make_group_theme <- function(theme, group_num){
       theme$legend$label <- paste("Group", 1:group_num)
     }
 
+    # Change CI theme if the plot has multiple group
+    if(group_num > 1){
+      if(length(theme$summary$fill) != length(theme$summary$col))
+        stop("summary theme fill and col have different length")
+
+      if(length(theme$summary$col) == 1){
+        theme$summary$col <- theme$ci$col
+        theme$summary$fill <- theme$ci$col
+      }
+    }
+
     # Check for group and color
     if(group_num > 1 & length(theme$ci$col) < group_num & length(theme$ci$col) > 1)
       stop("More groups than colors.")

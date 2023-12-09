@@ -7,7 +7,7 @@ test_that("Test themes default value", {
                             'arrow', 'refline', 'vertline', 'xlab',
                             'summary', 'tab_theme'))
 
-  expect_identical(tm$legend, list(gp = gpar(fontsize = 12, fontfamily = ""),
+  expect_identical(tm$legend, list(gp = gpar(fontsize = 12, fontfamily = "", cex=1),
                                    'name' = "Group", 'position' = "right",
                                    'label' = ""))
 
@@ -21,7 +21,7 @@ test_that("Set theme", {
   tm <- forest_theme(legend_value = c("Gp1", "Gp2"))
   expect_type(tm, "list")
 
-  expect_identical(tm$legend, list(gp = gpar('fontsize' = 12, 'fontfamily' = ""),
+  expect_identical(tm$legend, list(gp = gpar('fontsize' = 12, 'fontfamily' = "", "cex"=1),
                                    'name' = "Group", 'position' = "right",
                                    'label' = c("Gp1", "Gp2")))
 

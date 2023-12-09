@@ -36,7 +36,7 @@
 #' @param ticks_digits Number of digits for the x-axis, default is \code{NULL} to calculate
 #' an integer based on \code{ticks_at} if provided or \code{lower} and \code{upper} if not.
 #'  This should be a numerical vector if different rounding will be applied to different
-#'  column. If an integer is specified, for example \code{1L}, trailing zeros after 
+#'  column. If an integer is specified, for example \code{1L}, trailing zeros after
 #' the decimal mark will be dropped. Specify numeric, for example  \code{1}, to keep
 #'  the trailing zero after the decimal mark.
 #' @param arrow_lab Labels for the arrows, string vector of length two (left and
@@ -74,7 +74,7 @@
 #' @param theme Theme of the forest plot, see \code{\link{forest_theme}} for
 #' details.
 #' @param ... Other arguments passed on to the \code{fn_ci} and \code{fn_summary}.
-#' 
+#'
 #' @importFrom stats na.omit
 #'
 #'
@@ -120,8 +120,8 @@ forest <- function(data,
 
   args_summary <- names(formals(fn_summary))
   if(any(unlist(is_summary))){
-    if(!all(c("est", "lower", "upper", "sizes", "xlim", "gp") %in% args_summary))
-    stop("arguments \"est\", \"lower\", \"upper\", \"sizes\", \"xlim\",and \"gp\" must be provided in the function `fn_summary`.")
+    if(!all(c("est", "lower", "upper", "sizes", "xlim", "gp", "nudge_y") %in% args_summary))
+    stop("arguments \"est\", \"lower\", \"upper\", \"sizes\", \"nudge_y\", \"xlim\",and \"gp\" must be provided in the function `fn_summary`.")
   }
 
   check_errors(data = data, est = est, lower = lower, upper = upper, sizes = sizes,
@@ -225,9 +225,7 @@ forest <- function(data,
   nudge_y <- rep(nudge_y, each = length(ci_column))
 
 
-  if(group_num > 1 || is.null(is_summary)){
-    if(!is.null(is_summary))
-      warning("Summary CI is not supported for multiple groups and will be ignored.")
+  if(is.null(is_summary)){
     is_summary <- rep(FALSE, nrow(data))
   }
 
@@ -259,7 +257,7 @@ forest <- function(data,
       })
     else
       ticks_digits <- max(count_decimal(ticks_digits))
-    
+
     ticks_digits <- as.integer(ticks_digits)
   }
 
@@ -298,6 +296,11 @@ forest <- function(data,
     ticks_digits <- rep(ticks_digits, length(ci_column))
 
   gt <- tableGrob(data, theme = theme$tab_theme, rows = NULL)
+
+  if(group_num > 1 & any(is_summary)){
+    gt$heights[c(FALSE, is_summary)] <- gt$heights[c(FALSE, is_summary)]*2
+  }
+
 
   # Do not clip text
   gt$layout$clip <- "off"
@@ -347,7 +350,8 @@ forest <- function(data,
 
       if(is_summary[i]){
         # Update graphical parameters
-        g_par <- theme$summary
+        g_par <- gpar(col = theme$summary$col[current_gp],
+                      fill = theme$summary$fill[current_gp])
         if ("gp" %in% names(dot_pass)) {
           g_par <- modifyList(list(dot_pass$gp), g_par)
           dot_pass$gp <- NULL
@@ -361,7 +365,8 @@ forest <- function(data,
                upper = upper[[col_num]][i],
                sizes = sizes[[col_num]][i],
                xlim = xlim[[col_indx[col_num]]],
-               gp = g_par),
+               gp = g_par,
+               nudge_y = nudge_y[col_num]),
           dot_pass
         ))
 

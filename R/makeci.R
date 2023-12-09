@@ -143,14 +143,14 @@ makeci_static <- function(est, lower, upper, pch, size = 1, gp = gpar(),
 #' @return A gTree object
 #'
 #' @export
-make_summary <- function(est, lower, upper, sizes = 1, gp, xlim){
+make_summary <- function(est, lower, upper, sizes = 1, gp, xlim, nudge_y = NULL){
 
   # Return NULL if the CI is outside
   if(upper < min(xlim) | lower > max(xlim))
     return(NULL)
 
   polygonGrob(x = unit(c(lower, est, upper, est), "native"),
-              y = unit(0.5 + c(0, 0.5 * sizes, 0, -0.5*sizes), "npc"),
+              y = unit(0.5 + c(0, 0.5 * sizes, 0, -0.5*sizes) + nudge_y*2, "npc"),
               gp = gp,
               vp = viewport(xscale = xlim),
               name = "pooled.diamond")

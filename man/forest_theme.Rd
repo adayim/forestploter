@@ -17,6 +17,7 @@ forest_theme(
   legend_name = "Group",
   legend_position = "right",
   legend_value = "",
+  legend_cex = 1,
   xaxis_lwd = 0.6,
   xaxis_cex = 1,
   refline_lwd = 1,
@@ -85,6 +86,8 @@ for the grouped forest plot.}
 \item{legend_value}{Legend labels (expressions). A vector should be provided
 for the grouped forest plot. A "Group 1" etc will be created if not a vector
 for a grouped forest plot.}
+
+\item{legend_cex}{Multiplier applied to legend.}
 
 \item{xaxis_lwd}{Line width for x-axis.}
 
