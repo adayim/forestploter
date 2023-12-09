@@ -40,6 +40,7 @@ legend_grob <- function(name = "",
                          y = 0.5,
                          gp = gpar(fontsize = gp$fontsize,
                                    fontfamily = gp$fontfamily,
+                                   cex = gp$cex,
                                    fontface = 'bold',
                                    fill = 'black'))
 
@@ -55,7 +56,7 @@ legend_grob <- function(name = "",
   # LegendGrob
   leg_grob <- legendGrob(label, pch = pch, ncol = ncol,
                          do.lines = TRUE, byrow = by_row,
-                         hgap = hgap, vgap = vgap,
+                         hgap = hgap*gp$cex, vgap = vgap*gp$cex,
                          gp = gp)
 
   # Change legendGrob point color

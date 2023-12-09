@@ -45,6 +45,7 @@
 #' @param legend_value Legend labels (expressions). A vector should be provided
 #' for the grouped forest plot. A "Group 1" etc will be created if not a vector
 #' for a grouped forest plot.
+#' @param legend_cex Multiplier applied to legend.
 #' @param xaxis_lwd Line width for x-axis.
 #' @param xaxis_cex Multiplier applied to font size for x-axis.
 #' @param refline_lwd Line width for reference line.
@@ -104,6 +105,7 @@ forest_theme <- function(base_size = 12,
                          legend_name = "Group",
                          legend_position = "right",
                          legend_value = "",
+                         legend_cex = 1,
                          # X-axis
                          xaxis_lwd = 0.6,
                          xaxis_cex = 1,
@@ -235,7 +237,8 @@ forest_theme <- function(base_size = 12,
 
     # Legend
     legend_gp <- list(gp = gpar(fontsize = base_size,
-                                fontfamily = base_family),
+                                fontfamily = base_family,
+                                cex = legend_cex),
                       name = legend_name,
                       position = legend_position,
                       label = legend_value)
