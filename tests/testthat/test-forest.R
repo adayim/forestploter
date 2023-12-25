@@ -374,7 +374,8 @@ test_that("x-scale trans", {
               upper = dt$hi,
               ci_column = 4,
               vert_line = 5,
-              ticks_at = c(0.1, 0.5, 1, 5, 15, 20),
+              ticks_at = c(0.1, 0.5, 1, 5, 20),
+              ticks_minor = c(0.1, 0.3, 1, 2.5, 5, 10),
               x_trans = "log10",
               xlim = c(0.09, 24),
               ticks_digits = 1L)

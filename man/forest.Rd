@@ -17,6 +17,7 @@ forest(
   xlim = NULL,
   ticks_at = NULL,
   ticks_digits = NULL,
+  ticks_minor = NULL,
   arrow_lab = NULL,
   x_trans = "none",
   xlab = NULL,
@@ -77,6 +78,9 @@ This should be a numerical vector if different rounding will be applied to diffe
 column. If an integer is specified, for example \code{1L}, trailing zeros after
 the decimal mark will be dropped. Specify numeric, for example  \code{1}, to keep
 the trailing zero after the decimal mark.}
+
+\item{ticks_minor}{A numeric vector of positions to draw ticks without labels (optional).
+The values provided here can be superset or disjoint sets of \code{ticks_at}.}
 
 \item{arrow_lab}{Labels for the arrows, string vector of length two (left and
 right). The theme of arrow will inherit from the x-axis. This should be a list

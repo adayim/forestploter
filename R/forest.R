@@ -39,6 +39,8 @@
 #'  column. If an integer is specified, for example \code{1L}, trailing zeros after
 #' the decimal mark will be dropped. Specify numeric, for example  \code{1}, to keep
 #'  the trailing zero after the decimal mark.
+#' @param ticks_minor A numeric vector of positions to draw ticks without labels (optional).
+#' The values provided here can be superset or disjoint sets of \code{ticks_at}.
 #' @param arrow_lab Labels for the arrows, string vector of length two (left and
 #' right). The theme of arrow will inherit from the x-axis. This should be a list
 #' if different arrow labels for each column is desired.
@@ -99,6 +101,7 @@ forest <- function(data,
                    xlim = NULL,
                    ticks_at = NULL,
                    ticks_digits = NULL,
+                   ticks_minor = NULL,
                    arrow_lab = NULL,
                    x_trans = "none",
                    xlab = NULL,
@@ -128,7 +131,7 @@ forest <- function(data,
                ref_line = ref_line, vert_line = vert_line, ci_column = ci_column,
                is_summary = is_summary, xlim = xlim, ticks_at = ticks_at,
                ticks_digits = ticks_digits, arrow_lab = arrow_lab, xlab = xlab,
-               title = title, x_trans = x_trans)
+               title = title, x_trans = x_trans, ticks_minor = ticks_minor)
 
   # Set theme
   if(is.null(theme)){
@@ -148,8 +151,19 @@ forest <- function(data,
   if(!is.null(xlim) && !inherits(xlim, "list"))
     xlim <- rep(list(xlim), length(ci_column))
 
-  if(!is.null(ticks_at) && !inherits(ticks_at, "list"))
-    ticks_at <- rep(list(ticks_at), length(ci_column))
+  if(is.null(ticks_at)){
+      ticks_at <- ticks_minor
+  }else{
+    if(!inherits(ticks_at, "list"))
+      ticks_at <- rep(list(ticks_at), length(ci_column))
+  }
+
+  if(is.null(ticks_minor)){
+    ticks_minor <- ticks_at
+  }else{
+    if(!inherits(ticks_minor, "list"))
+      ticks_minor <- rep(list(ticks_minor), length(ci_column))
+  }
 
   if(!is.null(arrow_lab) && !inherits(arrow_lab, "list"))
     arrow_lab <- rep(list(arrow_lab), length(ci_column))
@@ -268,13 +282,20 @@ forest <- function(data,
               lower = lower[sel_num],
               upper = upper[sel_num],
               ref_line = ref_line[i],
-              ticks_at = ticks_at[[i]],
+              ticks_at = c(ticks_at[[i]], ticks_minor[[i]]),
               x_trans = x_trans[i])
   })
 
   # Set X-axis breaks if missing
   ticks_at <- lapply(seq_along(xlim), function(i){
     make_ticks(at = ticks_at[[i]],
+               xlim = xlim[[i]],
+               refline = ref_line[i],
+               x_trans = x_trans[i])
+  })
+
+  ticks_minor <- lapply(seq_along(xlim), function(i){
+    make_ticks(at = ticks_minor[[i]],
                xlim = xlim[[i]],
                refline = ref_line[i],
                x_trans = x_trans[i])
@@ -422,6 +443,7 @@ forest <- function(data,
   # Prepare X axis
   x_axis <- lapply(seq_along(xlim), function(i){
     make_xaxis(at = ticks_at[[i]],
+               at_minor = ticks_minor[[i]],
                gp = theme$xaxis,
                xlab_gp = theme$xlab,
                ticks_digits = ticks_digits[[i]],

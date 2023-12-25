@@ -19,6 +19,7 @@ check_errors <- function(data,
                          x_trans,
                          ticks_at,
                          ticks_digits,
+                         ticks_minor,
                          title,
                          arrow_lab,
                          xlab){
@@ -109,10 +110,19 @@ check_errors <- function(data,
     # Check the break
     if(!is.null(ticks_at) && !is.numeric(ticks_at))
       stop("ticks_at must be numeric.")
+    
+    if(!is.null(ticks_minor) && !is.numeric(ticks_minor))
+      stop("ticks_minor must be numeric.")
+    
 
     if(!is.null(ticks_at) && !is.null(xlim)){
       if(max(ticks_at) > max(xlim) || min(ticks_at) < min(xlim))
         warning("ticks_at is outside the xlim.")
+    }
+
+    if(!is.null(ticks_minor) && !is.null(xlim)){
+      if(max(ticks_minor) > max(xlim) || min(ticks_minor) < min(xlim))
+        warning("ticks_minor is outside the xlim.")
     }
 
   }else{
@@ -175,6 +185,21 @@ check_errors <- function(data,
       }else {
         if(!is.numeric(ticks_at))
           stop("ticks_at must be numeric.")
+      }
+    }
+
+    if(!is.null(ticks_minor)){
+      if(inherits(ticks_minor, "list")){
+        if(length(ticks_minor) != length(ci_column))
+          stop("ticks_minor must have the same length as ci_column.")
+
+        cl <- sapply(ticks_minor, is.numeric)
+        if(any(!cl))
+          stop("Elements in the ticks_minor must be numeric.")
+
+      }else {
+        if(!is.numeric(ticks_minor))
+          stop("ticks_minor must be numeric.")
       }
     }
 

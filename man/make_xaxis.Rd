@@ -6,6 +6,7 @@
 \usage{
 make_xaxis(
   at,
+  at_minor = NULL,
   xlab = NULL,
   x0 = 1,
   x_trans = "none",
@@ -17,6 +18,8 @@ make_xaxis(
 }
 \arguments{
 \item{at}{Numerical vector, create ticks at given values.}
+
+\item{at_minor}{Numerical vector, create ticks at given values without label.}
 
 \item{xlab}{X-axis labels, it will be put under the x-axis. An atomic vector should
 be provided if different \code{xlab} for different column is desired.}

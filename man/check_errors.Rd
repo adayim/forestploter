@@ -18,6 +18,7 @@ check_errors(
   x_trans,
   ticks_at,
   ticks_digits,
+  ticks_minor,
   title,
   arrow_lab,
   xlab
@@ -77,6 +78,9 @@ This should be a numerical vector if different rounding will be applied to diffe
 column. If an integer is specified, for example \code{1L}, trailing zeros after
 the decimal mark will be dropped. Specify numeric, for example  \code{1}, to keep
 the trailing zero after the decimal mark.}
+
+\item{ticks_minor}{A numeric vector of positions to draw ticks without labels (optional).
+The values provided here can be superset or disjoint sets of \code{ticks_at}.}
 
 \item{title}{The text for the title.}
 
