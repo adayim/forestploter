@@ -23,9 +23,9 @@ knitr::opts_chunk$set(
 
 # Principle
 
-The layout of the forest plot is determined by the dataset provided. All the elements of the forestplot are placed in the cells. This makes it very easy to edit any elements in the plot given the row and columns. The graphical parameters of the element can further be editted in the particular cell. Here, we will start with a simple meta analysis forest plot.   
+The layout of the forest plot is determined by the dataset provided. All the elements of the forest plot are placed in the cells. This makes it very easy to edit any elements in the plot given the row and columns. The graphical parameters of the element can further be edited in the particular cell. Here, we will start with a simple meta-analysis forest plot.   
 
-The plotting steps demonstrate in this vignette may not necessarily be the optimal. There are other R packages out there are better at the plot demonstrate here. Please choose the best one that suits you. Our final plot is shown in the below.
+The plotting steps demonstrated in this vignette may not necessarily be optimal. There are other R packages out there that are better at the plot demonstrated here. Please choose the best one that suits you. Our final plot is shown in the below.
 
 ```{r final-plot, out.width = '95%', echo = FALSE}
 knitr::include_graphics("img/metaplot.png")
@@ -33,13 +33,13 @@ knitr::include_graphics("img/metaplot.png")
 
 
 # Draw a forest plot
-We will start drawing forestplot with an example from [metafor](https://www.metafor-project.org/doku.php/plots:forest_plot_revman), which is similar to the plot above. We first load the data and draw a simple forestplot.
+We will start drawing a forest plot with an example from [metafor](https://www.metafor-project.org/doku.php/plots:forest_plot_revman), which is similar to the plot above. We first load the data and draw a simple forest plot.
 
 ```{r meta-forest, out.width="95%", fig.width  = 10.6, fig.height = 3.6}
 library(grid)
 library(forestploter)
 
-# Read meta analysis example data
+# Read meta-analysis example data
 dt <- read.csv(system.file("extdata", "metadata.csv", package = "forestploter"))
 
 str(dt)
@@ -47,7 +47,7 @@ str(dt)
 # Prepare a blank column for the CI
 dt$cicol <- paste(rep(" ", 20), collapse = " ")
 
-# Select some columns for plotting, this will be used as a skeleton of the forestplot
+# Select some columns for plotting, this will be used as a skeleton of the forest plot
 dt_fig <- dt[,c(1:7, 17, 8:13)]
 
 colnames(dt_fig) <- c("Study or Subgroup",
@@ -59,7 +59,7 @@ colnames(dt_fig) <- c("Study or Subgroup",
 dt_fig$Weight <- sprintf("%0.1f%%", dt_fig$Weight)
 dt_fig$Weight[dt_fig$Weight == "NA%"] <- ""
 
-# Convert NA to blank string
+# Convert NA to a blank string
 dt_fig[is.na(dt_fig)] <- ""
 
 # Background to white and summary diamond to black
@@ -89,18 +89,18 @@ p
 
 # Editing forest plot
 
-The package has some functionality to modify the forestplot. Below is the functions to edit various aspects of the plot:
+The package has some functionality to modify the forest plot. Below are the functions to edit various aspects of the plot:
 
-* The `edit_plot` function can be used to change the graphical parameter of text, background and CI. For example the color or font face of some cells. Other parameters controlling the background and text can be passed, position of the text for example.
-* The `add_text` function can be used to add text to certain rows/columns. If you want a complicated text align, you can leave some rows and/or columns blank and use this function to add the text.
-* The `insert_text` function can be used to insert a row before or after a certain row and add text. This function can be used to insert text between groups. The idea is to draw all data, and insert text after some rows to separate groups.
+* The `edit_plot` function can be used to change the graphical parameter of text, background, and CI. For example the color or font face of some cells. Other parameters controlling the background and text can be passed, the position of the text for example.
+* The `add_text` function can be used to add text to certain rows/columns. If you want a complicated text-align, you can leave some rows and/or columns blank and use this function to add the text.
+* The `insert_text` function can be used to insert a row before or after a certain row and add text. This function can be used to insert text between groups. The idea is to draw all data and insert text after some rows to separate groups.
 * The `add_border` function can be used to add a border to a specific cell.
 * The `add_grob` function can be used to add different grobs.
 
 ## Edit plot
-Below is to make the total row text to bold and change the color of the diamond shape. Then change the background color of the total row. After that, align texts in the last six columns to the center. 
+Below is to make the total row text bold and change the color of the diamond shape. Then change the background color of the total row. After that, align texts in the last six columns to the center. 
 ```{r edit-metaplot, out.width="95%", fig.width  = 10.6, fig.height = 3.6}
-# Change fontface
+# Change font face
 g <- edit_plot(p, row = 9, 
                gp = gpar(fontface = "bold"))
 
@@ -108,7 +108,7 @@ g <- edit_plot(p, row = 9,
 g <- edit_plot(g, col = 8, row = 9, which = "ci", 
           gp = gpar(col = "blue", fill = "blue"))
 
-# Change background of the total row
+# Change the background of the total row
 g <- edit_plot(g, col = 1:7, 
                row = 9, 
                which = "background", 
@@ -125,14 +125,14 @@ g
 ```
 
 
-For the text align, `hjust = unit(0, "npc")` and `x = unit(0, "npc")` to align left. `hjust = unit(0.5, "npc")` and `x = unit(0.5, "npc")` to align the text in the center. `hjust = unit(1, "npc")` and `x = unit(0.9, "npc")` to align right.
+For the text-align, `hjust = unit(0, "npc")` and `x = unit(0, "npc")` to align left. `hjust = unit(0.5, "npc")` and `x = unit(0.5, "npc")` to align the text in the center. `hjust = unit(1, "npc")` and `x = unit(0.9, "npc")` to align right.
 
 
 ## Add and insert text
 In this step, we want to add some text to the header and total number of events in the data.
 
 ```{r text-metaplot, out.width="95%", fig.width  = 10.6, fig.height = 3.6}
-# Add or insert some text to header on top of CI columns
+# Add or insert some text to the header on top of CI columns
 g <- add_text(g, text = "IV, Random, 95% CI",
               part = "header", 
               col = 7:8,
@@ -156,7 +156,7 @@ g <- add_text(g, text = "Decaf",
               col = 4:5,
               gp = gpar(fontface = "bold"))
 
-# Add text on the top of risk of bias data
+# Add text on the top of the risk of bias data
 g <- add_text(g, text = "Risk of Bias",
               part = "header", 
               row = 1,
@@ -187,9 +187,9 @@ g
 ```
 
 ## Add borders
-The next step we will add some borders at header. The default is to add border at the bottom of the cell(s).
+In the next step, we will add some borders at the header. The default is to add a border at the bottom of the cell(s).
 ```{r border-metaplot, out.width="95%", fig.width  = 10.6, fig.height = 3.6}
-# Add or insert some text to header
+# Add or insert some text to the header
 g <- add_border(g, 
                 part = "header", 
                 row = 1,
@@ -207,7 +207,7 @@ g
 
 
 ## Add grobs
-In the next step, we will add a rounded rectangle border with dashed line around the risk of bias data. Then draw circle grob with different color at the bottom of the text.
+In the next step, we will add a rounded rectangle border with a dashed line around the risk of bias data. Then draw a circle grob with different colors at the bottom of the text.
 ```{r grob-metaplot, out.width="95%", fig.width  = 10.6, fig.height = 3.6}
 g <- add_grob(g, 
               row = 1:c(nrow(dt_fig) - 1), 
@@ -218,7 +218,7 @@ g <- add_grob(g,
               gp = gpar(lty = "dotted",
                         col = "#bdbdbd"))
 
-# Draw circle grob, you can also draw a `pointsGrob`
+# Draw a circle grob, you can also draw a `pointsGrob`
 cols <- c("#eeee00", "#00cc00", "#cc0000")
 symb <- c("?", "+", "-")
 for(i in seq_along(symb)){
@@ -238,7 +238,7 @@ g
 
 ```
 
-The text we are going to create involves with math expression and multiple line. Any one of these can easily be done with `add_text` and setting `parse=TRUE`. We can use the code below to achieve what we want. The line break below is based on the solution [here](https://stackoverflow.com/questions/18237134/line-break-in-expression) using the `atop` function. You can also use [latex2exp](https://CRAN.R-project.org/package=latex2exp) package for math expression.
+The text we are going to create involves math expressions and multiple lines. Any one of these can easily be done with `add_text` and setting `parse=TRUE`. We can use the code below to achieve what we want. The line break below is based on the solution [here](https://stackoverflow.com/questions/18237134/line-break-in-expression) using the `atop` function. You can also use [latex2exp](https://CRAN.R-project.org/package=latex2exp) package for math expression.
 
 ```{r txtgrob-metaplot, out.width="95%", fig.width  = 10.6, fig.height = 3.6}
 txt <- bquote(atop(paste("Heterogeneity: ", tau^2, " = 0.22; ",
@@ -254,8 +254,8 @@ add_text(g, text = txt,
          gp = gpar(fontsize = 8))
 ```
 
-We can see that the second line is not left aligned, we can use `add_grob` to take advantage of other packages that create `grobs` object. Now we will use the
-[gridtext](https://CRAN.R-project.org/package=gridtext) package to generate a complex text and add it to the plot with `add_grob`. More details about the package can be found [here](https://wilkelab.org/gridtext/index.html). You can write markdown or HTML text and render it to the plot. Currently is does not support math equation. See other Unicode math symbols [here](https://www.stat.auckland.ac.nz/~paul/R/CM/AdobeSym.html)
+We can see that the second line is not left aligned, we can use `add_grob` to take advantage of other packages that create `grobs` objects. Now we will use the
+[gridtext](https://CRAN.R-project.org/package=gridtext) package to generate a complex text and add it to the plot with `add_grob`. More details about the package can be found [here](https://wilkelab.org/gridtext/index.html). You can write markdown or HTML text and render it to the plot. Currently, it does not support math equations. See other Unicode math symbols [here](https://www.stat.auckland.ac.nz/~paul/R/CM/AdobeSym.html)
 
 ```{r gridtext-metaplot, out.width="95%", fig.width  = 10.6, fig.height = 3.6}
 txt <- "Heterogeneity: &tau;<sup>2</sup> = 0.22; &chi;<sup>2</sup> = 9.39,
