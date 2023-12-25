@@ -1,6 +1,8 @@
 # forestploter 1.1.2
 
-* Draw reference line and other vertical lines under whiskers.
+* Draw reference line and other vertical lines below whiskers.
+* Allow minor ticks and groups for diamond shapes.
+* Able to change legend size.
 
 # forestploter 1.1.1
 

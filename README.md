@@ -15,12 +15,12 @@ coverage](https://codecov.io/gh/adayim/forestploter/branch/main/graph/badge.svg)
 <!-- badges: end -->
 
 The goal of `forestploter` is to create a publication-ready forest plot
-with little effort. This package provide some extra displays compared to
-other packages. The dataset will be used as a basic layout for the
-forest plot. Width of the column to draw the confidence interval can be
-controlled with the string length of the column. Can use space to
-control this. The elements in the plot are put in the row and columns,
-think the plot as a table.
+with little effort. This package provides some extra displays compared
+to other packages. The dataset will be used as a basic layout for the
+forest plot. The width of the column to draw the confidence interval can
+be controlled with the string length of the column. Can use space to
+control this. The elements in the plot are put in the rows and columns,
+think of the plot as a table.
 
 ## Installation
 
@@ -51,7 +51,7 @@ library(forestploter)
 
 dt <- read.csv(system.file("extdata", "example_data.csv", package = "forestploter"))
 
-# indent the subgroup if there is a number in the placebo column
+# Indent the subgroup if there is a number in the placebo column
 dt$Subgroup <- ifelse(is.na(dt$Placebo), 
                       dt$Subgroup,
                       paste0("   ", dt$Subgroup))
@@ -61,7 +61,7 @@ dt$Treatment <- ifelse(is.na(dt$Treatment), "", dt$Treatment)
 dt$Placebo <- ifelse(is.na(dt$Placebo), "", dt$Placebo)
 dt$se <- (log(dt$hi) - log(dt$est))/1.96
 
-# Add blank column for the forest plot to display CI.
+# Add a blank column for the forest plot to display CI.
 # Adjust the column width with space. 
 dt$` ` <- paste(rep(" ", 20), collapse = " ")
 
@@ -100,7 +100,7 @@ plot(p)
 Sometimes one may want to change the color or font face of some columns.
 Or one may want to insert text into certain rows. Or may want an
 underline to separate by group. The function `edit_plot`, `add_text`,
-`insert_text` and `add_border` can achieve these. Below is how to do
+`insert_text`, and `add_border` can achieve these. Below is how to do
 this:
 
 ``` r
@@ -112,7 +112,7 @@ g <- edit_plot(g,
                row = c(2, 5, 8, 11, 15, 18),
                gp = gpar(fontface = "bold"))
 
-# Insert text at top
+# Insert text at the top
 g <- insert_text(g,
                  text = "Treatment group",
                  col = 2:3,
@@ -125,7 +125,7 @@ g <- add_border(g, part = "header", row = 2, where = "bottom")
 g <- add_border(g, part = "header", row = 1, col = 2:3, 
                 gp = gpar(lwd = 2))
 
-# Edit background of row 5
+# Edit the background of row 5
 g <- edit_plot(g, row = 5, which = "background",
                gp = gpar(fill = "darkolivegreen1"))
 
@@ -148,17 +148,17 @@ before. The row number will be changed after inserting a text.
 
 If you want to draw CI to multiple columns, only need to provide a
 vector of the position of the columns to be drawn in the data. As seen
-in the example below, the CI will be drawn in the column 3 and 5. The
-first and second `est`, `lower` and `upper` will be drawn in column 3
-and column 5.
+in the example below, the CI will be drawn in columns 3 and 5. The first
+and second `est`, `lower`, and `upper` will be drawn in columns 3 and
+column 5.
 
 For a more complex example, you may want to draw CI by groups. The
-solution is simple, just provide another set of `est`, `lower` and
-`upper`. If the number of provided `est`, `lower` and `upper` are larger
-than the column number to draw CI, then the `est`, `lower` and `upper`
-will be reused. As it is shown in the example below, `est_gp1` and
-`est_gp2` will be drawn in column 3 and column 5 as normal. But
-`est_gp3` and `est_gp4` hasn’t been used, those will be drawn to column
+solution is simple, just provide another set of `est`, `lower`, and
+`upper`. If the number of provided `est`, `lower`, and `upper` are
+larger than the column number to draw CI, then the `est`, `lower`, and
+`upper` will be reused. As it is shown in the example below, `est_gp1`
+and `est_gp2` will be drawn in column 3 and column 5 as normal. But
+`est_gp3` and `est_gp4` haven’t been used, those will be drawn to column
 3 and column 5 again. So, the `est_gp1` and `est_gp2` will be considered
 as group 1, `est_gp3` and `est_gp4` group 2.
 
@@ -166,7 +166,7 @@ This is an example of multiple CI columns and groups:
 
 ``` r
 
-# Add blank column for the second CI column
+# Add a blank column for the second CI column
 dt$`   ` <- paste(rep(" ", 20), collapse = " ")
 
 # Set-up theme
