@@ -4,9 +4,9 @@
 \name{forestploter-package}
 \alias{forestploter}
 \alias{forestploter-package}
-\title{forestploter: Create Flexible Forest Plot}
+\title{forestploter: Create a Flexible Forest Plot}
 \description{
-Create forest plot based on the layout of the data. Confidence interval in multiple columns by groups can be done easily. Editing plot, inserting/adding text, applying theme to the plot and much more.
+Create a forest plot based on the layout of the data. Confidence intervals in multiple columns by groups can be done easily. Editing the plot, inserting/adding text, applying a theme to the plot, and much more.
 }
 \seealso{
 Useful links:
