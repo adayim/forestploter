@@ -81,3 +81,11 @@ make_xlim <- function(xlim = NULL,
 
 }
 
+# Stop if not a gpar() object
+# internal
+stop_ifnot_gpar <- function(x) {
+  nm <-deparse(substitute(x))
+  if(!inherits(x, "gpar"))
+    stop(sprintf("Error: %s must be a gpar() object", nm))
+}
+

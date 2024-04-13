@@ -74,7 +74,7 @@ dt$`HR (95% CI)` <- ifelse(is.na(dt$se), "",
 tm <- forest_theme(base_size = 10,
                    refline_col = "red",
                    arrow_type = "closed",
-                   footnote_col = "blue")
+                   footnote_gp = gpar(col = "blue", cex = 0.6))
 
 p <- forest(dt[,c(1:3, 20:21)],
             est = dt$est,
@@ -172,7 +172,7 @@ dt$`   ` <- paste(rep(" ", 20), collapse = " ")
 # Set-up theme
 tm <- forest_theme(base_size = 10,
                    refline_col = "red",
-                   footnote_col = "blue",
+                   footnote_gp = gpar(col = "blue"),
                    legend_name = "GP",
                    legend_value = c("Trt 1", "Trt 2"))
 

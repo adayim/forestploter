@@ -145,9 +145,9 @@
 <text x='486.55' y='372.74' text-anchor='middle' style='font-size: 6.00px; font-family: sans;' textLength='3.34px' lengthAdjust='spacingAndGlyphs'>4</text>
 <text x='377.59' y='393.39' text-anchor='end' style='font-size: 6.00px; font-family: sans;' textLength='52.37px' lengthAdjust='spacingAndGlyphs'>This Placebo Better</text>
 <line x1='325.23' y1='382.37' x2='377.59' y2='382.37' style='stroke-width: 0.45;' />
-<polygon points='331.46,378.77 325.23,382.37 331.46,385.97 ' style='stroke-width: 0.45; fill: #000000;' />
+<polygon points='331.46,378.77 325.23,382.37 331.46,385.97 ' style='stroke-width: 0.45; fill: #FFFFFF;' />
 <text x='484.44' y='393.39' text-anchor='end' style='font-size: 6.00px; font-family: sans;' textLength='22.01px' lengthAdjust='spacingAndGlyphs'> text Bet</text>
 <line x1='488.04' y1='382.37' x2='384.79' y2='382.37' style='stroke-width: 0.45;' />
-<polygon points='481.81,385.97 488.04,382.37 481.81,378.77 ' style='stroke-width: 0.45; fill: #000000;' />
+<polygon points='481.81,385.97 488.04,382.37 481.81,378.77 ' style='stroke-width: 0.45; fill: #FFFFFF;' />
 </g>
 </svg>

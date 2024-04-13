@@ -482,8 +482,10 @@ forest <- function(data,
 
   # Add footnote
   if(!is.null(footnote)){
+    if(theme$footnote$parse)
+      footnote <- tryCatch(parse(text = footnote), error = function(e) footnote)
     footnote_grob <- textGrob(label = footnote,
-                              gp = theme$footnote,
+                              gp = theme$footnote$gp,
                               x = 0,
                               y = .8,
                               just = "left",

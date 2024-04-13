@@ -27,8 +27,8 @@
 #' @param ci_col Color of the CI. A vector of color should be provided for
 #' the grouped forest plot. An internal color set will be if only not.
 #' @param ci_fill Color fill the point estimation. A vector of color should be
-#'  provided for the grouped forest plot. If this is \code{NULL} (default), the 
-#' value will inherit from \code{"ci_col"}. This is valid only if 
+#'  provided for the grouped forest plot. If this is \code{NULL} (default), the
+#' value will inherit from \code{"ci_col"}. This is valid only if
 #' \code{ci_pch} within 15:25.
 #' @param ci_alpha Scalar value, alpha channel for transparency of point estimation.
 #'  A small vertical line will be added to indicate the point estimation if this
@@ -45,12 +45,9 @@
 #' @param legend_value Legend labels (expressions). A vector should be provided
 #' for the grouped forest plot. A "Group 1" etc will be created if not a vector
 #' for a grouped forest plot.
-#' @param legend_cex Multiplier applied to legend.
-#' @param xaxis_lwd Line width for x-axis.
-#' @param xaxis_cex Multiplier applied to font size for x-axis.
-#' @param refline_lwd Line width for reference line.
-#' @param refline_lty Line type for reference line.
-#' @param refline_col Line color for the reference line.
+#' @param legend_gp \code{gpar} graphical parameters of legend, see \code{\link[grid]{gpar}}.
+#' @param xaxis_gp \code{gpar} graphical parameters of x-axis, see \code{\link[grid]{gpar}}.
+#' @param refline_gp \code{gpar} graphical parameters of reference line, see \code{\link[grid]{gpar}}.
 #' @param vertline_lwd Line width for extra vertical line. A vector can be provided
 #' for each vertical line, and the values will be recycled if no enough values are
 #' given.
@@ -58,27 +55,19 @@
 #' @param vertline_col Line color for the extra vertical line. Works same as \code{vertline_lwd}.
 #' @param summary_fill Color for filling the summary diamond shape.
 #' @param summary_col Color for borders of the summary diamond shape.
-#' @param footnote_cex Multiplier applied to font size for footnote.
-#' @param footnote_fontface The font face for footnote.
-#' @param footnote_col Color of the footnote.
+#' @param footnote_gp \code{gpar} graphical parameters of footnote, see \code{\link[grid]{gpar}}.
+#' @param footnote_parse Parse footnote text (default).
 #' @param title_just The justification of the title, default is \code{'left'}.
-#' @param title_cex Multiplier applied to font size for title.
-#' @param title_fontface The font face for title, default is \code{'bold'}.
-#' @param title_col Color of title.
-#' @param title_fontfamily Font family of title.
+#' @param title_gp \code{gpar} graphical parameters of title, see \code{\link[grid]{gpar}}.
 #' @param arrow_type Type of the arrow below x-axis, see \code{\link[grid]{arrow}}.
 #' @param arrow_label_just The justification of the arrow label relative to arrow. Control
 #' the arrow label to align to the starting point of the arrow \code{"start"} (default) or
 #' the ending point of the arrow \code{"end"}.
 #' @param arrow_length The length of the arrow head, default is \code{0.05}.
 #' See \code{\link[grid]{arrow}}.
-#' @param arrow_lwd Line width of the arrow, same as \code{xaxis_lwd} by default.
-#' @param arrow_fill Filling color of the arrow head, default is \code{"black"}.
-#' @param arrow_col Line and text color of the arrow, same as \code{arrow_fill} by default.
-#' @param arrow_cex Multiplier applied to font size for arrow label, same as \code{xaxis_cex} by default.
+#' @param arrow_gp \code{gpar} graphical parameters of arrow, see \code{\link[grid]{gpar}}.
 #' @param xlab_adjust Control the alignment of xlab to reference line (default) or center of the x-axis.
-#' @param xlab_cex Multiplier applied to font size for xlab
-#' @param xlab_fontface The font face for xlab, default is \code{'bold'}. 
+#' @param xlab_gp \code{gpar} graphical parameters of xlab, see \code{\link[grid]{gpar}}.
 #' @param ... Other parameters passed to table. See \code{\link[gridExtra]{tableGrob}}
 #'  for details.
 #'
@@ -105,14 +94,11 @@ forest_theme <- function(base_size = 12,
                          legend_name = "Group",
                          legend_position = "right",
                          legend_value = "",
-                         legend_cex = 1,
+                         legend_gp = gpar(fontsize = base_size, fontfamily = base_family, cex = 1),
                          # X-axis
-                         xaxis_lwd = 0.6,
-                         xaxis_cex = 1,
+                         xaxis_gp = gpar(fontsize = base_size, fontfamily = base_family, lwd = 0.6, cex = 1),
                          # Reference line
-                         refline_lwd = 1,
-                         refline_lty = "dashed",
-                         refline_col = "grey20",
+                         refline_gp = gpar(lwd = 1, lty = "dashed", col = "grey20"),
                          # Vertical line
                          vertline_lwd = 1,
                          vertline_lty = "dashed",
@@ -121,29 +107,23 @@ forest_theme <- function(base_size = 12,
                          summary_col = "#4575b4",
                          summary_fill = summary_col,
                          # Footnote
-                         footnote_cex = 0.6,
-                         footnote_fontface = "plain",
-                         footnote_col = "black",
+                         footnote_gp = gpar(fontsize = base_size, fontfamily = base_family, cex = 0.6, fontface = "plain", col = "black"),
+                         footnote_parse = TRUE,
                          # Title
                          title_just = c("left", "right", "center"),
-                         title_cex = 1.2,
-                         title_fontface = "bold",
-                         title_col = "black",
-                         title_fontfamily = base_family,
+                         title_gp = gpar(cex = 1.2, fontface = "bold", col = "black", fontfamily = base_family),
                          # Arrow
                          arrow_type = c("open", "closed"),
                          arrow_label_just = c("start", "end"),
                          arrow_length = 0.05,
-                         arrow_lwd = xaxis_lwd,
-                         arrow_fill = "black",
-                         arrow_col = arrow_fill,
-                         arrow_cex = xaxis_cex,
+                         arrow_gp = gpar(fontsize = base_size, fontfamily = base_family, lwd = 0.6),
                          # legend_lwd = 0.6,
                          # X-lab
                          xlab_adjust = c("refline", "center"),
-                         xlab_cex = 1,
-                         xlab_fontface = "plain",
+                         xlab_gp = gpar(fontsize = base_size, fontfamily = base_family, cex = 1, fontface = "plain"),
                          ...){
+
+    dot_args <- list(...)
 
     legend_position <- match.arg(legend_position, c("right", "top", "bottom", "none"))
 
@@ -196,11 +176,18 @@ forest_theme <- function(base_size = 12,
 
 
     # Reference line
-    refline_gp <- gpar(lwd = refline_lwd,
-                       lty = refline_lty,
-                       col = refline_col,
-                       fontsize = base_size,
-                       fontfamily = base_family)
+    # For backward compatability
+    refline_args <- c("refline_lwd", "refline_lty", "refline_col")
+    if(any(names(dot_args) %in% refline_args)){
+      message(paste(refline_args[refline_args %in% names(dot_args)], collapse = ", "),
+                    " will be deprecated, use refline_gp instead.")
+      refline_gp_old <- gpar(lwd = dot_args$refline_lwd,
+                             lty = dot_args$refline_lty,
+                             col = dot_args$refline_col)
+      refline_gp <- modifyList(refline_gp, refline_gp_old)
+      dot_args <- dot_args[!names(dot_args) %in% refline_args]
+    }
+    stop_ifnot_gpar(refline_gp)
 
     # Reference line
     vertline_gp <- gpar(lwd = vertline_lwd,
@@ -210,63 +197,123 @@ forest_theme <- function(base_size = 12,
                         fontfamily = base_family)
 
     # Confidence interval
-    ci_gp <- list(pch = ci_pch, 
-                  col = ci_col, 
-                  fill = ci_fill, 
-                  lty = ci_lty, 
+    ci_gp <- list(pch = ci_pch,
+                  col = ci_col,
+                  fill = ci_fill,
+                  lty = ci_lty,
                   alpha = ci_alpha,
-                  lwd = ci_lwd, 
+                  lwd = ci_lwd,
                   t_height = ci_Theight)
 
     # X-axis
-    xaxis_gp <- gpar(lwd = xaxis_lwd,
-                     cex = xaxis_cex,
-                     fontsize = base_size,
-                     fontfamily = base_family)
+    # For backward compatability
+    xaxis_args <- c("xaxis_lwd", "xaxis_cex")
+    if(any(names(dot_args) %in% xaxis_args)){
+      message(paste(xaxis_args[xaxis_args %in% names(dot_args)], collapse = ", "),
+                    " will be deprecated, use xaxis_gp instead.")
+      xaxis_gp_old <- gpar(lwd = dot_args$xaxis_lwd,
+                           cex = dot_args$xaxis_cex,
+                           fontsize = base_size,
+                           fontfamily = base_family)
+      xaxis_gp <- modifyList(xaxis_gp, xaxis_gp_old)
+      dot_args <- dot_args[!names(dot_args) %in% xaxis_args]
+    }
+    stop_ifnot_gpar(xaxis_gp)
 
     # Summary
     sum_gp <- gpar(col = summary_col,
                    fill = summary_fill)
 
     # Footnote
-    footnote_gp <- gpar(fontsize = base_size,
-                        fontfamily = base_family,
-                        cex = footnote_cex,
-                        fontface = footnote_fontface,
-                        col = footnote_col)
+    # For backward compatability
+    footnote_args <- c("footnote_cex", "footnote_fontface", "footnote_col")
+    if(any(names(dot_args) %in% footnote_args)){
+      message(paste(footnote_args[footnote_args %in% names(dot_args)], collapse = ", "),
+                   " will be deprecated, use footnote_gp instead.")
+      footnote_gp_old <- gpar(fontsize = base_size,
+                              fontfamily = base_family,
+                              cex = dot_args$footnote_cex,
+                              fontface = dot_args$footnote_fontface,
+                              col = dot_args$footnote_col)
+      footnote_gp <- modifyList(footnote_gp, footnote_gp_old)
+      dot_args <- dot_args[!names(dot_args) %in% footnote_args]
+    }
+    stop_ifnot_gpar(footnote_gp)
+    footnote_gp <- list(gp = footnote_gp,
+                        parse = footnote_parse)
 
     # Legend
-    legend_gp <- list(gp = gpar(fontsize = base_size,
-                                fontfamily = base_family,
-                                cex = legend_cex),
+    # For backward compatability
+    legend_args <- c("legend_cex")
+    if(any(names(dot_args) %in% legend_args)){
+      message("legend_cex will be deprecated, use legend_gp instead.")
+      legend_gp_old <- gpar(fontsize = base_size,
+                            fontfamily = base_family,
+                            cex = dot_args$legend_cex)
+      legend_gp <- modifyList(legend_gp, legend_gp_old)
+      dot_args <- dot_args[!names(dot_args) %in% legend_args]
+    }
+    stop_ifnot_gpar(legend_gp)
+
+    legend_gp <- list(gp = legend_gp,
                       name = legend_name,
                       position = legend_position,
                       label = legend_value)
 
     # Title
+    # For backward compatability
+    title_args <- c("title_cex", "title_fontface", "title_col", "title_fontfamily")
+    if(any(names(dot_args) %in% title_args)){
+      message(paste(title_args[title_args %in% names(dot_args)], collapse = ", "), 
+                    " will be deprecated, use title_gp instead.")
+      title_gp_old <- gpar(cex = dot_args$title_cex,
+                           fontface = dot_args$title_fontface,
+                           col = dot_args$title_col,
+                           fontfamily = dot_args$title_fontfamily)
+      title_gp <- modifyList(title_gp, title_gp_old)
+      dot_args <- dot_args[!names(dot_args) %in% title_args]
+    }
+    stop_ifnot_gpar(title_gp)
     title_gp <- list(just = match.arg(title_just),
-                     gp = gpar(cex = title_cex,
-                               fontface = title_fontface,
-                               col = title_col,
-                               fontfamily = title_fontfamily))
+                     gp = title_gp)
 
     # Arrow
+    # For backward compatability
+    arrow_args <- c("arrow_lwd", "arrow_fill", "arrow_col", "arrow_cex")
+    if(any(names(dot_args) %in% arrow_args)){
+      message(paste(arrow_args[arrow_args %in% names(dot_args)], collapse = ", "), 
+                    " will be deprecated, use arrow_gp instead.")
+      arrow_gp_old <- gpar(fontsize = base_size,
+                           fontfamily = base_family,
+                           lwd = dot_args$arrow_lwd,
+                           fill = dot_args$arrow_fill,
+                           col = dot_args$arrow_col,
+                           cex = dot_args$arrow_cex)
+      arrow_gp <- modifyList(arrow_gp, arrow_gp_old)
+      dot_args <- dot_args[!names(dot_args) %in% arrow_args]
+    }
+    stop_ifnot_gpar(arrow_gp)
     arrow_gp <- list(type = match.arg(arrow_type),
                     label_just = match.arg(arrow_label_just),
                     length = arrow_length,
-                    gp = gpar(fontsize = base_size,
-                              fontfamily = base_family,
-                              lwd = arrow_lwd,
-                              fill = arrow_fill,
-                              col = arrow_col,
-                              cex = arrow_cex))
-    
+                    gp = arrow_gp)
+
     # Arrow
+    # For backward compatability
+    xlab_args <- c("xlab_fontface", "xlab_cex")
+    if(any(names(dot_args) %in% xlab_args)){
+      message(paste(xlab_args[xlab_args %in% names(dot_args)], collapse = ", "), 
+                    " will be deprecated, use xlab_gp instead.")
+      xlab_gp_old <- gpar(fontsize = base_size,
+                          fontfamily = base_family,
+                          fontface = dot_args$xlab_fontface,
+                          cex = dot_args$xlab_cex)
+      xlab_gp <- modifyList(xlab_gp, xlab_gp_old)
+      dot_args <- dot_args[!names(dot_args) %in% xlab_args]
+    }
+    stop_ifnot_gpar(xlab_gp)
     xlab_gp <- list(just = match.arg(xlab_adjust),
-                    gp = gpar(fontsize = base_size,
-                              fontfamily = base_family,
-                              fontface = xlab_fontface,
-                              cex = xlab_cex))
+                    gp = xlab_gp)
 
     # Table body
     core <- list(fg_params = list(hjust = 0,
@@ -288,7 +335,7 @@ forest_theme <- function(base_size = 12,
     default <- list(core = core,
                     colhead = colhead)
 
-    tab_theme <- modifyList(default, list(...))
+    tab_theme <- modifyList(default, dot_args)
     tab_theme <- modifyList(ttheme_minimal(), tab_theme)
 
     return(list(legend = legend_gp,
@@ -325,7 +372,7 @@ make_group_theme <- function(theme, group_num){
   # If fill is given and not have the same length as group number
     if(group_num > 1 & length(theme$ci$fill) == 1)
       theme$ci$fill <- rep_len(theme$ci$fill, group_num)
-  
+
   # If alpha is given and not have the same length as group number
     if(group_num > 1 & length(theme$ci$alpha) == 1)
       theme$ci$alpha <- rep_len(theme$ci$alpha, group_num)

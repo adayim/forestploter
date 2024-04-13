@@ -316,9 +316,9 @@
 <text x='600.15' y='369.75' text-anchor='middle' style='font-size: 12.00px; font-family: sans;' textLength='20.02px' lengthAdjust='spacingAndGlyphs'>100</text>
 <text x='510.91' y='391.03' text-anchor='end' style='font-size: 12.00px; font-family: sans;' textLength='88.73px' lengthAdjust='spacingAndGlyphs'>Favours caffeine</text>
 <line x1='422.18' y1='377.73' x2='510.91' y2='377.73' style='stroke-width: 0.45;' />
-<polygon points='425.30,375.93 422.18,377.73 425.30,379.53 ' style='stroke-width: 0.45; fill: #000000;' />
+<polygon points='425.30,375.93 422.18,377.73 425.30,379.53 ' style='stroke-width: 0.45; fill: #FFFFFF;' />
 <text x='596.55' y='391.03' text-anchor='end' style='font-size: 12.00px; font-family: sans;' textLength='76.05px' lengthAdjust='spacingAndGlyphs'>Favours decaf</text>
 <line x1='600.15' y1='377.73' x2='518.11' y2='377.73' style='stroke-width: 0.45;' />
-<polygon points='597.03,379.53 600.15,377.73 597.03,375.93 ' style='stroke-width: 0.45; fill: #000000;' />
+<polygon points='597.03,379.53 600.15,377.73 597.03,375.93 ' style='stroke-width: 0.45; fill: #FFFFFF;' />
 </g>
 </svg>

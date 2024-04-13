@@ -17,35 +17,26 @@ forest_theme(
   legend_name = "Group",
   legend_position = "right",
   legend_value = "",
-  legend_cex = 1,
-  xaxis_lwd = 0.6,
-  xaxis_cex = 1,
-  refline_lwd = 1,
-  refline_lty = "dashed",
-  refline_col = "grey20",
+  legend_gp = gpar(fontsize = base_size, fontfamily = base_family, cex = 1),
+  xaxis_gp = gpar(fontsize = base_size, fontfamily = base_family, lwd = 0.6, cex = 1),
+  refline_gp = gpar(lwd = 1, lty = "dashed", col = "grey20"),
   vertline_lwd = 1,
   vertline_lty = "dashed",
   vertline_col = "grey20",
   summary_col = "#4575b4",
   summary_fill = summary_col,
-  footnote_cex = 0.6,
-  footnote_fontface = "plain",
-  footnote_col = "black",
+  footnote_gp = gpar(fontsize = base_size, fontfamily = base_family, cex = 0.6, fontface
+    = "plain", col = "black"),
+  footnote_parse = TRUE,
   title_just = c("left", "right", "center"),
-  title_cex = 1.2,
-  title_fontface = "bold",
-  title_col = "black",
-  title_fontfamily = base_family,
+  title_gp = gpar(cex = 1.2, fontface = "bold", col = "black", fontfamily = base_family),
   arrow_type = c("open", "closed"),
   arrow_label_just = c("start", "end"),
   arrow_length = 0.05,
-  arrow_lwd = xaxis_lwd,
-  arrow_fill = "black",
-  arrow_col = arrow_fill,
-  arrow_cex = xaxis_cex,
+  arrow_gp = gpar(fontsize = base_size, fontfamily = base_family, lwd = 0.6),
   xlab_adjust = c("refline", "center"),
-  xlab_cex = 1,
-  xlab_fontface = "plain",
+  xlab_gp = gpar(fontsize = base_size, fontfamily = base_family, cex = 1, fontface =
+    "plain"),
   ...
 )
 }
@@ -87,17 +78,11 @@ for the grouped forest plot.}
 for the grouped forest plot. A "Group 1" etc will be created if not a vector
 for a grouped forest plot.}
 
-\item{legend_cex}{Multiplier applied to legend.}
+\item{legend_gp}{\code{gpar} graphical parameters of legend, see \code{\link[grid]{gpar}}.}
 
-\item{xaxis_lwd}{Line width for x-axis.}
+\item{xaxis_gp}{\code{gpar} graphical parameters of x-axis, see \code{\link[grid]{gpar}}.}
 
-\item{xaxis_cex}{Multiplier applied to font size for x-axis.}
-
-\item{refline_lwd}{Line width for reference line.}
-
-\item{refline_lty}{Line type for reference line.}
-
-\item{refline_col}{Line color for the reference line.}
+\item{refline_gp}{\code{gpar} graphical parameters of reference line, see \code{\link[grid]{gpar}}.}
 
 \item{vertline_lwd}{Line width for extra vertical line. A vector can be provided
 for each vertical line, and the values will be recycled if no enough values are
@@ -111,21 +96,13 @@ given.}
 
 \item{summary_fill}{Color for filling the summary diamond shape.}
 
-\item{footnote_cex}{Multiplier applied to font size for footnote.}
+\item{footnote_gp}{\code{gpar} graphical parameters of footnote, see \code{\link[grid]{gpar}}.}
 
-\item{footnote_fontface}{The font face for footnote.}
-
-\item{footnote_col}{Color of the footnote.}
+\item{footnote_parse}{Parse footnote text (default).}
 
 \item{title_just}{The justification of the title, default is \code{'left'}.}
 
-\item{title_cex}{Multiplier applied to font size for title.}
-
-\item{title_fontface}{The font face for title, default is \code{'bold'}.}
-
-\item{title_col}{Color of title.}
-
-\item{title_fontfamily}{Font family of title.}
+\item{title_gp}{\code{gpar} graphical parameters of title, see \code{\link[grid]{gpar}}.}
 
 \item{arrow_type}{Type of the arrow below x-axis, see \code{\link[grid]{arrow}}.}
 
@@ -136,19 +113,11 @@ the ending point of the arrow \code{"end"}.}
 \item{arrow_length}{The length of the arrow head, default is \code{0.05}.
 See \code{\link[grid]{arrow}}.}
 
-\item{arrow_lwd}{Line width of the arrow, same as \code{xaxis_lwd} by default.}
-
-\item{arrow_fill}{Filling color of the arrow head, default is \code{"black"}.}
-
-\item{arrow_col}{Line and text color of the arrow, same as \code{arrow_fill} by default.}
-
-\item{arrow_cex}{Multiplier applied to font size for arrow label, same as \code{xaxis_cex} by default.}
+\item{arrow_gp}{\code{gpar} graphical parameters of arrow, see \code{\link[grid]{gpar}}.}
 
 \item{xlab_adjust}{Control the alignment of xlab to reference line (default) or center of the x-axis.}
 
-\item{xlab_cex}{Multiplier applied to font size for xlab}
-
-\item{xlab_fontface}{The font face for xlab, default is \code{'bold'}.}
+\item{xlab_gp}{\code{gpar} graphical parameters of xlab, see \code{\link[grid]{gpar}}.}
 
 \item{...}{Other parameters passed to table. See \code{\link[gridExtra]{tableGrob}}
 for details.}
