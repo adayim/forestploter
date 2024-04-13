@@ -7,15 +7,15 @@
 #' parameters will be passed to corresponding elements of the forest plot.
 #'
 #' \itemize{
-#'   \item{\code{ci_*}}{Control the graphical parameters of confidence intervals}
-#'   \item{\code{legend_*}}{Control the graphical parameters of legend}
-#'   \item{\code{xaxis_*}}{Control the graphical parameters of x-axis}
-#'   \item{\code{refline_*}}{Control the graphical parameters of reference line}
-#'   \item{\code{vertline_*}}{Control the graphical parameters of vertical line}
-#'   \item{\code{summary_*}}{Control the graphical parameters of diamond shaped summary CI}
-#'   \item{\code{footnote_*}}{Control the graphical parameters of footnote}
-#'   \item{\code{title_*}}{Control the graphical parameters of title}
-#'   \item{\code{arrow_*}}{Control the graphical parameters of arrow}
+#'   \item \code{ci_*} Control the graphical parameters of confidence intervals
+#'   \item \code{legend_*} Control the graphical parameters of legend
+#'   \item \code{xaxis_*} Control the graphical parameters of x-axis
+#'   \item \code{refline_*} Control the graphical parameters of reference line
+#'   \item \code{vertline_*} Control the graphical parameters of vertical line
+#'   \item \code{summary_*} Control the graphical parameters of diamond shaped summary CI
+#'   \item \code{footnote_*} Control the graphical parameters of footnote
+#'   \item \code{title_*} Control the graphical parameters of title
+#'   \item \code{arrow_*} Control the graphical parameters of arrow
 #' }
 #'
 #' See \code{\link[grid]{gpar}} for more details.
