@@ -113,7 +113,7 @@ tm <- forest_theme(base_size = 10,
                    ci_lwd = 1.5,
                    ci_Theight = 0.2, # Set a T end at the end of CI 
                    # Reference line width/type/color
-                   refline_lwd = gpar(lwd = 1, lty = "dashed", col = "grey20"),
+                   refline_gp = gpar(lwd = 1, lty = "dashed", col = "grey20"),
                    # Vertical line width/type/color
                    vertline_lwd = 1,
                    vertline_lty = "dashed",
