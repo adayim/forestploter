@@ -1,3 +1,9 @@
+# forestploter 1.1.3
+
+* Extend vertical line to the top and the bottom.
+* Fix error in vignette.
+
+
 # forestploter 1.1.2
 
 * Draw reference line and other vertical lines below whiskers.

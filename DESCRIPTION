@@ -1,6 +1,6 @@
 Package: forestploter
 Title: Create a Flexible Forest Plot
-Version: 1.1.2
+Version: 1.1.3
 Authors@R: person(given="Alimu", 
                  family = "Dayimu",
                  email = "ad938@cam.ac.uk",
