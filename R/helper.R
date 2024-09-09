@@ -41,10 +41,13 @@ get_wh <- function(plot, unit = c("in", "cm", "mm")){
 
 
 # Add vertical line
-vert_line <- function(x, gp = grid::gpar(), xlim, x_trans = "none"){
+vert_line <- function(x, gp = grid::gpar(), xlim, x_trans = "none", nrow = 10){
 
   if(x_trans != "none")
     x <- xscale(x, scale = x_trans)
+
+  # Multiplyer
+  denom <- max(c(nrow, 10))
 
   out_indx <- x > max(xlim) | x < min(xlim)
   if(all(out_indx)){
@@ -52,8 +55,8 @@ vert_line <- function(x, gp = grid::gpar(), xlim, x_trans = "none"){
   }else{
     segmentsGrob(x0 = unit(x[!out_indx],"native"),
                 x1 = unit(x[!out_indx],"native"),
-                y0 = unit(0,"npc"),
-                y1 = unit(1,"npc"),
+                y0 = unit(0,"npc") + unit(0.1,"npc")/denom,
+                y1 = unit(1,"npc") - unit(0.1,"npc")/denom,
                 gp = gp,
                 vp = viewport(xscale = xlim))
   }

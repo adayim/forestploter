@@ -210,7 +210,7 @@
 <text x='519.52' y='388.60' style='font-size: 12.00px; font-family: sans;' textLength='98.07px' lengthAdjust='spacingAndGlyphs'>1.66 (0.29 to 3.02)</text>
 <text x='519.52' y='422.12' style='font-size: 12.00px; font-family: sans;' textLength='98.07px' lengthAdjust='spacingAndGlyphs'>2.54 (0.89 to 4.20)</text>
 <text x='519.52' y='438.89' style='font-size: 12.00px; font-family: sans;' textLength='98.07px' lengthAdjust='spacingAndGlyphs'>1.11 (0.04 to 2.19)</text>
-<line x1='405.63' y1='439.79' x2='405.63' y2='111.24' style='stroke-width: 0.75; stroke: #333333; stroke-dasharray: 4.00,4.00;' />
+<line x1='405.63' y1='441.46' x2='405.63' y2='109.57' style='stroke-width: 0.75; stroke: #333333; stroke-dasharray: 4.00,4.00;' />
 <polyline points='376.55,116.27 493.00,116.27 ' style='stroke-width: 0.75;' />
 <polygon points='433.27,117.78 436.28,117.78 436.28,114.76 433.27,114.76 ' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
 <polyline points='374.40,149.80 466.98,149.80 ' style='stroke-width: 0.75;' />
