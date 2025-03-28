@@ -48,7 +48,7 @@ legend_grob <- function(name = "",
   if(position %in% c("top", "bottom")){
     by_row <- FALSE
     
-    if(ncol != 1)
+    if(ncol == 1)
       ncol <- length(gp$col)
 
   }else{
