@@ -23,6 +23,7 @@ legend_grob <- function(name = "",
                         hgap = unit(0.1, "lines"), #horizontal gap
                         vgap = unit(0.5, "lines"), #vertical gap
                         pch = 15,
+                        ncol = 1,
                         gp = gpar(lty = 1,
                                   col = "black",
                                   fill = "black",
@@ -46,11 +47,12 @@ legend_grob <- function(name = "",
 
   if(position %in% c("top", "bottom")){
     by_row <- FALSE
-    ncol <- length(gp$col)
+    
+    if(ncol != 1)
+      ncol <- length(gp$col)
 
   }else{
     by_row <- TRUE
-    ncol <- 1
   }
 
   # LegendGrob

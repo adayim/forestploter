@@ -46,6 +46,7 @@
 #' for the grouped forest plot. A "Group 1" etc will be created if not a vector
 #' for a grouped forest plot.
 #' @param legend_gp \code{gpar} graphical parameters of legend, see \code{\link[grid]{gpar}}.
+#' @param legend_ncol integer; the number of columns, see \code{\link[grid]{legendGrob}}.
 #' @param xaxis_gp \code{gpar} graphical parameters of x-axis, see \code{\link[grid]{gpar}}.
 #' @param refline_gp \code{gpar} graphical parameters of reference line, see \code{\link[grid]{gpar}}.
 #' @param vertline_lwd Line width for extra vertical line. A vector can be provided
@@ -95,6 +96,7 @@ forest_theme <- function(base_size = 12,
                          legend_position = "right",
                          legend_value = "",
                          legend_gp = gpar(fontsize = base_size, fontfamily = base_family, cex = 1),
+                         legend_ncol = 1,
                          # X-axis
                          xaxis_gp = gpar(fontsize = base_size, fontfamily = base_family, lwd = 0.6, cex = 1),
                          # Reference line
@@ -258,7 +260,8 @@ forest_theme <- function(base_size = 12,
     legend_gp <- list(gp = legend_gp,
                       name = legend_name,
                       position = legend_position,
-                      label = legend_value)
+                      label = legend_value,
+                      ncol = legend_ncol)
 
     # Title
     # For backward compatability

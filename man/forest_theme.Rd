@@ -18,6 +18,7 @@ forest_theme(
   legend_position = "right",
   legend_value = "",
   legend_gp = gpar(fontsize = base_size, fontfamily = base_family, cex = 1),
+  legend_ncol = 1,
   xaxis_gp = gpar(fontsize = base_size, fontfamily = base_family, lwd = 0.6, cex = 1),
   refline_gp = gpar(lwd = 1, lty = "dashed", col = "grey20"),
   vertline_lwd = 1,
@@ -79,6 +80,8 @@ for the grouped forest plot. A "Group 1" etc will be created if not a vector
 for a grouped forest plot.}
 
 \item{legend_gp}{\code{gpar} graphical parameters of legend, see \code{\link[grid]{gpar}}.}
+
+\item{legend_ncol}{integer; the number of columns, see \code{\link[grid]{legendGrob}}.}
 
 \item{xaxis_gp}{\code{gpar} graphical parameters of x-axis, see \code{\link[grid]{gpar}}.}
 
