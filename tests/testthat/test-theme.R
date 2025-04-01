@@ -9,7 +9,7 @@ test_that("Test themes default value", {
 
   expect_identical(tm$legend, list(gp = gpar(fontsize = 12, fontfamily = "", cex=1),
                                    'name' = "Group", 'position' = "right",
-                                   'label' = "", "ncol" = 1))
+                                   'label' = "", "ncol" = 1, "byrow" = TRUE))
 
   expect_identical(tm$ci, list('pch' = 15, 'col' = "black",
                                'fill' = NULL, 'lty' = 1, 'alpha' = 1,
@@ -23,7 +23,8 @@ test_that("Set theme", {
 
   expect_identical(tm$legend, list(gp = gpar('fontsize' = 12, 'fontfamily' = "", "cex"=1),
                                    'name' = "Group", 'position' = "right",
-                                   'label' = c("Gp1", "Gp2"), "ncol" = 1))
+                                   'label' = c("Gp1", "Gp2"), "ncol" = 1,
+                                   "byrow" = TRUE))
 
   expect_identical(tm$ci, list('pch' = c(15, 15), 'col' = c("#e41a1c","#377eb8"),
                                'fill' = c("#e41a1c","#377eb8"),

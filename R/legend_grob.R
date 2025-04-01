@@ -12,6 +12,8 @@
 #' @param vgap Vertical gap between the legend entries,
 #' see \code{\link[grid]{legendGrob}} for details.
 #' @param gp Graphical parameters.
+#' @param ncol integer; the number of columns
+#' @param byrow logical indicating whether rows of the legend are filled first.
 #' @param ... Other parameters, not used currently.
 #'
 #' @return A frame grob
@@ -29,6 +31,7 @@ legend_grob <- function(name = "",
                                   fill = "black",
                                   fontsize = 12,
                                   fontfamily = ""),
+                        byrow = TRUE,
                         ...
 ){
 
@@ -45,19 +48,12 @@ legend_grob <- function(name = "",
                                    fontface = 'bold',
                                    fill = 'black'))
 
-  if(position %in% c("top", "bottom")){
-    by_row <- FALSE
-    
-    if(ncol == 1)
-      ncol <- length(gp$col)
-
-  }else{
-    by_row <- TRUE
-  }
+  if(position %in% c("top", "bottom") & ncol == 1)
+    ncol <- length(gp$col)
 
   # LegendGrob
   leg_grob <- legendGrob(label, pch = pch, ncol = ncol,
-                         do.lines = TRUE, byrow = by_row,
+                         do.lines = TRUE, byrow = byrow,
                          hgap = hgap*gp$cex, vgap = vgap*gp$cex,
                          gp = gp)
 

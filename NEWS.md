@@ -2,6 +2,7 @@
 
 * Extend vertical line to the top and the bottom.
 * Allow multiple lines of legend with `legend_ncol` in `forest_theme`.
+* Allow control legend fills with `legend_byrow` in `forest_theme`.
 * Fix error in vignette.
 
 
