@@ -13,6 +13,7 @@ legend_grob(
   pch = 15,
   ncol = 1,
   gp = gpar(lty = 1, col = "black", fill = "black", fontsize = 12, fontfamily = ""),
+  byrow = TRUE,
   ...
 )
 }
@@ -32,7 +33,11 @@ see \code{\link[grid]{legendGrob}} for details.}
 
 \item{pch}{Legend symbol.}
 
+\item{ncol}{integer; the number of columns}
+
 \item{gp}{Graphical parameters.}
+
+\item{byrow}{logical indicating whether rows of the legend are filled first.}
 
 \item{...}{Other parameters, not used currently.}
 }

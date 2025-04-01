@@ -19,6 +19,7 @@ forest_theme(
   legend_value = "",
   legend_gp = gpar(fontsize = base_size, fontfamily = base_family, cex = 1),
   legend_ncol = 1,
+  legend_byrow = TRUE,
   xaxis_gp = gpar(fontsize = base_size, fontfamily = base_family, lwd = 0.6, cex = 1),
   refline_gp = gpar(lwd = 1, lty = "dashed", col = "grey20"),
   vertline_lwd = 1,
@@ -82,6 +83,8 @@ for a grouped forest plot.}
 \item{legend_gp}{\code{gpar} graphical parameters of legend, see \code{\link[grid]{gpar}}.}
 
 \item{legend_ncol}{integer; the number of columns, see \code{\link[grid]{legendGrob}}.}
+
+\item{legend_byrow}{logical indicating whether rows of the legend are filled first, see \code{\link[grid]{legendGrob}}.}
 
 \item{xaxis_gp}{\code{gpar} graphical parameters of x-axis, see \code{\link[grid]{gpar}}.}
 
