@@ -263,7 +263,7 @@ forest <- function(data,
     }
   }
 
-  # ticks digits auto calculation if missing
+  # automatic calculation of tick digits if missing
   if(is.null(ticks_digits) & !is.null(ticks_at)){
     if(is.list(ticks_at))
       ticks_digits <- sapply(ticks_at, function(x){

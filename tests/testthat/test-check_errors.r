@@ -43,7 +43,7 @@ test_that("check_errors works", {
                       upper = dt$hi,
                       is_summary = rep(F, nrow(dt)-1),
                       ci_column = 3),
-               "is_summary should have same legnth as data rownumber")
+               "is_summary should have same length as data rownumber")
 
   expect_error(forest(dt[,c(1:3, 20:21)],
                       est = dt$est,

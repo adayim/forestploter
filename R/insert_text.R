@@ -54,11 +54,11 @@ insert_text <- function(plot,
 
   # Row must be provided for the body
   if(part == "body" & is.null(row))
-    stop("Row must be defined if the text is interting to body.")
+    stop("Row must be defined if the text is inserting to body.")
 
   # Check text length 
   if(length(text) > 1 && length(row) != length(text) && length(col) != length(text))
-    stop("text must have same legnth with row or col.")
+    stop("text must have same length with row or col.")
 
   # Align text
   tx_x <- switch(just,

@@ -48,7 +48,7 @@ makeContent.makeci <- function(x) {
   setChildren(x, kids)
 }
 
-# Main function for confidence interval
+# Main function for confidence intervals
 #' @keywords internal
 makeci_static <- function(est, lower, upper, pch, size = 1, gp = gpar(),
                           t_height = NULL, xlim = c(0, 1), nudge_y = 0){
@@ -80,7 +80,7 @@ makeci_static <- function(est, lower, upper, pch, size = 1, gp = gpar(),
   }    
 
   if(upper > max(xlim) | lower < min(xlim)){
-    # Both side arrow
+    # Both sides arrow
     if(upper > max(xlim) & lower < min(xlim)){
       x_pos <- unit(c(0, 1), c("npc", "npc"))
       arrow_side <- "both"

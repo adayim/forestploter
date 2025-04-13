@@ -45,7 +45,7 @@ parameters.}
 A \code{\link[gtable]{gtable}} object.
 }
 \description{
-This function is used to edit the graphical parameter of text and background
+This function is used to edit the graphical parameters of text and background
 of the forest plot.
 }
 \seealso{

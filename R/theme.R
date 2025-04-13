@@ -180,7 +180,7 @@ forest_theme <- function(base_size = 12,
 
 
     # Reference line
-    # For backward compatability
+    # For backward compatibility
     refline_args <- c("refline_lwd", "refline_lty", "refline_col")
     if(any(names(dot_args) %in% refline_args)){
       message(paste(refline_args[refline_args %in% names(dot_args)], collapse = ", "),

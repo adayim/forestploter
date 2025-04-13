@@ -65,7 +65,7 @@ check_errors <- function(data,
 
   # Check length for the summary
   if(!is.null(is_summary) && length(is_summary) != nrow(data))
-    stop("is_summary should have same legnth as data rownumber.")
+    stop("is_summary should have same length as data rownumber.")
   
   if(!is.null(is_summary) && ! is.logical(is_summary))
     stop("is_summary must be logical vector.")
@@ -164,7 +164,7 @@ check_errors <- function(data,
           !is.numeric(x) || length(x) != 2 || x[1] >= x[2]
         })
         if(any(tst))
-          stop("Elements in the xlim must be numeric and of length 2, with first element less than the second.")
+          stop("The elements in xlim must be numeric and have a length of 2, with first element smaller than the second.")
 
       }else {
         if(!is.numeric(xlim) || length(xlim) != 2 || xlim[1] >= xlim[2])

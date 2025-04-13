@@ -1,7 +1,7 @@
 
 #' Edit forest plot
 #'
-#' This function is used to edit the graphical parameter of text and background
+#' This function is used to edit the graphical parameters of text and background
 #' of the forest plot.
 #'
 #' @param plot A forest plot object.
@@ -78,7 +78,7 @@ edit_plot <- function(plot,
     }else {
       # For CI
       if(is.null(row) | is.null(col))
-        stop("row and col must be difined for ci")
+        stop("row and col must be defined for ci")
 
       # Generate name of the ci grob
       name_to_edit <- paste(which, apply(expand.grid(row, col), 1, paste, collapse="-"), sep = "-")
