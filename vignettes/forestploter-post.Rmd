@@ -106,10 +106,11 @@ g <- edit_plot(g, col = 8, row = 9, which = "ci",
                gp = gpar(col = "blue", fill = "blue"))
 
 # Change the background of the total row
+# You need to change both fill and col if you don't want see a gap between cells
 g <- edit_plot(g, col = 1:7, 
                row = 9, 
                which = "background", 
-               gp = gpar(fill = "#f6eff7"))
+               gp = gpar(fill = "#f6eff7", col = "#f6eff7"))
 
 # Align text to center
 g <- edit_plot(g, col = 9:14, 

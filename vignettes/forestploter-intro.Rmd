@@ -285,7 +285,7 @@ dt$ci2[grepl("NA", dt$ci2)] <- ""
 
 # Set-up theme
 tm <- forest_theme(base_size = 10,
-                   refline_lty = "solid",
+                   refline_gp = gpar(lty = "solid"),
                    ci_pch = c(15, 18),
                    ci_col = c("#377eb8", "#4daf4a"),
                    footnote_gp = gpar(col = "blue"),

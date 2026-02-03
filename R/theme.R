@@ -129,6 +129,35 @@ forest_theme <- function(base_size = 12,
 
     dot_args <- list(...)
 
+    # Defaults
+    xaxis_gp_default <- gpar(fontsize = base_size,
+                             fontfamily = base_family,
+                             lwd = 0.6, cex = 1)
+    legend_gp_default <- gpar(fontsize = base_size,
+                              fontfamily = base_family,
+                              cex = 1)
+    refline_gp_default <- gpar(lwd = 1,
+                               lty = "dashed",
+                               col = "grey20")
+    footnote_gp_default <- gpar(fontsize = base_size,
+                                fontfamily = base_family,
+                                cex = 0.6,
+                                fontface = "plain",
+                                col = "black")
+    title_gp_default <- gpar(fontsize = base_size,
+                             cex = 1.2,
+                             fontface = "bold",
+                             col = "black",
+                             fontfamily = base_family)
+    arrow_gp_default <- gpar(fontsize = base_size,
+                             fontfamily = base_family,
+                             lwd = 0.6)
+    xlab_gp_default <- gpar(fontsize = base_size,
+                            fontfamily = base_family,
+                            cex = 1,
+                            fontface = "plain")
+    # End of defaults
+
     legend_position <- match.arg(legend_position, c("right", "top", "bottom", "none"))
 
     if (!is.unit(arrow_length)) arrow_length <- unit(arrow_length, units = "inches")
@@ -183,15 +212,11 @@ forest_theme <- function(base_size = 12,
     # For backward compatibility
     refline_args <- c("refline_lwd", "refline_lty", "refline_col")
     if(any(names(dot_args) %in% refline_args)){
-      message(paste(refline_args[refline_args %in% names(dot_args)], collapse = ", "),
-                    " will be deprecated, use refline_gp instead.")
-      refline_gp_old <- gpar(lwd = dot_args$refline_lwd,
-                             lty = dot_args$refline_lty,
-                             col = dot_args$refline_col)
-      refline_gp <- modifyList(refline_gp, refline_gp_old)
-      dot_args <- dot_args[!names(dot_args) %in% refline_args]
+      stop(paste(refline_args[refline_args %in% names(dot_args)], collapse = ", "),
+                    " is deprecated, use refline_gp instead.")
     }
     stop_ifnot_gpar(refline_gp)
+    refline_gp <- modifyList(refline_gp_default, refline_gp)
 
     # Reference line
     vertline_gp <- gpar(lwd = vertline_lwd,
@@ -213,16 +238,11 @@ forest_theme <- function(base_size = 12,
     # For backward compatability
     xaxis_args <- c("xaxis_lwd", "xaxis_cex")
     if(any(names(dot_args) %in% xaxis_args)){
-      message(paste(xaxis_args[xaxis_args %in% names(dot_args)], collapse = ", "),
-                    " will be deprecated, use xaxis_gp instead.")
-      xaxis_gp_old <- gpar(lwd = dot_args$xaxis_lwd,
-                           cex = dot_args$xaxis_cex,
-                           fontsize = base_size,
-                           fontfamily = base_family)
-      xaxis_gp <- modifyList(xaxis_gp, xaxis_gp_old)
-      dot_args <- dot_args[!names(dot_args) %in% xaxis_args]
+      stop(paste(xaxis_args[xaxis_args %in% names(dot_args)], collapse = ", "),
+                    " is deprecated, use xaxis_gp instead.")
     }
     stop_ifnot_gpar(xaxis_gp)
+    xaxis_gp <- modifyList(xaxis_gp_default, xaxis_gp)
 
     # Summary
     sum_gp <- gpar(col = summary_col,
@@ -232,17 +252,12 @@ forest_theme <- function(base_size = 12,
     # For backward compatability
     footnote_args <- c("footnote_cex", "footnote_fontface", "footnote_col")
     if(any(names(dot_args) %in% footnote_args)){
-      message(paste(footnote_args[footnote_args %in% names(dot_args)], collapse = ", "),
-                   " will be deprecated, use footnote_gp instead.")
-      footnote_gp_old <- gpar(fontsize = base_size,
-                              fontfamily = base_family,
-                              cex = dot_args$footnote_cex,
-                              fontface = dot_args$footnote_fontface,
-                              col = dot_args$footnote_col)
-      footnote_gp <- modifyList(footnote_gp, footnote_gp_old)
-      dot_args <- dot_args[!names(dot_args) %in% footnote_args]
+      stop(paste(footnote_args[footnote_args %in% names(dot_args)], collapse = ", "),
+                    " is deprecated, use footnote_gp instead.")
     }
     stop_ifnot_gpar(footnote_gp)
+    footnote_gp <- modifyList(footnote_gp_default, footnote_gp)
+
     footnote_gp <- list(gp = footnote_gp,
                         parse = footnote_parse)
 
@@ -250,14 +265,11 @@ forest_theme <- function(base_size = 12,
     # For backward compatability
     legend_args <- c("legend_cex")
     if(any(names(dot_args) %in% legend_args)){
-      message("legend_cex will be deprecated, use legend_gp instead.")
-      legend_gp_old <- gpar(fontsize = base_size,
-                            fontfamily = base_family,
-                            cex = dot_args$legend_cex)
-      legend_gp <- modifyList(legend_gp, legend_gp_old)
-      dot_args <- dot_args[!names(dot_args) %in% legend_args]
+      stop("legend_cex is deprecated, use legend_gp instead.")
     }
     stop_ifnot_gpar(legend_gp)
+
+    legend_gp <- modifyList(legend_gp_default, legend_gp)
 
     legend_gp <- list(gp = legend_gp,
                       name = legend_name,
@@ -270,16 +282,11 @@ forest_theme <- function(base_size = 12,
     # For backward compatability
     title_args <- c("title_cex", "title_fontface", "title_col", "title_fontfamily")
     if(any(names(dot_args) %in% title_args)){
-      message(paste(title_args[title_args %in% names(dot_args)], collapse = ", "), 
-                    " will be deprecated, use title_gp instead.")
-      title_gp_old <- gpar(cex = dot_args$title_cex,
-                           fontface = dot_args$title_fontface,
-                           col = dot_args$title_col,
-                           fontfamily = dot_args$title_fontfamily)
-      title_gp <- modifyList(title_gp, title_gp_old)
-      dot_args <- dot_args[!names(dot_args) %in% title_args]
+      stop(paste(title_args[title_args %in% names(dot_args)], collapse = ", "),
+                    " is deprecated, use title_gp instead.")
     }
     stop_ifnot_gpar(title_gp)
+    title_gp <- modifyList(title_gp_default, title_gp)
     title_gp <- list(just = match.arg(title_just),
                      gp = title_gp)
 
@@ -287,18 +294,12 @@ forest_theme <- function(base_size = 12,
     # For backward compatability
     arrow_args <- c("arrow_lwd", "arrow_fill", "arrow_col", "arrow_cex")
     if(any(names(dot_args) %in% arrow_args)){
-      message(paste(arrow_args[arrow_args %in% names(dot_args)], collapse = ", "), 
-                    " will be deprecated, use arrow_gp instead.")
-      arrow_gp_old <- gpar(fontsize = base_size,
-                           fontfamily = base_family,
-                           lwd = dot_args$arrow_lwd,
-                           fill = dot_args$arrow_fill,
-                           col = dot_args$arrow_col,
-                           cex = dot_args$arrow_cex)
-      arrow_gp <- modifyList(arrow_gp, arrow_gp_old)
-      dot_args <- dot_args[!names(dot_args) %in% arrow_args]
+      stop(paste(arrow_args[arrow_args %in% names(dot_args)], collapse = ", "),
+                    " is deprecated, use arrow_gp instead.")
     }
     stop_ifnot_gpar(arrow_gp)
+    arrow_gp <- modifyList(arrow_gp_default, arrow_gp)
+
     arrow_gp <- list(type = match.arg(arrow_type),
                     label_just = match.arg(arrow_label_just),
                     length = arrow_length,
@@ -308,40 +309,49 @@ forest_theme <- function(base_size = 12,
     # For backward compatability
     xlab_args <- c("xlab_fontface", "xlab_cex")
     if(any(names(dot_args) %in% xlab_args)){
-      message(paste(xlab_args[xlab_args %in% names(dot_args)], collapse = ", "), 
-                    " will be deprecated, use xlab_gp instead.")
-      xlab_gp_old <- gpar(fontsize = base_size,
-                          fontfamily = base_family,
-                          fontface = dot_args$xlab_fontface,
-                          cex = dot_args$xlab_cex)
-      xlab_gp <- modifyList(xlab_gp, xlab_gp_old)
-      dot_args <- dot_args[!names(dot_args) %in% xlab_args]
+      stop(paste(xlab_args[xlab_args %in% names(dot_args)], collapse = ", "),
+                    " is deprecated, use xlab_gp instead.")
     }
     stop_ifnot_gpar(xlab_gp)
+    xlab_gp <- modifyList(xlab_gp_default, xlab_gp)
+
     xlab_gp <- list(just = match.arg(xlab_adjust),
                     gp = xlab_gp)
 
+
     # Table body
-    core <- list(fg_params = list(hjust = 0,
-                               x = 0.05,
-                               fontsize = base_size,
-                               fontfamily = base_family),
-              bg_params = list(fill=c(rep(c("#eff3f2", "white"),
-                                length.out=4))),
-              padding = unit(c(4, 3), "mm"))
+    core_internal <- list(
+      fg_params = list(hjust = 0,
+                       x = 0.05,
+                       fontsize = base_size,
+                       fontfamily = base_family),
+      bg_params = list(fill=c(rep(c("#eff3f2", "white"), length.out=4)),
+                       col=c(rep(c("#eff3f2", "white"), length.out=4))),
+      padding = unit(c(4, 3), "mm")
+    )
 
     # Table header
-    colhead <- list(fg_params = list(hjust = 0, x = 0.05,
-                                    fontface = 2L,
-                                    fontsize = base_size,
-                                    fontfamily = base_family),
-                   bg_params = list(fill = "white"),
-                   padding = unit(c(4, 4), "mm"))
+    colhead_internal <- list(
+      fg_params = list(hjust = 0,
+                       x = 0.05,
+                       fontface = 2L,
+                       fontsize = base_size,
+                       fontfamily = base_family),
+      bg_params = list(fill = "white"),
+      padding = unit(c(4, 4), "mm")
+    )
 
-    default <- list(core = core,
-                    colhead = colhead)
+    internal_theme <- list(
+      core = core_internal,
+      colhead = colhead_internal
+    )
 
-    tab_theme <- modifyList(default, dot_args)
+    # Make sure the background fill also applies to the background color
+    if(!is.null(dot_args$core$bg_params$fill) & is.null(dot_args$core$bg_params$col)){
+      dot_args$core$bg_params$col <- dot_args$core$bg_params$fill
+    }
+
+    tab_theme <- modifyList(internal_theme, dot_args)
     tab_theme <- modifyList(ttheme_minimal(), tab_theme)
 
     return(list(legend = legend_gp,

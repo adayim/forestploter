@@ -20,12 +20,12 @@
 <g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1NzYuMDA=)'>
 <rect x='238.00' y='239.39' width='39.36' height='19.60' style='stroke-width: 0.75; stroke: none; fill: #FFFFFF;' />
 <rect x='277.36' y='239.39' width='141.35' height='19.60' style='stroke-width: 0.75; stroke: none; fill: #FFFFFF;' />
-<rect x='238.00' y='258.99' width='39.36' height='16.76' style='stroke-width: 0.75; stroke: none; fill: #EFF3F2;' />
-<rect x='238.00' y='275.75' width='39.36' height='16.76' style='stroke-width: 0.75; stroke: none; fill: #FFFFFF;' />
-<rect x='238.00' y='292.51' width='39.36' height='16.76' style='stroke-width: 0.75; stroke: none; fill: #EFF3F2;' />
-<rect x='277.36' y='258.99' width='141.35' height='16.76' style='stroke-width: 0.75; stroke: none; fill: #EFF3F2;' />
-<rect x='277.36' y='275.75' width='141.35' height='16.76' style='stroke-width: 0.75; stroke: none; fill: #FFFFFF;' />
-<rect x='277.36' y='292.51' width='141.35' height='16.76' style='stroke-width: 0.75; stroke: none; fill: #EFF3F2;' />
+<rect x='238.00' y='258.99' width='39.36' height='16.76' style='stroke-width: 0.75; stroke: #EFF3F2; fill: #EFF3F2;' />
+<rect x='238.00' y='275.75' width='39.36' height='16.76' style='stroke-width: 0.75; stroke: #FFFFFF; fill: #FFFFFF;' />
+<rect x='238.00' y='292.51' width='39.36' height='16.76' style='stroke-width: 0.75; stroke: #EFF3F2; fill: #EFF3F2;' />
+<rect x='277.36' y='258.99' width='141.35' height='16.76' style='stroke-width: 0.75; stroke: #EFF3F2; fill: #EFF3F2;' />
+<rect x='277.36' y='275.75' width='141.35' height='16.76' style='stroke-width: 0.75; stroke: #FFFFFF; fill: #FFFFFF;' />
+<rect x='277.36' y='292.51' width='141.35' height='16.76' style='stroke-width: 0.75; stroke: #EFF3F2; fill: #EFF3F2;' />
 <text x='239.97' y='253.32' style='font-size: 12.00px; font-weight: bold; font-family: sans;' textLength='28.02px' lengthAdjust='spacingAndGlyphs'>Dpse</text>
 <text x='239.97' y='271.50' style='font-size: 12.00px; font-family: sans;' textLength='16.68px' lengthAdjust='spacingAndGlyphs'>0.5</text>
 <text x='284.43' y='253.32' style='font-size: 12.00px; font-weight: bold; font-family: sans;' textLength='20.69px' lengthAdjust='spacingAndGlyphs'>Box</text>

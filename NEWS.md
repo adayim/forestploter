@@ -1,3 +1,8 @@
+# forestploter 1.1.4
+
+* Deprecated some parameters in `forest_theme`.
+* Remove gap between cells.
+
 # forestploter 1.1.3
 
 * Extend vertical line to the top and the bottom.

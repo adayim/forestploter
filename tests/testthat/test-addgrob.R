@@ -28,6 +28,9 @@ test_that("Add grob", {
                      arrow_label_just = "end",
                      arrow_type = "closed")
 
+  expect_equal(tm$tab_theme$core$bg_params$fill,
+               tm$tab_theme$core$bg_params$col)
+
   p <- forest(dt_fig,
               est = dt$est,
               lower = dt$lb,

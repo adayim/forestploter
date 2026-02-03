@@ -56,11 +56,11 @@ test_that("CI outside forestplot", {
 test_that("Apply theme", {
 
   tm <- forest_theme(base_size = 10,
-                     refline_col = "red",
+                     refline_gp = gpar(col = "red"),
                      ci_lty = 1,
                      ci_lwd = 1,
                      ci_Theight = 0.2,
-                     footnote_col = "blue")
+                     footnote_gp = gpar(col = "blue"))
 
   p <- forest(dt[,c(1:3, 20:21)],
               est = dt$est,
@@ -107,7 +107,8 @@ test_that("Apply theme", {
 
   # Edit background of row 5
   g <- edit_plot(g, row = 5, which = "background",
-                 gp = gpar(fill = "darkolivegreen1"))
+                 gp = gpar(fill = "darkolivegreen1",
+                           col = "darkolivegreen1"))
 
   # Insert text
   g <- insert_text(g,
@@ -142,11 +143,11 @@ test_that("Apply theme", {
 test_that("Multiple column", {
 
   tm <- forest_theme(base_size = 10,
-                     refline_col = "green",
+                     refline_gp = gpar(col = "green"),
                      ci_lty = c(1, 3),
                      ci_lwd = 1.5,
                      ci_Theight = 0.2,
-                     footnote_col = "blue",
+                     footnote_gp = gpar(col = "blue"),
                      legend_name = "GP",
                      legend_value = c("Trt 1", "Trt 2"))
 
@@ -178,11 +179,11 @@ test_that("Multiple column", {
 test_that("Multiple column and Multi parameters", {
 
   tm <- forest_theme(base_size = 10,
-                     refline_col = "green",
+                     refline_gp = gpar(col = "green"),
                      ci_lty = c(1, 3),
                      ci_lwd = 1.5,
                      ci_Theight = 0.2,
-                     footnote_col = "blue",
+                     footnote_gp = gpar(col = "blue"),
                      legend_name = "GP",
                      legend_value = c("Trt 1", "Trt 2"))
 
@@ -228,23 +229,17 @@ test_that("Summary CI", {
                      ci_lwd = 1.5,
                      ci_Theight = 0.2, # Set an T end at the end of CI
                      # Reference line width/type/color
-                     refline_lwd = 1,
-                     refline_lty = "dashed",
-                     refline_col = "grey20",
+                     refline_gp = gpar(lwd = 1, lty = "dashed", col = "grey20"),
                      # Vertical line width/type/color
-                     vertline_lwd = 1,
-                     vertline_lty = "dashed",
-                     vertline_col = "grey20",
+                     vertline_gp = gpar(lwd = 1, lty = "dashed", col = "grey20"),
                      # Change summary color for filling and borders
                      summary_fill = "#4575b4",
                      summary_col = "#4575b4",
                      # Footnote font size/face/color
-                     footnote_cex = 0.6,
-                     footnote_fontface = "italic",
-                     footnote_col = "blue",
+                     footnote_gp = gpar(cex = 0.6, fontface = "italic", col = "blue"),
                      # Title
                      title_just = "center",
-                     title_col = "red")
+                     title_gp = gpar(col = "red"))
 
   p <- forest(dt_tmp[,c(1:3, 20:21)],
               est = dt_tmp$est,
@@ -295,9 +290,9 @@ test_that("forestplot check ERRORS", {
 test_that("check arrow", {
 
   dt <- dt[1:10, ]
-  tm <- forest_theme(arrow_cex = .5,
+  tm <- forest_theme(arrow_gp = gpar(cex = .5),
                      arrow_label_just = "end",
-                     xaxis_cex = .5,
+                     xaxis_gp = gpar(cex = .5),
                      arrow_length = 0.1,
                      arrow_type = "closed")
 
@@ -313,9 +308,9 @@ test_that("check arrow", {
 
   vdiffr::expect_doppelganger("arrow end", p)
 
-  tm <- forest_theme(arrow_cex = .5,
+  tm <- forest_theme(arrow_gp = gpar(cex = .5),
                      arrow_label_just = "start",
-                     xaxis_cex = .5,
+                     xaxis_gp = gpar(cex = .5),
                      arrow_length = 0.1,
                      arrow_type = "closed")
 
@@ -413,11 +408,11 @@ test_that("Test multiple group", {
   dt <- dt[1:6, ]
 
   tm <- forest_theme(base_size = 10,
-                     refline_lty = "solid",
+                     refline_gp = gpar(lty = "solid"),
                      ci_pch = c(15, 18, 16, 17, 19),
                      ci_col = c("#808080", "#00FF00", "royalblue3", "maroon3", "red"),
                      ci_lwd = 2,
-                     footnote_col = "blue",
+                     footnote_gp = gpar(col = "blue"),
                      legend_name = "Model:   ", legend_position = "bottom",
                      legend_value = c("Cox  ", "Normal  ", "Clayton  ",  "Frank", "Gumbel"),
                      vertline_lty = c("dashed", "dotdash"),
