@@ -45,10 +45,9 @@ legend_grob <- function(name = "",
                          gp = gpar(fontsize = gp$fontsize,
                                    fontfamily = gp$fontfamily,
                                    cex = gp$cex,
-                                   fontface = 'bold',
-                                   fill = 'black'))
+                                   fontface = 'bold'))
 
-  if(position %in% c("top", "bottom") & ncol == 1)
+  if(position %in% c("top", "bottom") && ncol == 1)
     ncol <- length(gp$col)
 
   # LegendGrob
@@ -83,9 +82,9 @@ edit_leg_point <- function(leg, gp_col){
   # Find the point path
   lst <- grid.grep("point", leg, grep = TRUE, global = TRUE)
   # Extract name of the gPath
-  g_paths <- sapply(lst, function(x){
-    paste(sub(".*?::",'', x$path), x$name, sep = "::")
-  })
+  g_paths <- vapply(lst, function(x){
+    paste(sub(".*?::", "", x$path), x$name, sep = "::")
+  }, FUN.VALUE = character(1))
   
   for(i in seq_along(g_paths)){
     leg <- editGrob(leg, 

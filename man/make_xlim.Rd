@@ -27,12 +27,13 @@ for each column if not provided. This should be a list with the same length of
 \item{ref_line}{X-axis coordinates of zero line, default is 1. Provide an atomic
 vector if different reference line for each \code{ci_column} is desired.}
 
-\item{ticks_at}{Set X-axis tick-marks point. This will apply to all CI columns if
-provided, and will be calculated automatically for each column if not provided.
-This should be a list if different \code{ticks_at} for different column is desired.
-Although many efforts have been made to automatically get a pretty ticks break,
-it will not give a perfect solution, especially if \code{'log2'} and \code{'log10'}
-defined for \code{x_trans}. Please provide this value if possible.}
+\item{ticks_at}{Set X-axis tick-mark positions. Applies to all CI columns if
+a single vector is provided, or supply a list of vectors for column-specific
+ticks. When omitted, ticks are computed automatically: \code{\link[base]{pretty}}
+for linear axes and a decade-aware log-pretty helper for \code{x_trans} in
+\code{"log"}, \code{"log2"}, or \code{"log10"} (e.g. \code{0.1, 1, 10, 100}
+for a wide log10 range). The auto-tick output is rarely a perfect substitute
+for a hand-chosen set, so supply this argument when you need exact control.}
 
 \item{x_trans}{Change axis scale, Allowed values are one of c("none", "log", "log2",
 "log10"). Default is \code{"none"}, no transformation will be applied.

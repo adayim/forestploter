@@ -4,7 +4,7 @@
 \alias{make_summary}
 \title{Create pooled summary diamond shape}
 \usage{
-make_summary(est, lower, upper, sizes = 1, gp, xlim, nudge_y = NULL)
+make_summary(est, lower, upper, sizes = 1, gp, xlim, nudge_y = 0)
 }
 \arguments{
 \item{est}{Point estimation. Can be a list for multiple columns
@@ -28,7 +28,10 @@ This will apply to all CI columns if provided, and will be calculated automatica
 for each column if not provided. This should be a list with the same length of
 \code{ci_column} if different \code{xlim} for different column is desired.}
 
-\item{nudge_y}{Horizontal adjustment to nudge groups by, must be within 0 to 1.}
+\item{nudge_y}{Vertical adjustment to nudge groups by, must be within 0 to 1.
+Defaults to \code{0}; for grouped forest plots a value of \code{0} is bumped
+to \code{0.1} automatically so that group CIs do not overplot. Set explicitly
+to override.}
 }
 \value{
 A gTree object

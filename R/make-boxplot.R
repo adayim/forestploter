@@ -74,7 +74,7 @@ boxplot_static <- function(est, lower, upper, pch,
                           t_height = NULL, xlim = c(0, 1), nudge_y = 0){
 
   # Return NULL if the CI is outside
-  if(upper < min(xlim) | lower > max(xlim))
+  if(upper < min(xlim) || lower > max(xlim))
     return(gList(nullGrob()))
 
   # Point estimation
@@ -88,16 +88,16 @@ boxplot_static <- function(est, lower, upper, pch,
                         name = "point")
 
   # Plot whisker
-  if(upper > max(xlim) | lower < min(xlim)){
+  if(upper > max(xlim) || lower < min(xlim)){
     # Both side arrow
-    if(upper > max(xlim) & lower < min(xlim)){
+    if(upper > max(xlim) && lower < min(xlim)){
       x_pos <- unit(c(0, 1), c("npc", "npc"))
       arrow_side <- "both"
       x_vert <- NULL
     }
 
     # Left side arrow
-    else if(lower < min(xlim) & upper < max(xlim)){
+    else if(lower < min(xlim) && upper < max(xlim)){
       x_pos <- unit(c(0, upper), c("npc", "native"))
       arrow_side <- "first"
       x_vert <- unit(upper, "native")
@@ -122,7 +122,7 @@ boxplot_static <- function(est, lower, upper, pch,
   }
 
   # Draw T end to the CI
-  if(!is.null(t_height) & !is.null(x_vert)){
+  if(!is.null(t_height) && !is.null(x_vert)){
     if(!is.unit(t_height))
       t_height <- unit(t_height, "npc")
 
@@ -135,7 +135,7 @@ boxplot_static <- function(est, lower, upper, pch,
   }
 
   # Plot hinge
-  if((is.na(uphinge) | is.na(lowhinge)) | (lowhinge > max(xlim) | uphinge < min(xlim))){
+  if(is.na(uphinge) || is.na(lowhinge) || lowhinge > max(xlim) || uphinge < min(xlim)){
     hinge_rect <- nullGrob()
   }else{
     hinge_width <- uphinge - lowhinge
@@ -151,7 +151,7 @@ boxplot_static <- function(est, lower, upper, pch,
 
 
   # No dots if outside
-  if(est > max(xlim) | est < min(xlim))
+  if(est > max(xlim) || est < min(xlim))
     med_rec <- nullGrob()
 
   gList(lng, hinge_rect, vert, med_rec)

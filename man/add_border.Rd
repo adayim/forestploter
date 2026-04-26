@@ -2,7 +2,6 @@
 % Please edit documentation in R/add_border.R
 \name{add_border}
 \alias{add_border}
-\alias{add_underline}
 \title{Add border to cells}
 \usage{
 add_border(
@@ -11,14 +10,6 @@ add_border(
   col = NULL,
   part = c("body", "header"),
   where = c("bottom", "left", "top", "right"),
-  gp = gpar(lwd = 2)
-)
-
-add_underline(
-  plot,
-  row = NULL,
-  col = NULL,
-  part = c("body", "header"),
   gp = gpar(lwd = 2)
 )
 }
@@ -46,9 +37,6 @@ A \code{\link[gtable]{gtable}} object.
 }
 \description{
 Add border to any cells at any side.
-
-\code{\link{add_underline}} is a wrapper of \code{\link{add_border}} can be used to add
-underline to cells.
 }
 \seealso{
 \code{\link[grid]{gpar}} \code{\link[grid]{segmentsGrob}} \code{\link[gtable]{gtable_add_grob}}

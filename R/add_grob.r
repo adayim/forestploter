@@ -6,7 +6,7 @@
 #' @param plot A forest plot object.
 #' @param row A numeric value or vector indicating row(s) to draw a grob.
 #' @param col A numeric value or vector indicating the columns to draw a grob.
-#' @param part The border will be added to \code{"body"} (default) or
+#' @param part The grob will be added to \code{"body"} (default) or
 #' \code{"header"}.
 #' @param order Order in which the grobs should be plotted. Use \code{'top'} 
 #' (default) to draw the grob above everything, \code{'text'} on the top of text 
@@ -29,12 +29,12 @@ add_grob <- function(plot,
   
   dots <- list(...)
   arg <- match(names(formals(gb_fn)), names(dots))
-  dots[arg[!is.na(arg)]]
-  
-  if(length(row) != 1 & !all(diff(row) == 1))
+  dots <- dots[arg[!is.na(arg)]]
+
+  if(length(row) != 1 && !all(diff(row) == 1))
     stop("row must be scalar value or a consecutive vector.")
-  
-  if(length(col) != 1 & !all(diff(col) == 1))
+
+  if(length(col) != 1 && !all(diff(col) == 1))
     stop("col must be scalar value or a consecutive vector.")
 
   if(!inherits(plot, "forestplot"))
@@ -43,6 +43,9 @@ add_grob <- function(plot,
 
   part <- match.arg(part)
   order <- match.arg(order)
+
+  if(part == "body" && is.null(row))
+    stop("Row must be defined if the grob is added to body.")
 
   l <- plot$layout
 

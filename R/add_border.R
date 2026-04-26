@@ -93,19 +93,3 @@ add_border <- function(plot,
   return(plot)
 
 }
-
-
-#' @title Add underline to cells
-#' @description \code{\link{add_underline}} is a wrapper of \code{\link{add_border}} can be used to add
-#' underline to cells.
-#' @rdname add_border
-#'
-add_underline <- function(plot,
-                          row = NULL,
-                          col = NULL,
-                          part = c("body", "header"),
-                          gp = gpar(lwd = 2.0)){
-
-  add_border(plot, row = row, col = col, part = part, where = "bottom", gp = gp)
-
-}

@@ -27,12 +27,13 @@
 #' This will apply to all CI columns if provided, and will be calculated automatically
 #' for each column if not provided. This should be a list with the same length of
 #' \code{ci_column} if different \code{xlim} for different column is desired.
-#' @param ticks_at Set X-axis tick-marks point. This will apply to all CI columns if
-#' provided, and will be calculated automatically for each column if not provided.
-#' This should be a list if different \code{ticks_at} for different column is desired.
-#' Although many efforts have been made to automatically get a pretty ticks break,
-#' it will not give a perfect solution, especially if \code{'log2'} and \code{'log10'}
-#' defined for \code{x_trans}. Please provide this value if possible.
+#' @param ticks_at Set X-axis tick-mark positions. Applies to all CI columns if
+#' a single vector is provided, or supply a list of vectors for column-specific
+#' ticks. When omitted, ticks are computed automatically: \code{\link[base]{pretty}}
+#' for linear axes and a decade-aware log-pretty helper for \code{x_trans} in
+#' \code{"log"}, \code{"log2"}, or \code{"log10"} (e.g. \code{0.1, 1, 10, 100}
+#' for a wide log10 range). The auto-tick output is rarely a perfect substitute
+#' for a hand-chosen set, so supply this argument when you need exact control.
 #' @param ticks_digits Number of digits for the x-axis, default is \code{NULL} to calculate
 #' an integer based on \code{ticks_at} if provided or \code{lower} and \code{upper} if not.
 #'  This should be a numerical vector if different rounding will be applied to different
@@ -56,7 +57,10 @@
 #' of the plot. Please adjust the line length with line break to avoid the overlap
 #' with the arrow and/or x-axis.
 #' @param title The text for the title.
-#' @param nudge_y Horizontal adjustment to nudge groups by, must be within 0 to 1.
+#' @param nudge_y Vertical adjustment to nudge groups by, must be within 0 to 1.
+#' Defaults to \code{0}; for grouped forest plots a value of \code{0} is bumped
+#' to \code{0.1} automatically so that group CIs do not overplot. Set explicitly
+#' to override.
 #' @param fn_ci Name of the function to draw confidence interval, default is
 #' \code{\link{makeci}}. You can specify your own drawing function to draw the
 #' confidence interval, but the function needs to accept arguments \code{
@@ -119,12 +123,12 @@ forest <- function(data,
   # Check arguments
   args_ci <- names(formals(fn_ci))
   if(!all(c("est", "lower", "upper", "sizes", "xlim", "pch", "gp", "t_height", "nudge_y") %in% args_ci))
-    stop("arguments \"est\", \"lower\", \"upper\", \"sizes\", \"xlim\", \"pch\", \"gp\", \"t_height\" and \"nudge_y\" must be provided in the function `fn_ci`.")
+    stop("`fn_ci` must accept arguments \"est\", \"lower\", \"upper\", \"sizes\", \"xlim\", \"pch\", \"gp\", \"t_height\", and \"nudge_y\".")
 
   args_summary <- names(formals(fn_summary))
   if(any(unlist(is_summary))){
     if(!all(c("est", "lower", "upper", "sizes", "xlim", "gp", "nudge_y") %in% args_summary))
-    stop("arguments \"est\", \"lower\", \"upper\", \"sizes\", \"nudge_y\", \"xlim\",and \"gp\" must be provided in the function `fn_summary`.")
+    stop("`fn_summary` must accept arguments \"est\", \"lower\", \"upper\", \"sizes\", \"xlim\", \"gp\", and \"nudge_y\".")
   }
 
   check_errors(data = data, est = est, lower = lower, upper = upper, sizes = sizes,
@@ -151,19 +155,18 @@ forest <- function(data,
   if(!is.null(xlim) && !inherits(xlim, "list"))
     xlim <- rep(list(xlim), length(ci_column))
 
+  # Wrap ticks_minor into list form first so it's safe to fall back to
+  if(!is.null(ticks_minor) && !inherits(ticks_minor, "list"))
+    ticks_minor <- rep(list(ticks_minor), length(ci_column))
+
   if(is.null(ticks_at)){
-      ticks_at <- ticks_minor
-  }else{
-    if(!inherits(ticks_at, "list"))
-      ticks_at <- rep(list(ticks_at), length(ci_column))
+    ticks_at <- ticks_minor
+  }else if(!inherits(ticks_at, "list")){
+    ticks_at <- rep(list(ticks_at), length(ci_column))
   }
 
-  if(is.null(ticks_minor)){
+  if(is.null(ticks_minor))
     ticks_minor <- ticks_at
-  }else{
-    if(!inherits(ticks_minor, "list"))
-      ticks_minor <- rep(list(ticks_minor), length(ci_column))
-  }
 
   if(!is.null(arrow_lab) && !inherits(arrow_lab, "list"))
     arrow_lab <- rep(list(arrow_lab), length(ci_column))
@@ -218,8 +221,7 @@ forest <- function(data,
   if(nudge_y >= 1 || nudge_y < 0)
     stop("`nudge_y` must be within 0 to 1.")
 
-  # Check nudge_y
-  if(group_num > 1 & nudge_y == 0)
+  if(group_num > 1 && nudge_y == 0)
     nudge_y <- 0.1
 
   # Create nudge_y vector
@@ -264,13 +266,13 @@ forest <- function(data,
   }
 
   # automatic calculation of tick digits if missing
-  if(is.null(ticks_digits) & !is.null(ticks_at)){
+  if(is.null(ticks_digits) && !is.null(ticks_at)){
     if(is.list(ticks_at))
       ticks_digits <- sapply(ticks_at, function(x){
         max(count_decimal(x))
       })
     else
-      ticks_digits <- max(count_decimal(ticks_digits))
+      ticks_digits <- max(count_decimal(ticks_at))
 
     ticks_digits <- as.integer(ticks_digits)
   }
@@ -318,7 +320,7 @@ forest <- function(data,
 
   gt <- tableGrob(data, theme = theme$tab_theme, rows = NULL)
 
-  if(group_num > 1 & any(is_summary)){
+  if(group_num > 1 && any(is_summary)){
     gt$heights[c(FALSE, is_summary)] <- gt$heights[c(FALSE, is_summary)]*2
   }
 
@@ -335,6 +337,7 @@ forest <- function(data,
     # Get current CI column and group number
     current_col <- ci_col_list[col_num]
     current_gp <- sum(col_indx[1:col_num] == col_indx[col_num])
+    col_xlim <- xlim[[col_indx[col_num]]]
 
     # Convert value is exponentiated
     col_trans <- x_trans[col_indx[col_num]]
@@ -346,12 +349,48 @@ forest <- function(data,
       # Transform other indexing arguments
       if(!is.null(index_args)){
         for(ind_v in index_args){
-          if(any(unlist(dot_args[[ind_v]][[col_num]]) <= 0, na.rm = TRUE) & col_trans %in% c("log", "log2", "log10"))
+          if(any(unlist(dot_args[[ind_v]][[col_num]]) <= 0, na.rm = TRUE) && col_trans %in% c("log", "log2", "log10"))
             stop(ind_v, " should be larger than 0, if `x_trans` in \"log\", \"log2\", \"log10\".")
           dot_args[[ind_v]][[col_num]] <- xscale(dot_args[[ind_v]][[col_num]], col_trans)
         }
       }
     }
+
+    # ---- Hoist per-column invariants out of the row loop ----
+    # User-supplied gp from `...` (consumed once; per-row dot_pass$gp <- NULL
+    # in the original was redundant against a fresh per-row copy).
+    user_gp <- dot_args[["gp"]]
+
+    ci_gp <- gpar(lty = lty_list[col_num],
+                  lwd = lwd_list[col_num],
+                  col = color_list[col_num],
+                  fill = fill_list[col_num],
+                  alpha = alpha_list[col_num])
+    if(!is.null(user_gp))
+      ci_gp <- modifyList(user_gp, ci_gp)
+
+    summary_gp <- gpar(col = theme$summary$col[current_gp],
+                       fill = theme$summary$fill[current_gp])
+    if(!is.null(user_gp))
+      summary_gp <- modifyList(list(user_gp), summary_gp)
+
+    # Static (non-row-dependent) extras for fn_ci / fn_summary. `gp` and the
+    # per-row `index_args` are added inside the loop below.
+    static_dot_args <- dot_args
+    static_dot_args[["gp"]] <- NULL
+    if(!is.null(index_args))
+      static_dot_args[index_args] <- NULL
+    ci_extra      <- static_dot_args[names(static_dot_args) %in% args_ci]
+    summary_extra <- static_dot_args[names(static_dot_args) %in% args_summary]
+
+    col_min <- min(col_xlim)
+    col_max <- max(col_xlim)
+
+    # Collect grobs and their row positions, then add to gt in one batch
+    grob_list <- vector("list", nrow(data))
+    t_pos <- integer(nrow(data))
+    name_list <- character(nrow(data))
+    n_grobs <- 0L
 
     for(i in 1:nrow(data)){
       if(is.na(est[[col_num]][i]))
@@ -362,79 +401,67 @@ forest <- function(data,
         next
       }
 
-      dot_pass <- dot_args
-      if(!is.null(index_args)){
-        for(ind_v in index_args){
-          dot_pass[[ind_v]] <- dot_pass[[ind_v]][[col_num]][i]
-        }
-      }
-
-      if(is_summary[i]){
-        # Update graphical parameters
-        g_par <- gpar(col = theme$summary$col[current_gp],
-                      fill = theme$summary$fill[current_gp])
-        if ("gp" %in% names(dot_pass)) {
-          g_par <- modifyList(list(dot_pass$gp), g_par)
-          dot_pass$gp <- NULL
-        }
-
-        dot_pass <- dot_pass[names(dot_pass) %in% args_summary]
-
-        draw_ci <- do.call(fn_summary, c(
-          list(est = est[[col_num]][i],
-               lower = lower[[col_num]][i],
-               upper = upper[[col_num]][i],
-               sizes = sizes[[col_num]][i],
-               xlim = xlim[[col_indx[col_num]]],
-               gp = g_par,
-               nudge_y = nudge_y[col_num]),
-          dot_pass
-        ))
-
-      }else {
-        # Update graphical parameters
-        g_par <- gpar(lty = lty_list[col_num],
-                      lwd = lwd_list[col_num],
-                      col = color_list[col_num],
-                      fill = fill_list[col_num],
-                      alpha = alpha_list[col_num])
-
-        if ("gp" %in% names(dot_pass)) {
-          g_par <- modifyList(dot_pass$gp, g_par)
-          dot_pass$gp <- NULL
-        }
-
-        dot_pass <- dot_pass[names(dot_pass) %in% args_ci]
-
-        draw_ci <- do.call(fn_ci, c(
-          list(est = est[[col_num]][i],
-               lower = lower[[col_num]][i],
-               upper = upper[[col_num]][i],
-               sizes = sizes[[col_num]][i],
-               xlim = xlim[[col_indx[col_num]]],
-               pch = pch_list[col_num],
-               gp = g_par,
-               t_height = theme$ci$t_height,
-               nudge_y = nudge_y[col_num]),
-          dot_pass
-        ))
-      }
-
-      # Skip if CI is outside xlim
-      if(upper[[col_num]][i] < min(xlim[[col_indx[col_num]]]) | lower[[col_num]][i] > max(xlim[[col_indx[col_num]]])){
+      # Skip if CI is outside xlim before building any grob
+      if(upper[[col_num]][i] < col_min || lower[[col_num]][i] > col_max){
         message("The confidence interval of row ", i, ", column ", current_col, ", group ", current_gp,
                 " is outside of the xlim.")
         next
       }
 
+      # Per-row index_args (the only piece that genuinely depends on `i`)
+      index_pass <- list()
+      if(!is.null(index_args)){
+        for(ind_v in index_args){
+          index_pass[[ind_v]] <- dot_args[[ind_v]][[col_num]][i]
+        }
+      }
 
-      gt <- gtable_add_grob(gt, draw_ci,
-                            t = i + 1,
+      if(is_summary[i]){
+        draw_ci <- do.call(fn_summary, c(
+          list(est = est[[col_num]][i],
+               lower = lower[[col_num]][i],
+               upper = upper[[col_num]][i],
+               sizes = sizes[[col_num]][i],
+               xlim = col_xlim,
+               gp = summary_gp,
+               nudge_y = nudge_y[col_num]),
+          summary_extra,
+          index_pass[names(index_pass) %in% args_summary]
+        ))
+      }else {
+        draw_ci <- do.call(fn_ci, c(
+          list(est = est[[col_num]][i],
+               lower = lower[[col_num]][i],
+               upper = upper[[col_num]][i],
+               sizes = sizes[[col_num]][i],
+               xlim = col_xlim,
+               pch = pch_list[col_num],
+               gp = ci_gp,
+               t_height = theme$ci$t_height,
+               nudge_y = nudge_y[col_num]),
+          ci_extra,
+          index_pass[names(index_pass) %in% args_ci]
+        ))
+      }
+
+      n_grobs <- n_grobs + 1L
+      grob_list[[n_grobs]] <- draw_ci
+      t_pos[n_grobs] <- i + 1L
+      name_list[n_grobs] <- paste0("ci-", i, "-", current_col, "-", current_gp)
+    }
+
+    # One gtable_add_grob call per CI column instead of one per row
+    if(n_grobs > 0L){
+      grob_list <- grob_list[seq_len(n_grobs)]
+      t_pos <- t_pos[seq_len(n_grobs)]
+      name_list <- name_list[seq_len(n_grobs)]
+      gt <- gtable_add_grob(gt, grob_list,
+                            t = t_pos,
                             l = current_col,
-                            b = i + 1,
+                            b = t_pos,
                             r = current_col,
                             clip = "off",
-                            name = paste0("ci-", i, "-", current_col, "-", current_gp))
+                            name = name_list)
     }
   }
 
@@ -505,11 +532,11 @@ forest <- function(data,
     idx <- which(ci_column == j)
     # Add reference line
     gt <- gtable_add_grob(gt,
-                          vert_line(x = ref_line[idx],
-                                    gp = theme$refline,
-                                    xlim = xlim[[idx]],
-                                    x_trans = x_trans[idx],
-                                    nrow = nrow(data)),
+                          make_vert_line(x = ref_line[idx],
+                                         gp = theme$refline,
+                                         xlim = xlim[[idx]],
+                                         x_trans = x_trans[idx],
+                                         nrow = nrow(data)),
                           t = 2,
                           l = j,
                           b = tot_row, r = j,
@@ -529,11 +556,11 @@ forest <- function(data,
     # Add vertical line
     if(!is.null(vert_line))
       gt <- gtable_add_grob(gt,
-                            vert_line(x = vert_line[[idx]],
-                                      gp = theme$vertline,
-                                      xlim = xlim[[idx]],
-                                      x_trans = x_trans[idx],
-                                      nrow = nrow(data)),
+                            make_vert_line(x = vert_line[[idx]],
+                                           gp = theme$vertline,
+                                           xlim = xlim[[idx]],
+                                           x_trans = x_trans[idx],
+                                           nrow = nrow(data)),
                             t = 2,
                             l = j,
                             b = tot_row, r = j,
@@ -552,7 +579,7 @@ forest <- function(data,
   }
 
   # Add legend
-  if(group_num > 1 & theme$legend$position != "none"){
+  if(group_num > 1 && theme$legend$position != "none"){
 
     by_row <- !theme$legend$position %in% c("top", "bottom")
 

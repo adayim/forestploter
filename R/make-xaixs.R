@@ -26,9 +26,12 @@ make_xaxis <- function(at,
 
   # To avoid overlap shift
   at_minor <- at_minor[!at_minor %in% at]
-  # Formating for minor will be different different from the main
+  # Formatting for minor may differ from the main ticks; guard against the
+  # case where every minor tick coincided with a major one (empty after the
+  # filter above), which would make `max()` return -Inf.
+  minor_digits <- if(length(at_minor)) max(count_decimal(at_minor)) else 0L
   minor_labs <- trimws(xscale(at_minor, scale = x_trans, type = "format",
-                              format_digits = max(count_decimal(at_minor))))
+                              format_digits = minor_digits))
 
   x0 <- xscale(x0, scale = x_trans, type = "scale")
   label_at <- xscale(as.numeric(labels), scale = x_trans, type = "scale")

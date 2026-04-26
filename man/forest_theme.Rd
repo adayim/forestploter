@@ -17,29 +17,26 @@ forest_theme(
   legend_name = "Group",
   legend_position = "right",
   legend_value = "",
-  legend_gp = gpar(fontsize = base_size, fontfamily = base_family, cex = 1),
+  legend_gp = gpar(),
   legend_ncol = 1,
   legend_byrow = TRUE,
-  xaxis_gp = gpar(fontsize = base_size, fontfamily = base_family, lwd = 0.6, cex = 1),
-  refline_gp = gpar(lwd = 1, lty = "dashed", col = "grey20"),
+  xaxis_gp = gpar(),
+  refline_gp = gpar(),
   vertline_lwd = 1,
   vertline_lty = "dashed",
   vertline_col = "grey20",
   summary_col = "#4575b4",
   summary_fill = summary_col,
-  footnote_gp = gpar(fontsize = base_size, fontfamily = base_family, cex = 0.6, fontface
-    = "plain", col = "black"),
+  footnote_gp = gpar(),
   footnote_parse = TRUE,
   title_just = c("left", "right", "center"),
-  title_gp = gpar(fontsize = base_size, cex = 1.2, fontface = "bold", col = "black",
-    fontfamily = base_family),
+  title_gp = gpar(),
   arrow_type = c("open", "closed"),
   arrow_label_just = c("start", "end"),
   arrow_length = 0.05,
-  arrow_gp = gpar(fontsize = base_size, fontfamily = base_family, lwd = 0.6),
+  arrow_gp = gpar(),
   xlab_adjust = c("refline", "center"),
-  xlab_gp = gpar(fontsize = base_size, fontfamily = base_family, cex = 1, fontface =
-    "plain"),
+  xlab_gp = gpar(),
   ...
 )
 }
@@ -51,26 +48,26 @@ forest_theme(
 \item{ci_pch}{Shape of the point estimation. It will be reused if the
 forest plot is grouped.}
 
-\item{ci_col}{Color of the CI. A vector of color should be provided for
-the grouped forest plot. An internal color set will be if only not.}
+\item{ci_col}{Color of the CI. A vector of colors should be provided for
+a grouped forest plot. An internal color set will be used if not provided.}
 
-\item{ci_alpha}{Scalar value, alpha channel for transparency of point estimation.
-A small vertical line will be added to indicate the point estimation if this
-is not equals to 1.}
+\item{ci_alpha}{Scalar value, alpha channel for transparency of the point
+estimate. A small vertical line will be added to mark the location of the
+point estimate if this is not equal to 1.}
 
-\item{ci_fill}{Color fill the point estimation. A vector of color should be
-provided for the grouped forest plot. If this is \code{NULL} (default), the
-value will inherit from \code{"ci_col"}. This is valid only if
-\code{ci_pch} within 15:25.}
+\item{ci_fill}{Fill color of the point estimation. A vector of colors should
+be provided for a grouped forest plot. If this is \code{NULL} (default),
+the value will be inherited from \code{ci_col}. This is only effective if
+\code{ci_pch} is within 15:25.}
 
-\item{ci_lty}{Line type of the CI. A vector of line type should be provided
-for the grouped forest plot.}
+\item{ci_lty}{Line type of the CI. A vector of line types should be provided
+for a grouped forest plot.}
 
-\item{ci_lwd}{Line width of the CI. A vector of line type should be provided
-for the grouped forest plot.}
+\item{ci_lwd}{Line width of the CI. A vector of line widths should be provided
+for a grouped forest plot.}
 
-\item{ci_Theight}{A unit specifying the height of the T end of CI. If set to
-\code{NULL} (default), no T end will be drawn.}
+\item{ci_Theight}{A unit specifying the height of the T end of the CI. If set
+to \code{NULL} (default), no T end will be drawn.}
 
 \item{legend_name}{Title of the legend.}
 
@@ -78,8 +75,8 @@ for the grouped forest plot.}
 \code{"bottom"} or \code{"none"} to suppress the legend.}
 
 \item{legend_value}{Legend labels (expressions). A vector should be provided
-for the grouped forest plot. A "Group 1" etc will be created if not a vector
-for a grouped forest plot.}
+for a grouped forest plot. Defaults to "Group 1", "Group 2", ... if not
+provided.}
 
 \item{legend_gp}{\code{gpar} graphical parameters of legend, see \code{\link[grid]{gpar}}.}
 
@@ -92,7 +89,7 @@ for a grouped forest plot.}
 \item{refline_gp}{\code{gpar} graphical parameters of reference line, see \code{\link[grid]{gpar}}.}
 
 \item{vertline_lwd}{Line width for extra vertical line. A vector can be provided
-for each vertical line, and the values will be recycled if no enough values are
+for each vertical line, and the values will be recycled if not enough values are
 given.}
 
 \item{vertline_lty}{Line type for extra vertical line. Works same as \code{vertline_lwd}.}
@@ -133,8 +130,8 @@ for details.}
 A list.
 }
 \description{
-Default theme for the forest plot, but can pass other parameters. The
-parameters will be passed to corresponding elements of the forest plot.
+Default theme for the forest plot. Other parameters can also be passed and
+will be forwarded to the corresponding elements of the forest plot.
 
 \itemize{
 \item \code{ci_*} Control the graphical parameters of confidence intervals

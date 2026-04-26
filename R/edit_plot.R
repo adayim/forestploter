@@ -18,11 +18,11 @@
 #' @param gp Pass \code{gpar} parameters, see \code{\link[grid]{gpar}}. It should
 #' be passed as \code{gpar(col = "red")}. For \code{which = "ci"}, please refer to
 #' \code{\link{forest_theme}} \code{ci_*} parameters for the editable elements.
-#' @param ... Other parameters to be passed to the grobs. For the \code{"text"}, please
-#' see \code{\link[grid]{textGrob}} for details and \code{\link[grid]{rectGrob}}
-#' for \code{"background"}. This will be ignored if \code{which = "ci"} as changing
-#' parameters for the confidence interval are not allowed except for the graphical
-#' parameters.
+#' @param ... Other parameters to be passed to the grobs. See
+#' \code{\link[grid]{textGrob}} for the \code{"text"} part and
+#' \code{\link[grid]{rectGrob}} for \code{"background"}. This is ignored when
+#' \code{which = "ci"} because non-graphical parameters cannot be changed for
+#' the confidence interval.
 #'
 #' @return A \code{\link[gtable]{gtable}} object.
 #' @seealso \code{\link[grid]{gpar}} \code{\link[grid]{editGrob}} \code{\link{forest_theme}} 
@@ -56,7 +56,7 @@ edit_plot <- function(plot,
                   background = "bg",
                   ci = "ci")
 
-  if(which == "ci" & part != "core"){
+  if(which == "ci" && part != "core"){
     warning("`which=ci` but part is not set to body")
     part <- "core"
   }
@@ -77,7 +77,7 @@ edit_plot <- function(plot,
         row <- unique(l$b[which(l$name == "core-fg")])
     }else {
       # For CI
-      if(is.null(row) | is.null(col))
+      if(is.null(row) || is.null(col))
         stop("row and col must be defined for ci")
 
       # Generate name of the ci grob

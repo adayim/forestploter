@@ -1,16 +1,19 @@
-#' Change Axis Scale: log2, log10 and more
+#' Apply, invert, or format an x-axis scale
 #'
-#' Change axis scale.
-#' 
-#' @param scale axis scale. Allowed values are one of c("none", "log2", "log10",
-#'  "sqrt", "percent", "dollar", "scientific"); e.g.: .scale="log2".
-#' @param inv Inverse value back to its original.
-#' @param format logical value. If TRUE, axis tick mark labels will be formatted
-#'  when scale  = "log2" or "log10".
-#' @param format_digits Digits to keep while formatting
+#' Helper used by the forest plot to switch between the user-facing axis
+#' scale and the internal numeric scale, and to format tick labels.
+#'
+#' @param x Numeric vector to be transformed or formatted.
+#' @param scale Axis scale. One of \code{"none"}, \code{"log"}, \code{"log2"},
+#' \code{"log10"}, or \code{"scientific"}.
+#' @param type What to do with \code{x}: \code{"scale"} applies the
+#' transformation, \code{"inv"} inverts it back to the original space, and
+#' \code{"format"} returns formatted character labels.
+#' @param format_digits Number of digits to keep when \code{type = "format"}.
+#' If an integer is supplied (e.g. \code{1L}) trailing zeros are dropped.
 #' @keywords internal
 
-xscale <- function(x, 
+xscale <- function(x,
                    scale = c("none", "log", "log2", "log10", "scientific"),
                    type = c("scale", "inv", "format"),
                    format_digits = 1){
@@ -57,29 +60,4 @@ xscale <- function(x,
     return(r)
   }
 }
-
-# Math expression
-math_exp <- function(x, expr = 10^x){
-
-  expr_qt <- substitute(expr)
-  subs <- function(x) {
-    do.call("substitute", list(expr_qt, list(x = x)))
-  }
-
-  f <- function(x) {
-    ret <- lapply(x, subs)
-    ret <- as.expression(ret)
-    # restore NAs from input vector
-    ret[is.na(x)] <- NA
-    names(ret) <- names(x)
-    ret
-  }
-
-  r <- f(x)
-  r[x == 0] <- 1
-  
-  return(r)
-
-}
-
 

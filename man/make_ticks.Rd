@@ -23,9 +23,18 @@ are exponential, e.g. for logistic regression (OR), survival estimates (HR), Poi
 regression etc.}
 }
 \value{
-A vector
+A vector of tick coordinates in the transformed space.
 }
 \description{
-Create ticks points.
+Pick tick positions in the (already-transformed) \code{xlim} space.
+}
+\details{
+For \code{x_trans} in \code{"none"} / \code{"scientific"} this delegates to
+\code{\link[base]{pretty}}. For \code{"log"} / \code{"log2"} / \code{"log10"}
+it converts \code{xlim} back to the original scale, runs
+\code{\link{log_pretty}} to get base-aware ticks (e.g. \code{0.1, 1, 10}
+rather than \code{0.22, 0.61, 2.72}), and re-applies the transform. The
+reference line value is included as a tick when it falls inside the range,
+so forest plots always label their visual anchor.
 }
 \keyword{internal}

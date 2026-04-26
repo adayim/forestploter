@@ -28,7 +28,7 @@ insert_text(
 \item{col}{A numeric value or vector indicating the columns the text will be
 added. The text will span over the column if a vector is given.}
 
-\item{part}{Part to insert text, body (default) or header.}
+\item{part}{Part to insert text, \code{"body"} (default) or \code{"header"}.}
 
 \item{just}{The justification of the text, \code{"center"} (default),
 \code{"left"} or \code{"right"}.}
@@ -47,10 +47,11 @@ settings of the text. See \code{\link[grid]{gpar}}.}
 A \code{\link[gtable]{gtable}} object.
 }
 \description{
-This function can be used to insert text to forest plot. Remember to adjust
-for the row number if you have added text before, including header. This is
-achieved by inserted new row(s) to the plot and will affect the row number.
-A text vector can be inserted to multiple columns or rows.
+This function can be used to insert text into a forest plot. Remember to
+adjust for the row number if you have added text before, including the
+header. This is achieved by inserting new row(s) into the plot and will
+affect subsequent row numbers. A text vector can be inserted into multiple
+columns or rows.
 }
 \seealso{
 \code{\link[grid]{gpar}} \code{\link[grid]{textGrob}} \code{\link[gtable]{gtable_add_grob}}

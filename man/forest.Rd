@@ -65,12 +65,13 @@ This will apply to all CI columns if provided, and will be calculated automatica
 for each column if not provided. This should be a list with the same length of
 \code{ci_column} if different \code{xlim} for different column is desired.}
 
-\item{ticks_at}{Set X-axis tick-marks point. This will apply to all CI columns if
-provided, and will be calculated automatically for each column if not provided.
-This should be a list if different \code{ticks_at} for different column is desired.
-Although many efforts have been made to automatically get a pretty ticks break,
-it will not give a perfect solution, especially if \code{'log2'} and \code{'log10'}
-defined for \code{x_trans}. Please provide this value if possible.}
+\item{ticks_at}{Set X-axis tick-mark positions. Applies to all CI columns if
+a single vector is provided, or supply a list of vectors for column-specific
+ticks. When omitted, ticks are computed automatically: \code{\link[base]{pretty}}
+for linear axes and a decade-aware log-pretty helper for \code{x_trans} in
+\code{"log"}, \code{"log2"}, or \code{"log10"} (e.g. \code{0.1, 1, 10, 100}
+for a wide log10 range). The auto-tick output is rarely a perfect substitute
+for a hand-chosen set, so supply this argument when you need exact control.}
 
 \item{ticks_digits}{Number of digits for the x-axis, default is \code{NULL} to calculate
 an integer based on \code{ticks_at} if provided or \code{lower} and \code{upper} if not.
@@ -102,7 +103,10 @@ with the arrow and/or x-axis.}
 
 \item{title}{The text for the title.}
 
-\item{nudge_y}{Horizontal adjustment to nudge groups by, must be within 0 to 1.}
+\item{nudge_y}{Vertical adjustment to nudge groups by, must be within 0 to 1.
+Defaults to \code{0}; for grouped forest plots a value of \code{0} is bumped
+to \code{0.1} automatically so that group CIs do not overplot. Set explicitly
+to override.}
 
 \item{fn_ci}{Name of the function to draw confidence interval, default is
 \code{\link{makeci}}. You can specify your own drawing function to draw the

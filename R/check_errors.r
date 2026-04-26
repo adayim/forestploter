@@ -27,6 +27,9 @@ check_errors <- function(data,
   if(!is.numeric(ci_column))
     stop("ci_column must be numeric atomic vector.")
 
+  if(any(ci_column < 1) || any(ci_column > ncol(data)))
+    stop("ci_column must be within seq_len(ncol(data)).")
+
   if(!is.null(title) && length(title) != 1)
       stop("title must be of length 1.")
 
@@ -34,7 +37,7 @@ check_errors <- function(data,
   if(length(unique(c(length(est), length(lower), length(upper)))) != 1)
     stop("Estimate, lower and upper should have the same length.")
   
-  if(inherits(sizes, "list") & length(est) != length(sizes))
+  if(inherits(sizes, "list") && length(est) != length(sizes))
     stop("sizes should have the same length as est.")
   
   if(!is.numeric(unlist(sizes)))
@@ -45,10 +48,10 @@ check_errors <- function(data,
     stop("Sizes must be larger than 0.")
 
   # Check type
-  if(typeof(est) != typeof(lower) | typeof(est) != typeof(upper))
+  if(typeof(est) != typeof(lower) || typeof(est) != typeof(upper))
     stop("Estimate, lower and upper should have the same type.")
-  
-  if(!is.numeric(unlist(est)) | !is.numeric(unlist(lower)) | !is.numeric(unlist(upper)))
+
+  if(!is.numeric(unlist(est)) || !is.numeric(unlist(lower)) || !is.numeric(unlist(upper)))
     stop("Estimate, lower and upper must be numeric.")
 
   if(inherits(est, "list") | inherits(lower, "list") | inherits(upper, "list")){
@@ -57,18 +60,18 @@ check_errors <- function(data,
     upper_len <- vapply(upper, length, FUN.VALUE = 1L)
 
     if(length(unique(c(est_len, lower_len, upper_len))) != 1)
-      stop("All the elements in estimate, lower and upper should have the same length")
-    
-    if(inherits(sizes, "list") & length(unique(c(est_len, vapply(sizes, length, FUN.VALUE = 1L)))) != 1)
-      stop("All the elements in sizes should have the same length as estimate")
+      stop("All the elements in estimate, lower and upper should have the same length.")
+
+    if(inherits(sizes, "list") && length(unique(c(est_len, vapply(sizes, length, FUN.VALUE = 1L)))) != 1)
+      stop("All the elements in sizes should have the same length as estimate.")
   }
 
   # Check length for the summary
   if(!is.null(is_summary) && length(is_summary) != nrow(data))
-    stop("is_summary should have same length as data rownumber.")
-  
-  if(!is.null(is_summary) && ! is.logical(is_summary))
-    stop("is_summary must be logical vector.")
+    stop("is_summary should have the same length as the number of rows in data.")
+
+  if(!is.null(is_summary) && !is.logical(is_summary))
+    stop("is_summary must be a logical vector.")
 
   # Check ref_line
   if(!is.numeric(ref_line) || !length(ref_line) %in% c(1, length(ci_column)))
@@ -100,8 +103,8 @@ check_errors <- function(data,
       stop("vert_line must be a numeric vector.")
 
     # Check arrow
-    if(!is.null(arrow_lab) & length(arrow_lab) != 2)
-      stop("Arrow label must of length 2.")
+    if(!is.null(arrow_lab) && length(arrow_lab) != 2)
+      stop("Arrow label must be of length 2.")
 
     # Check xlim
     if(!is.null(xlim) && (!is.numeric(xlim) || length(xlim) != 2 || xlim[1] >= xlim[2]))
@@ -148,10 +151,10 @@ check_errors <- function(data,
           stop("arrow_lab must have the same length as ci_column.")
         cl <- sapply(arrow_lab, length) == 2
         if(any(!cl))
-          stop("Elements in the arrow_lab must of length 2.")
+          stop("Elements in the arrow_lab must be of length 2.")
       }else {
-        if(!is.null(arrow_lab) & length(arrow_lab) != 2)
-          stop("Arrow label must of length 2.")
+        if(!is.null(arrow_lab) && length(arrow_lab) != 2)
+          stop("Arrow label must be of length 2.")
       }
     }
 
@@ -164,7 +167,7 @@ check_errors <- function(data,
           !is.numeric(x) || length(x) != 2 || x[1] >= x[2]
         })
         if(any(tst))
-          stop("The elements in xlim must be numeric and have a length of 2, with first element smaller than the second.")
+          stop("The elements in xlim must be numeric and of length 2, with first element less than the second.")
 
       }else {
         if(!is.numeric(xlim) || length(xlim) != 2 || xlim[1] >= xlim[2])

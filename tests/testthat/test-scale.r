@@ -14,10 +14,6 @@ test_that("test scales", {
   expect_equal(xscale(log2(3.5), "log2", "inv"), 3.5)
   expect_equal(xscale(log10(3.5), "log10", "inv"), 3.5)
 
-  # Math expression
-  expect_equal(math_exp(3.5, 2^x), expression(2^3.5))
-  expect_equal(math_exp(3.5, 10^x), expression(10^3.5))
-
   # Scientific notation
   expect_equal(xscale(pi, "scientific", "format"), "3.1e+00")
   expect_equal(xscale(pi, "scientific", "format", 1L), "3.1")

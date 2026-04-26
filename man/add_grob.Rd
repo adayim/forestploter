@@ -21,7 +21,7 @@ add_grob(
 
 \item{col}{A numeric value or vector indicating the columns to draw a grob.}
 
-\item{part}{The border will be added to \code{"body"} (default) or
+\item{part}{The grob will be added to \code{"body"} (default) or
 \code{"header"}.}
 
 \item{order}{Order in which the grobs should be plotted. Use \code{'top'}

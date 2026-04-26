@@ -35,11 +35,11 @@ not have any impact on the legend.}
 be passed as \code{gpar(col = "red")}. For \code{which = "ci"}, please refer to
 \code{\link{forest_theme}} \code{ci_*} parameters for the editable elements.}
 
-\item{...}{Other parameters to be passed to the grobs. For the \code{"text"}, please
-see \code{\link[grid]{textGrob}} for details and \code{\link[grid]{rectGrob}}
-for \code{"background"}. This will be ignored if \code{which = "ci"} as changing
-parameters for the confidence interval are not allowed except for the graphical
-parameters.}
+\item{...}{Other parameters to be passed to the grobs. See
+\code{\link[grid]{textGrob}} for the \code{"text"} part and
+\code{\link[grid]{rectGrob}} for \code{"background"}. This is ignored when
+\code{which = "ci"} because non-graphical parameters cannot be changed for
+the confidence interval.}
 }
 \value{
 A \code{\link[gtable]{gtable}} object.

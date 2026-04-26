@@ -1,10 +1,11 @@
 
 #' Insert text to forest plot
 #'
-#' This function can be used to insert text to forest plot. Remember to adjust
-#' for the row number if you have added text before, including header. This is
-#' achieved by inserted new row(s) to the plot and will affect the row number.
-#' A text vector can be inserted to multiple columns or rows.
+#' This function can be used to insert text into a forest plot. Remember to
+#' adjust for the row number if you have added text before, including the
+#' header. This is achieved by inserting new row(s) into the plot and will
+#' affect subsequent row numbers. A text vector can be inserted into multiple
+#' columns or rows.
 #'
 #' @param plot A forest plot object.
 #' @param text A character or expression vector, see \code{\link[grid]{textGrob}}.
@@ -12,7 +13,7 @@
 #' "header".
 #' @param col A numeric value or vector indicating the columns the text will be
 #' added. The text will span over the column if a vector is given.
-#' @param part Part to insert text, body (default) or header.
+#' @param part Part to insert text, \code{"body"} (default) or \code{"header"}.
 #' @param just The justification of the text, \code{"center"} (default),
 #' \code{"left"} or \code{"right"}.
 #' @param before Indicating the text will be inserted before or after the row.
@@ -53,12 +54,12 @@ insert_text <- function(plot,
   just <- match.arg(just)
 
   # Row must be provided for the body
-  if(part == "body" & is.null(row))
-    stop("Row must be defined if the text is inserting to body.")
+  if(part == "body" && is.null(row))
+    stop("Row must be defined if the text is inserted into body.")
 
-  # Check text length 
+  # Check text length
   if(length(text) > 1 && length(row) != length(text) && length(col) != length(text))
-    stop("text must have same length with row or col.")
+    stop("text must have the same length as row or col.")
 
   # Align text
   tx_x <- switch(just,

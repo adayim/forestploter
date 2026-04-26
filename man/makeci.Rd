@@ -36,8 +36,8 @@ Values will be used as it is, no transformation will be applied.}
 \item{gp}{Graphical parameters of \code{\link[grid]{gpar}}. Please refer
 to \code{\link{forest_theme}} for more details.}
 
-\item{t_height}{The height confidence interval line end vertices. If
-value is \code{NULL} (default), no vertices will be drawn.}
+\item{t_height}{The height of the confidence interval line end vertices.
+If the value is \code{NULL} (default), no vertices will be drawn.}
 
 \item{xlim}{Limits for the x axis as a vector of length 2, i.e. c(low, high). It
 will take the minimum and maximum of the lower and upper value if not provided.
@@ -45,9 +45,12 @@ This will apply to all CI columns if provided, and will be calculated automatica
 for each column if not provided. This should be a list with the same length of
 \code{ci_column} if different \code{xlim} for different column is desired.}
 
-\item{nudge_y}{Horizontal adjustment to nudge groups by, must be within 0 to 1.}
+\item{nudge_y}{Vertical adjustment to nudge groups by, must be within 0 to 1.
+Defaults to \code{0}; for grouped forest plots a value of \code{0} is bumped
+to \code{0.1} automatically so that group CIs do not overplot. Set explicitly
+to override.}
 
-\item{name}{name of the grob.}
+\item{name}{Name of the grob.}
 }
 \value{
 A gTree object

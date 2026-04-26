@@ -84,5 +84,12 @@ test_that("Add grob", {
   expect_equal(unname(wh), c(10.43, 3.64),
                tolerance = 0.01)
 
+  # Body grobs without an explicit row should error rather than silently
+  # producing numeric(0)/Inf indices.
+  expect_error(add_grob(p,
+                        col = 9:14,
+                        gb_fn = roundrectGrob),
+               "Row must be defined")
+
 })
 

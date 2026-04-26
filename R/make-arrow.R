@@ -14,18 +14,19 @@ make_arrow <- function(x0 = 1, arrow_lab, arrow_gp, col_width, xlim, x_trans = "
 
   gp <- arrow_gp$gp
 
-  # Calculate width of left and right width
-  left_col_w <- col_width * abs(x0 - xlim[1])/(abs(xlim[1]) + abs(xlim[2]))
-  right_col_w <- col_width * abs(xlim[2] - x0)/(abs(xlim[1]) + abs(xlim[2]))
+  # Calculate width of left and right column relative to x0
+  denom <- xlim[2] - xlim[1]
+  left_col_w <- col_width * (x0 - xlim[1]) / denom
+  right_col_w <- col_width * (xlim[2] - x0) / denom
 
-  txt_len <- sapply(arrow_lab, function(txt){
+  txt_len <- vapply(arrow_lab, function(txt){
     tx_gb <- textGrob(txt, gp = gp)
     convertWidth(grobWidth(tx_gb), "char", valueOnly = TRUE)
-  }, USE.NAMES = FALSE)
+  }, FUN.VALUE = numeric(1), USE.NAMES = FALSE)
 
 
   # Left side
-  if(arrow_gp$label_just == "start" | txt_len[1] > left_col_w){
+  if(arrow_gp$label_just == "start" || txt_len[1] > left_col_w){
     l_just <- "right"
     x_pos_l <- unit(x0, "native") - unit(0.05, "inches")
   }else{
@@ -34,7 +35,7 @@ make_arrow <- function(x0 = 1, arrow_lab, arrow_gp, col_width, xlim, x_trans = "
   }
 
   # Right side
-  if(arrow_gp$label_just == "start" | txt_len[2] > right_col_w){
+  if(arrow_gp$label_just == "start" || txt_len[2] > right_col_w){
     r_just <- "left"
     x_pos_r <- unit(x0, "native") + unit(0.05, "inches")
   }else{

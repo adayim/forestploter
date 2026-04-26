@@ -276,7 +276,9 @@
 <polyline points='395.68,351.45 537.03,351.45 ' style='stroke-width: 0.45;' />
 <line x1='404.44' y1='351.45' x2='404.44' y2='358.65' style='stroke-width: 0.45;' />
 <line x1='498.51' y1='351.45' x2='498.51' y2='358.65' style='stroke-width: 0.45;' />
+<line x1='528.80' y1='351.45' x2='528.80' y2='358.65' style='stroke-width: 0.45;' />
 <text x='404.44' y='369.98' text-anchor='middle' style='font-size: 12.00px; font-family: sans;' textLength='13.35px' lengthAdjust='spacingAndGlyphs'>32</text>
 <text x='498.51' y='369.98' text-anchor='middle' style='font-size: 12.00px; font-family: sans;' textLength='13.35px' lengthAdjust='spacingAndGlyphs'>64</text>
+<text x='528.80' y='369.98' text-anchor='middle' style='font-size: 12.00px; font-family: sans;' textLength='13.35px' lengthAdjust='spacingAndGlyphs'>80</text>
 </g>
 </svg>

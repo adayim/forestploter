@@ -2,21 +2,23 @@
 % Please edit documentation in R/helper.R
 \name{get_wh}
 \alias{get_wh}
-\title{Get widths and height the forestplot}
+\title{Get width and height of the forestplot}
 \usage{
 get_wh(plot, unit = c("in", "cm", "mm"))
 }
 \arguments{
 \item{plot}{A forest plot object.}
 
-\item{unit}{Unit of the plot size in \code{units} ("in", "cm", or "mm")to be saved.}
+\item{unit}{Unit for the returned width and height. One of \code{"in"},
+\code{"cm"}, or \code{"mm"}.}
 }
 \value{
 A named vector of width and height
 }
 \description{
-\code{get_wh} can be used to find the correct width and height of the forestplot
-for saving, as the width and height is difficult to fit for saving.
+\code{get_wh} can be used to find the correct width and height of the
+forestplot for saving, as the width and height are difficult to estimate
+otherwise.
 }
 \examples{
 \dontrun{

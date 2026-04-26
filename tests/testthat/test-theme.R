@@ -42,7 +42,7 @@ test_that("Set theme", {
 
 test_that("Test errors", {
   expect_error(forest_theme(ci_fill = c("#e41a1c","#377eb8")),
-                 "legend_value should be provided each groups.")
+                 "legend_value should be provided for each group.")
 
   expect_warning(forest_theme(ci_fill = "#e41a1c", ci_pch = 1),
                  "`ci_pch` is not within 15:25, `ci_fill` will be ignored.")

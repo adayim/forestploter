@@ -97,7 +97,7 @@ p <- forest(dt[,c(1:3, 20:21)],
 plot(p)
 ```
 
-<img src="man/figures/README-example-1.png" width="100%" height="40%" />
+<img src="man/figures/README-example-1.png" alt="" width="100%" height="40%" />
 
 ## Editing the Plot
 
@@ -142,7 +142,7 @@ g <- add_border(g, row = 10, col = 1:3, where = "top")
 plot(g)
 ```
 
-<img src="man/figures/README-edit-1.png" width="100%" height="40%" />
+<img src="man/figures/README-edit-1.png" alt="" width="100%" height="40%" />
 
 Remember to add 1 to the row number if you have inserted any text
 before, as the row number will change after inserting text.
@@ -200,4 +200,4 @@ p <- forest(dt[,c(1:2, 20, 3, 22)],
 plot(p)
 ```
 
-<img src="man/figures/README-multiple-1.png" width="100%" height="80%" />
+<img src="man/figures/README-multiple-1.png" alt="" width="100%" height="80%" />

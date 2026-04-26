@@ -1,10 +1,12 @@
-#' Get widths and height the forestplot
+#' Get width and height of the forestplot
 #'
-#' \code{get_wh} can be used to find the correct width and height of the forestplot 
-#' for saving, as the width and height is difficult to fit for saving.
+#' \code{get_wh} can be used to find the correct width and height of the
+#' forestplot for saving, as the width and height are difficult to estimate
+#' otherwise.
 #'
 #' @param plot A forest plot object.
-#' @param unit Unit of the plot size in `units` ("in", "cm", or "mm")to be saved.
+#' @param unit Unit for the returned width and height. One of \code{"in"},
+#' \code{"cm"}, or \code{"mm"}.
 #'
 #' @return A named vector of width and height
 #' @export
@@ -40,13 +42,14 @@ get_wh <- function(plot, unit = c("in", "cm", "mm")){
 }
 
 
-# Add vertical line
-vert_line <- function(x, gp = grid::gpar(), xlim, x_trans = "none", nrow = 10){
+# Add vertical line. Named with the `make_*` prefix to avoid shadowing the
+# `vert_line` parameter of `forest()`.
+make_vert_line <- function(x, gp = grid::gpar(), xlim, x_trans = "none", nrow = 10){
 
   if(x_trans != "none")
     x <- xscale(x, scale = x_trans)
 
-  # Multiplyer
+  # Multiplier
   denom <- max(c(nrow, 10))
 
   out_indx <- x > max(xlim) | x < min(xlim)
