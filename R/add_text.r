@@ -19,12 +19,12 @@
 #' @param gp An object of class \code{"gpar"}, this is the graphical parameter
 #'  settings of the text. See \code{\link[grid]{gpar}}.
 #' @param padding Padding of the text, default is \code{unit(1, "mm")}
-#' @param parse Logical, behaviour for parsing text as plotmath, see 
-#' \code{\link[grDevices]{plotmath}} 
+#' @param parse Logical, behaviour for parsing text as plotmath, see
+#' \code{\link[grDevices]{plotmath}}
 #'
 #' @return A \code{\link[gtable]{gtable}} object.
-#' @seealso \code{\link[gtable]{gtable}} \code{\link[grid]{gpar}} \code{\link[grid]{textGrob}} 
-#' \code{\link[gtable]{gtable_add_grob}} 
+#' @seealso \code{\link[gtable]{gtable}} \code{\link[grid]{gpar}} \code{\link[grid]{textGrob}}
+#' \code{\link[gtable]{gtable_add_grob}}
 #' @export
 #'
 add_text <- function(plot,
@@ -36,7 +36,7 @@ add_text <- function(plot,
                      gp = gpar(),
                      padding = unit(1, "mm"),
                      parse = FALSE){
-  
+
   if(parse)
     text <- tryCatch(parse(text = text), error = function(e) text)
 
@@ -76,7 +76,7 @@ add_text <- function(plot,
 
   # Span to whole plot if col is missing
   if(is.null(col))
-    col <- 2:max(l$r)
+    col <- min(l$l):max(l$r)
   else
     col <- 1 + col # Add 1 to account for padding of the plot
 
