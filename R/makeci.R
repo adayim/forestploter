@@ -63,7 +63,7 @@ makeci_static <- function(est, lower, upper, pch, size = 1, gp = gpar(),
   rec <- pointsGrob(x = unit(est, "native"),
                     y = 0.5 + nudge_y,
                     pch = pch,
-                    size = unit(size, "char"),
+                    size = size_bigpts(size, gp),
                     gp = rec_gp,
                     name = "point")
 
@@ -71,8 +71,8 @@ makeci_static <- function(est, lower, upper, pch, size = 1, gp = gpar(),
   if(!is.null(gp$alpha) && gp$alpha != 1){
     gp$alpha <- NULL
     cent_gp <- segmentsGrob(x0 = unit(est, "native"), x1 = unit(est, "native"),
-                            y0 = unit(0.5 + nudge_y, "npc") - unit(size*.2, "char"),
-                            y1 = unit(0.5 + nudge_y, "npc") + unit(size*.2, "char"),
+                            y0 = unit(0.5 + nudge_y, "npc") - size_bigpts(size*.2, gp),
+                            y1 = unit(0.5 + nudge_y, "npc") + size_bigpts(size*.2, gp),
                             gp = gp, name = "center")
 
   }else {
@@ -149,8 +149,13 @@ make_summary <- function(est, lower, upper, sizes = 1, gp, xlim, nudge_y = 0){
   if(upper < min(xlim) || lower > max(xlim))
     return(NULL)
 
+  # `sizes` is the full height of the diamond, in the same unit as the point
+  # estimation of a non-summary row: a multiple of one line of text.
+  mid <- unit(0.5 + nudge_y, "npc")
+  half <- size_bigpts(0.5 * sizes, gp)
+
   polygonGrob(x = unit(c(lower, est, upper, est), "native"),
-              y = unit(0.5 + c(0, 0.5 * sizes, 0, -0.5*sizes) + nudge_y, "npc"),
+              y = unit.c(mid, mid + half, mid, mid - half),
               gp = gp,
               vp = viewport(xscale = xlim),
               name = "pooled.diamond")

@@ -19,5 +19,10 @@ Useful links:
 \author{
 \strong{Maintainer}: Alimu Dayimu \email{ad938@cam.ac.uk} (\href{https://orcid.org/0000-0001-9998-7463}{ORCID})
 
+Authors:
+\itemize{
+  \item Alimu Dayimu \email{ad938@cam.ac.uk} (\href{https://orcid.org/0000-0001-9998-7463}{ORCID})
+}
+
 }
 \keyword{internal}

@@ -36,8 +36,12 @@ and considered as different groups.}
 
 \item{upper}{Upper bound of the confidence interval, same as \code{est}.}
 
-\item{sizes}{Size of the point estimation box, can be a unit, vector or a list.
-Values will be used as it is, no transformation will be applied.}
+\item{sizes}{Size of the point estimation box, can be a vector or a list.
+The value is a multiple of one line of text, so \code{1} draws a point as tall
+as the \code{base_size} of the theme. The same scale applies to the summary
+diamond. Values are used as they are unless \code{size_method} is set; useful
+values are roughly between \code{0.2} and \code{1.5}, and a warning is given
+outside \code{0.1} to \code{2}.}
 
 \item{ref_line}{X-axis coordinates of zero line, default is 1. Provide an atomic
 vector if different reference line for each \code{ci_column} is desired.}
@@ -49,8 +53,9 @@ Provide a list of numerical vector element if different vertical line for each
 \item{ci_column}{Column number of the data the CI will be displayed.}
 
 \item{is_summary}{A logical vector indicating if the value is a summary value,
-which will have a diamond shape for the estimate. Can not be used with multiple
-group \code{forestplot}.}
+which will have a diamond shape for the estimate. With multiple groups the
+diamonds are stacked in the same cell and the summary rows are made taller to
+fit them, so a larger \code{nudge_y} may be wanted.}
 
 \item{xlim}{Limits for the x axis as a vector of length 2, i.e. c(low, high). It
 will take the minimum and maximum of the lower and upper value if not provided.

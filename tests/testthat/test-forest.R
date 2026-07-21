@@ -444,3 +444,30 @@ test_that("Test multiple group", {
   vdiffr::expect_doppelganger("multiple-groups", p)
 
 })
+
+
+test_that("Summary row with user gp passed via dots", {
+
+  dt <- dt[1:6, ]
+
+  # Regression: `gp` supplied through `...` used to be wrapped in a list when
+  # merged into the summary gpar, breaking polygonGrob at draw time.
+  p <- forest(dt[,c(1:3, 20:21)],
+              est = dt$est,
+              lower = dt$low,
+              upper = dt$hi,
+              ci_column = 4,
+              ref_line = 1,
+              is_summary = c(TRUE, rep(FALSE, 5)),
+              gp = gpar(lwd = 2))
+
+  expect_s3_class(p, "forestplot")
+
+  smry <- p$grobs[[grep("ci-1-4", p$layout$name)]]
+  expect_s3_class(smry$gp, "gpar")
+
+  pdf(NULL)
+  on.exit(dev.off(), add = TRUE)
+  expect_no_error(print(p))
+
+})

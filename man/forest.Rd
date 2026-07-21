@@ -10,6 +10,8 @@ forest(
   lower,
   upper,
   sizes = 0.4,
+  size_method = c("none", "range", "proportional"),
+  size_range = c(0.2, 0.8),
   ref_line = ifelse(x_trans \%in\% c("log", "log2", "log10"), 1, 0),
   vert_line = NULL,
   ci_column,
@@ -43,8 +45,32 @@ and considered as different groups.}
 
 \item{upper}{Upper bound of the confidence interval, same as \code{est}.}
 
-\item{sizes}{Size of the point estimation box, can be a unit, vector or a list.
-Values will be used as it is, no transformation will be applied.}
+\item{sizes}{Size of the point estimation box, can be a vector or a list.
+The value is a multiple of one line of text, so \code{1} draws a point as tall
+as the \code{base_size} of the theme. The same scale applies to the summary
+diamond. Values are used as they are unless \code{size_method} is set; useful
+values are roughly between \code{0.2} and \code{1.5}, and a warning is given
+outside \code{0.1} to \code{2}.}
+
+\item{size_method}{How to turn \code{sizes} into point sizes. The default
+\code{"none"} uses the values as they are. Any other value reads \code{sizes}
+as study weights and takes their square root, so that the \emph{area} of the
+point is proportional to the weight, before mapping onto \code{size_range}.
+\code{"range"} puts the smallest weight on \code{size_range[1]} and the
+largest on \code{size_range[2]}, as \code{metafor::forest.rma} does with its
+\code{plim}. \code{"proportional"} keeps the areas proportional to the weights
+and only clamps the smallest points up, as \code{meta::forest.meta} does.
+Weights are scaled jointly across all groups and CI columns so that the areas
+stay comparable between them; scale by hand if per-column control is wanted.
+Rows flagged by \code{is_summary} are held out of the scaling and drawn at
+\code{size_range[2]}, since a pooled total is not comparable with a study
+weight. This follows \code{meta}, whose pooled rows carry no study weight and
+end up the size of the largest study square, and \code{metafor}, which sizes
+its summary polygon from \code{efac} rather than from the weights.}
+
+\item{size_range}{Numeric vector of length 2 giving the smallest and largest
+point size \code{size_method} may produce. Ignored if \code{size_method} is
+\code{"none"}.}
 
 \item{ref_line}{X-axis coordinates of zero line, default is 1. Provide an atomic
 vector if different reference line for each \code{ci_column} is desired.}
@@ -56,8 +82,9 @@ Provide a list of numerical vector element if different vertical line for each
 \item{ci_column}{Column number of the data the CI will be displayed.}
 
 \item{is_summary}{A logical vector indicating if the value is a summary value,
-which will have a diamond shape for the estimate. Can not be used with multiple
-group \code{forestplot}.}
+which will have a diamond shape for the estimate. With multiple groups the
+diamonds are stacked in the same cell and the summary rows are made taller to
+fit them, so a larger \code{nudge_y} may be wanted.}
 
 \item{xlim}{Limits for the x axis as a vector of length 2, i.e. c(low, high). It
 will take the minimum and maximum of the lower and upper value if not provided.

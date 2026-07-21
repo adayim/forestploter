@@ -36,6 +36,9 @@ check_errors <- function(data,
   # Check length
   if(length(unique(c(length(est), length(lower), length(upper)))) != 1)
     stop("Estimate, lower and upper should have the same length.")
+
+  if(inherits(est, "list") && length(est) %% length(ci_column) != 0)
+    stop("Length of est should be a multiple of the length of ci_column.")
   
   if(inherits(sizes, "list") && length(est) != length(sizes))
     stop("sizes should have the same length as est.")

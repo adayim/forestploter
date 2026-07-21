@@ -86,5 +86,14 @@ test_that("check_errors works", {
                       ci_column = 3),
                "xlab must be of length 1 or the same length as ci_column.")
 
+  # 3 series over 2 CI columns: neither 1 nor 2 groups, previously the extra
+  # series was silently dropped
+  expect_error(forest(dt[,c(1:3, 20:21)],
+                      est = list(dt$est, dt$est_gp1, dt$est_gp2),
+                      lower = list(dt$low, dt$low_gp1, dt$low_gp2),
+                      upper = list(dt$hi, dt$hi_gp1, dt$hi_gp2),
+                      ci_column = c(3, 5)),
+               "Length of est should be a multiple of the length of ci_column.")
+
 
 })

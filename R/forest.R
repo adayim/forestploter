@@ -11,8 +11,30 @@
 #' and considered as different groups.
 #' @param lower Lower bound of the confidence interval, same as \code{est}.
 #' @param upper Upper bound of the confidence interval, same as \code{est}.
-#' @param sizes Size of the point estimation box, can be a unit, vector or a list.
-#' Values will be used as it is, no transformation will be applied.
+#' @param sizes Size of the point estimation box, can be a vector or a list.
+#' The value is a multiple of one line of text, so \code{1} draws a point as tall
+#' as the \code{base_size} of the theme. The same scale applies to the summary
+#' diamond. Values are used as they are unless \code{size_method} is set; useful
+#' values are roughly between \code{0.2} and \code{1.5}, and a warning is given
+#' outside \code{0.1} to \code{2}.
+#' @param size_method How to turn \code{sizes} into point sizes. The default
+#' \code{"none"} uses the values as they are. Any other value reads \code{sizes}
+#' as study weights and takes their square root, so that the \emph{area} of the
+#' point is proportional to the weight, before mapping onto \code{size_range}.
+#' \code{"range"} puts the smallest weight on \code{size_range[1]} and the
+#' largest on \code{size_range[2]}, as \code{metafor::forest.rma} does with its
+#' \code{plim}. \code{"proportional"} keeps the areas proportional to the weights
+#' and only clamps the smallest points up, as \code{meta::forest.meta} does.
+#' Weights are scaled jointly across all groups and CI columns so that the areas
+#' stay comparable between them; scale by hand if per-column control is wanted.
+#' Rows flagged by \code{is_summary} are held out of the scaling and drawn at
+#' \code{size_range[2]}, since a pooled total is not comparable with a study
+#' weight. This follows \code{meta}, whose pooled rows carry no study weight and
+#' end up the size of the largest study square, and \code{metafor}, which sizes
+#' its summary polygon from \code{efac} rather than from the weights.
+#' @param size_range Numeric vector of length 2 giving the smallest and largest
+#' point size \code{size_method} may produce. Ignored if \code{size_method} is
+#' \code{"none"}.
 #' @param ref_line X-axis coordinates of zero line, default is 1. Provide an atomic
 #'  vector if different reference line for each \code{ci_column} is desired.
 #' @param vert_line Numerical vector, add additional vertical line at given value.
@@ -20,8 +42,9 @@
 #'  \code{ci_column} is desired.
 #' @param ci_column Column number of the data the CI will be displayed.
 #' @param is_summary A logical vector indicating if the value is a summary value,
-#' which will have a diamond shape for the estimate. Can not be used with multiple
-#' group `forestplot`.
+#' which will have a diamond shape for the estimate. With multiple groups the
+#' diamonds are stacked in the same cell and the summary rows are made taller to
+#' fit them, so a larger \code{nudge_y} may be wanted.
 #' @param xlim Limits for the x axis as a vector of length 2, i.e. c(low, high). It
 #' will take the minimum and maximum of the lower and upper value if not provided.
 #' This will apply to all CI columns if provided, and will be calculated automatically
@@ -82,6 +105,7 @@
 #' @param ... Other arguments passed on to the \code{fn_ci} and \code{fn_summary}.
 #'
 #' @importFrom stats na.omit
+#' @importFrom utils relist
 #'
 #'
 #' @return A \code{\link[gtable]{gtable}} object.
@@ -98,6 +122,8 @@ forest <- function(data,
                    lower,
                    upper,
                    sizes = 0.4,
+                   size_method = c("none", "range", "proportional"),
+                   size_range = c(0.2, 0.8),
                    ref_line = ifelse(x_trans %in% c("log", "log2", "log10"), 1, 0),
                    vert_line = NULL,
                    ci_column,
@@ -119,6 +145,8 @@ forest <- function(data,
                    ...){
 
   dot_args <- list(...)
+
+  size_method <- match.arg(size_method)
 
   # Check arguments
   args_ci <- names(formals(fn_ci))
@@ -187,6 +215,45 @@ forest <- function(data,
     sizes <- list(sizes)
   }
 
+  # Read `sizes` as weights and scale them. Normalised jointly across all groups
+  # and CI columns so the areas stay comparable between them; use the default
+  # `size_method = "none"` and scale by hand if per-column control is wanted.
+  #
+  # Summary rows are held out. Their weight is a pooled total rather than a
+  # study weight, so leaving them in would drag the whole normalisation towards
+  # the summary and squash the studies into a narrow band. They are then drawn
+  # at the top of the range, which is what `meta` does: its pooled rows have no
+  # study weight, so they fall to the fixed `1 * squaresize`, the same size as
+  # the largest study square. `metafor` likewise sizes its summary polygon from
+  # `efac` alone and never from the weights.
+  if(size_method != "none"){
+    summ_row <- if(is.null(is_summary)) rep(FALSE, nrow(data)) else is_summary
+
+    if(all(lengths(sizes) == length(summ_row)))
+      summ_flat <- rep(summ_row, length(sizes))
+    else
+      summ_flat <- rep(FALSE, length(unlist(sizes)))
+
+    size_flat <- unlist(sizes)
+    keep <- !is.na(size_flat)
+    size_flat[summ_flat] <- NA
+
+    size_flat <- scale_sizes(size_flat, range = size_range, method = size_method)
+    size_flat[summ_flat & keep] <- size_range[2]
+
+    sizes <- relist(size_flat, sizes)
+  }
+
+  # Warn on sizes that will not render sensibly. Done here rather than in
+  # `check_errors` so that the values checked are the ones actually drawn, not
+  # the raw weights handed to `size_method`.
+  size_flat <- unlist(sizes)
+  if(any(size_flat < 0.1, na.rm = TRUE) || any(size_flat > 2, na.rm = TRUE))
+    warning("`sizes` outside the usual range of 0.1 to 2: values below 0.1 draw ",
+            "smaller than a point and are invisible, values above 2 are taller ",
+            "than the row and overlap neighbouring rows. Weight-based sizes ",
+            "typically fall between 0.2 and 1.5; see the `size_method` argument.")
+
   # Check index_var
   if(!is.null(index_args)){
     for(ind_v in index_args){
@@ -240,6 +307,25 @@ forest <- function(data,
 
   nudge_y <- rep(nudge_y, each = length(ci_column))
 
+  # Grouped CIs share one cell, so a point taller than the gap between two group
+  # offsets overlaps its neighbour. The row height is only known once the plot is
+  # drawn, so estimate it from the theme rather than measuring the device: a row
+  # is the text height plus the vertical cell padding, which tracks
+  # `0.72 * base_size + padding` closely across base sizes.
+  #
+  # Only a point more than twice the gap is reported, i.e. one overlapping its
+  # neighbour by at least half its own height. Points touching slightly are
+  # common and legible, and the estimate runs low for rows holding more than one
+  # line of text, so a tighter bound would cry wolf.
+  if(group_num > 1){
+    gap_npc <- min(diff(sort(unique(nudge_y))))
+    row_pt <- 0.72 * theme$base_size + core_padding_bigpts(theme)
+    max_size <- max(size_flat, na.rm = TRUE)
+    if(max_size * theme$base_size > 2 * gap_npc * row_pt)
+      warning("Grouped confidence intervals are likely to overlap: a point of ",
+              "`sizes` ", signif(max_size, 3), " is more than twice the gap ",
+              "between groups. Increase `nudge_y` or reduce `sizes`.")
+  }
 
   if(is.null(is_summary)){
     is_summary <- rep(FALSE, nrow(data))
@@ -320,8 +406,21 @@ forest <- function(data,
 
   gt <- tableGrob(data, theme = theme$tab_theme, rows = NULL)
 
+  # Stacked group diamonds need room. A diamond of height `s` big points sitting
+  # at npc offset `o` fits only if the row is at least `(s/2) / (0.5 - |o|)`
+  # tall, so grow the summary rows to what the offsets actually need instead of
+  # a flat doubling. `unit.pmax` resolves lazily at draw time, so the natural
+  # row height never has to be measured here.
   if(group_num > 1 && any(is_summary)){
-    gt$heights[c(FALSE, is_summary)] <- gt$heights[c(FALSE, is_summary)]*2
+    off <- abs(nudge_y)
+    off <- off[off < 0.5]
+    if(length(off) > 0){
+      half_pt <- max(size_flat, na.rm = TRUE) * theme$base_size / 2
+      h_req <- max(half_pt / (0.5 - off))
+      sum_rows <- c(FALSE, is_summary)
+      gt$heights[sum_rows] <- unit.pmax(gt$heights[sum_rows],
+                                        unit(h_req, "bigpts"))
+    }
   }
 
 
@@ -361,18 +460,22 @@ forest <- function(data,
     # in the original was redundant against a fresh per-row copy).
     user_gp <- dot_args[["gp"]]
 
+    # `fontsize` is what makes `sizes` mean "a multiple of one line of text";
+    # see `size_bigpts()`.
     ci_gp <- gpar(lty = lty_list[col_num],
                   lwd = lwd_list[col_num],
                   col = color_list[col_num],
                   fill = fill_list[col_num],
-                  alpha = alpha_list[col_num])
+                  alpha = alpha_list[col_num],
+                  fontsize = theme$base_size)
     if(!is.null(user_gp))
       ci_gp <- modifyList(user_gp, ci_gp)
 
     summary_gp <- gpar(col = theme$summary$col[current_gp],
-                       fill = theme$summary$fill[current_gp])
+                       fill = theme$summary$fill[current_gp],
+                       fontsize = theme$base_size)
     if(!is.null(user_gp))
-      summary_gp <- modifyList(list(user_gp), summary_gp)
+      summary_gp <- modifyList(user_gp, summary_gp)
 
     # Static (non-row-dependent) extras for fn_ci / fn_summary. `gp` and the
     # per-row `index_args` are added inside the loop below.

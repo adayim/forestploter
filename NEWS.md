@@ -1,3 +1,23 @@
+# forestploter 1.2.0
+
+## Breaking changes
+
+* `sizes` is now a multiple of one line of text for both points and summary diamonds, where it used to be `char` for one and a fraction of the row height for the other. **Summary diamonds are flatter than in 1.1.4**; pass a larger `sizes` to restore the old look.
+* Point size now follows the theme's `base_size` instead of the pointsize of whichever device happened to be open. Unchanged at the default `base_size`.
+* Summary rows in grouped plots grow to the height the group offsets need, rather than always doubling.
+
+## New features
+
+* New `size_method` and `size_range` arguments to `forest()` to scale study weights into point sizes, following `metafor` and `meta`. The default `"none"` keeps the previous behaviour ([#37](https://github.com/adayim/forestploter/issues/37)).
+* `forest()` warns when `sizes` falls outside 0.1 to 2, and when grouped confidence intervals are likely to overlap given `nudge_y`.
+
+## Bug fixes
+
+* Fix automatic `ticks_digits` dropping decimals on linear axes, which rendered fractional ticks with duplicated labels (e.g. `1, 1.5, 2` as "1", "2", "2").
+* Fix error when `gp` is passed to `forest` with summary rows.
+* Error if the length of `est` is not a multiple of the length of `ci_column`, instead of silently dropping the extra series.
+* Replace `gridtext` with `gridmicrotex` in the vignettes, so the annotation examples are typeset as real LaTeX math. 
+
 # forestploter 1.1.4
 
 * Deprecated some parameters in `forest_theme`.

@@ -199,7 +199,7 @@ plot(p)
 
 Similar to text justification, you can parse text in any cell. However, parsing all text will remove blanks from the data, which will also affect the blank columns used for drawing the whiskers.
 
-```{r text-parsing, out.width="80%", fig.width = 7, fig.height = 2}
+```{r text-parsing, out.width="80%", fig.width = 7, fig.height = 2, fig.keep = "last"}
 # Check out the `plotmath` function for math expression.
 dt <- data.frame(
   Study = c("Study ~1^a", "Study ~2^b", "NO[2]"),
@@ -233,18 +233,23 @@ p <- forest(fig_dt,
             theme = tm)
 
 # Add customized footnote.
-# Due to the limitation of the textGrob, passing a parsed text with linebreak 
+# Due to the limitation of the textGrob, passing a parsed text with linebreak
 # has some issues. We use a different approach here.
-txt <- "<sup>a</sup> This is study A<br><sup>b</sup> This is study B"
+txt <- r"(
+{}^{a}\ \text{This is study A}\\
+{}^{b}\ \text{This is study B}
+)"
 
-add_grob(p, 
-         row = 4, 
+add_grob(p,
+         row = 4,
          col = 1:2,
          order = "background",
-         gb_fn = gridtext::richtext_grob,
-         text = txt,
+         gb_fn = gridmicrotex::latex_grob,
+         tex = txt,
          gp = gpar(fontsize = 8),
-         hjust = 0, vjust = 1, halign = 0, valign = 1,
+         hjust = 0, vjust = 1,
+         input_mode = "math",
+         render_mode = "path",
          x = unit(0, "npc"), y = unit(1, "npc"))
 ```
 
@@ -455,7 +460,22 @@ ggplot2::ggsave(filename = "rplot.png",
 
 **Q: How should I use weights for sizes?**
 
-**A:** The `forest` function uses the `sizes` argument as is, without any transformation. If you need to weigh the sizes yourself, you can find some options discussed [here](https://github.com/adayim/forestploter/issues/37#issuecomment-1450208581).
+**A:** Pass the weights to `sizes` and set `size_method`. The weights are square-rooted first, so that the *area* of each point is proportional to its weight, and then mapped onto `size_range`:
+
+```{r weight-sizes, eval = FALSE}
+forest(dt_fig,
+       est = dt$est,
+       lower = dt$lb,
+       upper = dt$ub,
+       sizes = dt$weights,        # weights, not sizes
+       size_method = "range",     # or "proportional"
+       size_range = c(0.2, 0.8),
+       ci_column = 8)
+```
+
+`"range"` puts the smallest weight on `size_range[1]` and the largest on `size_range[2]`, the way `metafor::forest.rma()` does with its `plim` argument. `"proportional"` keeps the areas strictly proportional to the weights and only clamps the smallest points up so that they do not disappear into the confidence interval line, the way `meta::forest.meta()` does.
+
+By default `size_method = "none"` and the values in `sizes` are used as they are. In that case remember that `sizes` is a multiple of one line of text, so `1` draws a point as tall as the `base_size` of the theme. Useful values are roughly between 0.2 and 1.5, and `forest` warns outside 0.1 to 2.
 
 **Q: How can I create a grouped forest plot?**
 

@@ -62,6 +62,7 @@ test_that("Box plot with groups", {
               lowhinge = list(dat_oj$q1, dat_vc$q1),
               uphinge = list(dat_oj$q3, dat_vc$q3),
               hinge_height = 0.2,
+              nudge_y = 0.4,
               index_args = c("lowhinge", "uphinge"),
               theme = tm
   )

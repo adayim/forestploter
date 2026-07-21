@@ -103,6 +103,21 @@ test_that("make_ticks: explicit `at` is just transformed and filtered", {
 })
 
 
+test_that("count_zeros keeps decimals on fractional ticks", {
+  # All-integer ticks need no decimals
+  expect_equal(count_zeros(c(1, 2, 3)), 0)
+
+  # Fractional ticks must keep one decimal, regardless of sign
+  # (all-positive input used to short-circuit to 0 digits, rendering
+  # ticks 1, 1.5, 2 as "1", "2", "2")
+  expect_equal(count_zeros(c(1, 1.5, 2)), 1)
+  expect_equal(count_zeros(c(0, 0.5, 1)), 1)
+
+  # Sub-decimal ticks get enough digits for their leading zeros
+  expect_equal(count_zeros(c(0.05, 0.1, 1)), 2)
+})
+
+
 
 
 

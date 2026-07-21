@@ -1,6 +1,6 @@
 Package: forestploter
 Title: Create a Flexible Forest Plot
-Version: 1.1.4
+Version: 1.2.0
 Authors@R: person(given="Alimu", 
                  family = "Dayimu",
                  email = "ad938@cam.ac.uk",
@@ -12,13 +12,12 @@ URL: https://github.com/adayim/forestploter
 BugReports: https://github.com/adayim/forestploter/issues
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.3
 Imports: 
     grid,
     gridExtra,
     gtable
-Suggests: 
-    gridtext,
+Suggests:
+    gridmicrotex,
     rmarkdown,
     knitr,
     vdiffr,
@@ -26,3 +25,4 @@ Suggests:
     covr
 VignetteBuilder: knitr
 Config/testthat/edition: 3
+Config/roxygen2/version: 8.0.0

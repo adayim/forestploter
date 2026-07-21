@@ -70,7 +70,8 @@ p <- forest(dt_fig,
             est = dt$est,
             lower = dt$lb, 
             upper = dt$ub,
-            sizes = sqrt(dt$weights / 100),
+            sizes = dt$weights,
+            size_method = "range",
             is_summary = c(rep(FALSE, nrow(dt) - 1), TRUE),
             ci_column = 8,
             ref_line = 1,
@@ -250,20 +251,27 @@ add_text(g, text = txt,
          gp = gpar(fontsize = 8))
 ```
 
-As you can see, the second line is not left-aligned. To address this, we can use `add_grob` to leverage other packages that create `grob` objects. In this case, we will use the [gridtext](https://CRAN.R-project.org/package=gridtext) package to generate complex text and add it to the plot. More details about this package can be found [here](https://wilkelab.org/gridtext/index.html). With `gridtext`, you can write and render Markdown or HTML text in your plot. However, it does not currently support math equations. For Unicode math symbols, you can refer to this resource [here](https://www.stat.auckland.ac.nz/~paul/R/CM/AdobeSym.html).
+As you can see, the second line is not left-aligned. To address this, we can use `add_grob` to leverage other packages that create `grob` objects. In this case, we will use the [gridmicrotex](https://CRAN.R-project.org/package=gridmicrotex) package, which renders LaTeX directly as `grid` grobs without requiring a LaTeX installation. More details about this package can be found [here](https://adayim.github.io/gridmicrotex/). Passing the LaTeX string through `latex_grob` gives us both the math expressions and full control over the line breaks.
 
-```{r gridtext-metaplot, out.width="95%", fig.width = 10.6, fig.height = 3.6}
-txt <- "Heterogeneity: &tau;<sup>2</sup> = 0.22; &chi;<sup>2</sup> = 9.39,
-df = 6 (P = 0.15); I<sup>2</sup> = 36%<br><span style='color:blue'>**Test for overall effect:**</span> Z = 1.15 (P = 0.25)"
+With `input_mode = "math"` the whole string is treated as math, so `\\` starts a new line and `\text{}` marks the parts that should be typeset as prose rather than math. Both lines are flush left, which is what we were after. Individual pieces can be styled with the usual LaTeX commands, such as `\textcolor` and `\textbf`. Note that `%` is a comment character in LaTeX and must be escaped as `\%`. Using an R raw string (`r"(...)"`) avoids having to double every backslash.
 
-add_grob(g, 
-         row = 11, 
+```{r gridmicrotex-metaplot, out.width="95%", fig.width = 10.6, fig.height = 3.6, fig.keep = "last"}
+txt <- r"(
+\text{Heterogeneity: } \tau^{2} = 0.22;\ \chi^{2} = 9.39,\ \text{df} = 6\ (P = 0.15);\ I^{2} = 36\%\\
+\textcolor{blue}{\textbf{Test for overall effect:}}\ Z = 1.15\ (P = 0.25)
+)"
+
+add_grob(g,
+         row = 11,
          col = 1:6,
          order = "background",
-         gb_fn = gridtext::richtext_grob,
-         text = txt,
+         gb_fn = gridmicrotex::latex_grob,
+         tex = txt,
          gp = gpar(fontsize = 8),
-         hjust = 0, vjust = 1, halign = 0, valign = 1,
+         hjust = 0, vjust = 1,
+         input_mode = "math",
+         render_mode = "path",
          x = unit(0, "npc"), y = unit(1, "npc"))
 ```
 
+We use `render_mode = "path"` here, which draws the symbols as filled vector outlines and works on every graphics device. The default, `render_mode = "typeface"`, draws them as real text and keeps the formula selectable in SVG and PDF output, but it requires a device with glyph support such as `ragg::agg_png`, `svglite::svglite`, or `grDevices::cairo_pdf`.

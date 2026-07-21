@@ -83,7 +83,7 @@ boxplot_static <- function(est, lower, upper, pch,
   med_rec <- pointsGrob(x = unit(est, "native"),
                         y = 0.5 + nudge_y,
                         pch = pch,
-                        size = unit(size, "char"),
+                        size = size_bigpts(size, gp),
                         gp = rec_gp,
                         name = "point")
 

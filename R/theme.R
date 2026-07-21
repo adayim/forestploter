@@ -360,7 +360,8 @@ forest_theme <- function(base_size = 12,
     tab_theme <- modifyList(internal_theme, dot_args)
     tab_theme <- modifyList(ttheme_minimal(), tab_theme)
 
-    return(list(legend = legend_gp,
+    return(list(base_size = base_size,
+                legend = legend_gp,
                 ci = ci_gp,
                 xaxis = xaxis_gp,
                 footnote = footnote_gp,
