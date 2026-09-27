@@ -4,9 +4,32 @@
 \name{forestploter-package}
 \alias{forestploter}
 \alias{forestploter-package}
-\title{forestploter: Create a Flexible Forest Plot}
+\title{forestploter: create a flexible forest plot}
 \description{
-Create a forest plot based on the layout of the data. Confidence intervals in multiple columns by groups can be done easily. Editing the plot, inserting/adding text, applying a theme to the plot, and much more.
+The layout of the forest plot is the layout of the data given to
+\code{\link{forest}}, which draws the table and the confidence intervals.
+The other parts are added with functions that take the plot as their first
+argument, so they can be chained with the pipe \code{|>}:
+}
+\details{
+\itemize{
+\item \code{\link{set_xaxis}} Limits, tick marks and scale of the x-axis,
+and vertical lines
+\item \code{\link{set_labs}} Title, x-axis labels, footnote, arrow labels
+and legend labels
+\item \code{\link{scale_sizes}} Point sizes scaled by study weights
+\item \code{\link{set_style}} Graphical parameters, see
+\code{\link{forest_style}}
+}
+
+The plot is a \code{\link[gtable]{gtable}} at every step, so it can be drawn,
+saved with \code{ggplot2::ggsave} or combined with other plots. Afterwards it
+can be edited cell by cell with \code{\link{edit_plot}},
+\code{\link{add_text}}, \code{\link{insert_text}}, \code{\link{add_border}}
+and \code{\link{add_grob}}.
+
+The vignettes \code{vignette("forestploter-intro")} and
+\code{vignette("forestploter-post")} walk through both steps.
 }
 \seealso{
 Useful links:
@@ -18,11 +41,6 @@ Useful links:
 }
 \author{
 \strong{Maintainer}: Alimu Dayimu \email{ad938@cam.ac.uk} (\href{https://orcid.org/0000-0001-9998-7463}{ORCID})
-
-Authors:
-\itemize{
-  \item Alimu Dayimu \email{ad938@cam.ac.uk} (\href{https://orcid.org/0000-0001-9998-7463}{ORCID})
-}
 
 }
 \keyword{internal}

@@ -4,6 +4,11 @@
 #' forestplot for saving, as the width and height are difficult to estimate
 #' otherwise.
 #'
+#' This is the natural size of the plot, where every column and row fits its
+#' content. By default a plot drawn in a larger space keeps this size and is
+#' centred. With \code{fit} of \code{\link{forest_style}} the CI columns, and
+#' the rows if asked for, take the space instead.
+#'
 #' @param plot A forest plot object.
 #' @param unit Unit for the returned width and height. One of \code{"in"},
 #' \code{"cm"}, or \code{"mm"}.
@@ -42,9 +47,8 @@ get_wh <- function(plot, unit = c("in", "cm", "mm")){
 }
 
 
-# Add vertical line. Named with the `make_*` prefix to avoid shadowing the
-# `vert_line` parameter of `forest()`.
-make_vert_line <- function(x, gp = grid::gpar(), xlim, x_trans = "none", nrow = 10){
+# Vertical lines, used for the reference line and `vline` of `set_xaxis()`
+make_vline <- function(x, gp = grid::gpar(), xlim, x_trans = "none", nrow = 10){
 
   if(x_trans != "none")
     x <- xscale(x, scale = x_trans)
@@ -151,7 +155,7 @@ core_padding_bigpts <- function(theme) {
 # `"proportional"` follows `meta::forest.meta()`: areas stay proportional to the
 # weights, and only the smallest points are clamped up to `floor` so that they
 # do not become indistinguishable from the confidence interval line.
-scale_sizes <- function(weights,
+weights_to_sizes <- function(weights,
                         range = c(0.2, 0.8),
                         method = c("range", "proportional"),
                         floor = 0.35) {
@@ -159,13 +163,13 @@ scale_sizes <- function(weights,
   method <- match.arg(method)
 
   if(!is.numeric(range) || length(range) != 2 || any(is.na(range)))
-    stop("`size_range` must be a numeric vector of length 2.")
+    stop("`range` must be a numeric vector of length 2.")
 
   if(any(range <= 0))
-    stop("`size_range` must be larger than 0.")
+    stop("`range` must be larger than 0.")
 
   if(range[1] > range[2])
-    stop("`size_range` must be in increasing order.")
+    stop("`range` must be in increasing order.")
 
   w <- sqrt(weights)
   keep <- !is.na(w)

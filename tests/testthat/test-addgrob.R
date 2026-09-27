@@ -43,7 +43,7 @@ test_that("Add grob", {
               arrow_lab = c("Favours caffeine","Favours decaf"),
               xlim = c(0.05, 100),
               ticks_at = c(0.1, 1, 10, 100),
-              theme = tm)
+              style = tm)
 
   g <- add_grob(p,
                 row = 1:c(nrow(dt_fig) - 1),

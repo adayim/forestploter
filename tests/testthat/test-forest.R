@@ -74,7 +74,7 @@ test_that("Apply theme", {
               ticks_at = c(0.5, 1, 2, 3),
               ticks_digits = 1L,
               footnote = "This is only a demo",
-              theme = tm)
+              style = tm)
 
   vdiffr::expect_doppelganger("Simple forest plot with theme", p)
 
@@ -170,7 +170,7 @@ test_that("Multiple column", {
               nudge_y = 0.2,
               xlim = c(0, 4),
               ticks_digits = 1,
-              theme = tm)
+              style = tm)
 
   vdiffr::expect_doppelganger("Multiple columns", p)
 })
@@ -210,7 +210,7 @@ test_that("Multiple column and Multi parameters", {
               ticks_digits = list(1, 1L),
               xlab = c("OR", "Beta"),
               nudge_y = 0.2,
-              theme = tm)
+              style = tm)
 
   vdiffr::expect_doppelganger("Multiple columns and multi parameters", p)
 })
@@ -255,7 +255,7 @@ test_that("Summary CI", {
               ticks_digits = 1L,
               title = "This is a title",
               footnote = "This is the demo data. Please feel free to change\nanything you want.",
-              theme = tm)
+              style = tm)
 
   vdiffr::expect_doppelganger("Summary CI", p)
 })
@@ -273,7 +273,7 @@ test_that("forestplot check ERRORS", {
                       ref_line = 1,
                       x_trans = "log",
                       ci_column = 4),
-               "est, lower, upper, ref_line, vert_line and xlim should be larger than 0")
+               "est, lower, upper, ref_line, vline and xlim should be larger than 0")
 
   dt$se_n <- - dt$se
   expect_error(forest(dt[,c(1:3, 20:21)],
@@ -304,7 +304,7 @@ test_that("check arrow", {
               ref_line = 1,
               arrow_lab = c("This Placebo Better", " text Bet"),
               ticks_digits = 2L,
-              theme = tm)
+              style = tm)
 
   vdiffr::expect_doppelganger("arrow end", p)
 
@@ -322,7 +322,7 @@ test_that("check arrow", {
               ref_line = 1,
               arrow_lab = c("Worse", "Better"),
               ticks_digits = 2L,
-              theme = tm)
+              style = tm)
 
   vdiffr::expect_doppelganger("arrow start", p)
 
@@ -439,7 +439,7 @@ test_that("Test multiple group", {
               arrow_lab = c("Placebo Better", "Treatment Better"),
               nudge_y = 0.2,
               xlim = c(0, 4),
-              theme = tm)
+              style = tm)
 
   vdiffr::expect_doppelganger("multiple-groups", p)
 

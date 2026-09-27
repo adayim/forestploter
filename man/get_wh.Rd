@@ -20,6 +20,12 @@ A named vector of width and height
 forestplot for saving, as the width and height are difficult to estimate
 otherwise.
 }
+\details{
+This is the natural size of the plot, where every column and row fits its
+content. By default a plot drawn in a larger space keeps this size and is
+centred. With \code{fit} of \code{\link{forest_style}} the CI columns, and
+the rows if asked for, take the space instead.
+}
 \examples{
 \dontrun{
  dt <- read.csv(system.file("extdata", "example_data.csv", package = "forestploter"))

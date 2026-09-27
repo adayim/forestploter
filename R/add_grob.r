@@ -105,7 +105,7 @@ add_grob <- function(plot,
                           clip = "off",
                           name = paste("custom.grob", row_name, col_name, sep = "-"))
 
-  return(plot)
+  return(mark_edited(plot))
 
 }
 

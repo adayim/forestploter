@@ -6,8 +6,9 @@ Authors@R: person(given="Alimu",
                  email = "ad938@cam.ac.uk",
                  role = c("aut", "cre"),
                  comment = c(ORCID = "0000-0001-9998-7463"))
-Description: Create a forest plot based on the layout of the data. Confidence intervals in multiple columns by groups can be done easily. Editing the plot, inserting/adding text, applying a theme to the plot, and much more.
+Description: Create a forest plot based on the layout of the data. Confidence intervals in multiple columns by groups can be done easily. The plot is built step by step with the pipe, adding the axis, the labels and a style, editing the plot, inserting/adding text, and much more.
 License: MIT + file LICENSE
+Depends: R (>= 4.1.0)
 URL: https://github.com/adayim/forestploter
 BugReports: https://github.com/adayim/forestploter/issues
 Encoding: UTF-8
@@ -26,3 +27,4 @@ Suggests:
 VignetteBuilder: knitr
 Config/testthat/edition: 3
 Config/roxygen2/version: 8.0.0
+RoxygenNote: 7.3.3

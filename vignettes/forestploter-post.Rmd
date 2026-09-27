@@ -60,26 +60,27 @@ dt_fig$Weight[dt_fig$Weight == "NA%"] <- ""
 # Convert NA to a blank string
 dt_fig[is.na(dt_fig)] <- ""
 
-# Set background to white and summary diamond to black
-tm <- forest_theme(core = list(bg_params = list(fill = c("white"))),
-                   summary_col = "black",
-                   arrow_label_just = "end",
-                   arrow_type = "closed")
+# Set background to white, summary diamond to black and closed arrows
+st <- forest_style(body = gpar(fill = "white"),
+                   summary = gpar(col = "black"),
+                   arrow_type = "closed",
+                   arrow_label_just = "end")
 
 p <- forest(dt_fig,
             est = dt$est,
-            lower = dt$lb, 
+            lower = dt$lb,
             upper = dt$ub,
             sizes = dt$weights,
-            size_method = "range",
             is_summary = c(rep(FALSE, nrow(dt) - 1), TRUE),
             ci_column = 8,
             ref_line = 1,
-            x_trans = "log",
-            arrow_lab = c("Favours caffeine", "Favours decaf"),
+            style = st) |>
+  set_xaxis(x_trans = "log",
             xlim = c(0.05, 100),
-            ticks_at = c(0.1, 1, 10, 100),
-            theme = tm)
+            ticks_at = c(0.1, 1, 10, 100)) |>
+  set_labs(arrow = c("Favours caffeine", "Favours decaf")) |>
+  # Read the sizes as study weights
+  scale_sizes(method = "range")
 p
 ```
 
@@ -93,31 +94,31 @@ The `forestploter` package provides several functions to modify a forest plot. T
 -   `add_border`: Adds a border to specific cells.
 -   `add_grob`: Adds various graphical objects (grobs) to the plot.
 
+They take the plot as their first argument and can be chained with the pipe `|>`. Rows and columns refer to the plot as it is when the function is called. `set_xaxis()`, `set_labs()`, `scale_sizes()` and `set_style()` build the plot again, so they must be used before any of these editing functions.
+
 ## Editing the Plot
 
 Below, we will make the "Total" row text bold, change the color of the diamond shape, and modify the background color of the "Total" row. We will also align the text in the last six columns to the center.
 
 ```{r edit-metaplot, out.width="95%", fig.width = 10.6, fig.height = 3.6}
-# Change font face
-g <- edit_plot(p, row = 9, 
-               gp = gpar(fontface = "bold"))
-
-# Change color
-g <- edit_plot(g, col = 8, row = 9, which = "ci", 
-               gp = gpar(col = "blue", fill = "blue"))
-
-# Change the background of the total row
-# You need to change both fill and col if you don't want to see a gap between cells
-g <- edit_plot(g, col = 1:7, 
-               row = 9, 
-               which = "background", 
-               gp = gpar(fill = "#f6eff7", col = "#f6eff7"))
-
-# Align text to center
-g <- edit_plot(g, col = 9:14, 
-               which = "text",
-               hjust = unit(0.5, "npc"),
-               x = unit(0.5, "npc"))
+g <- p |>
+  # Change font face
+  edit_plot(row = 9,
+            gp = gpar(fontface = "bold")) |>
+  # Change color
+  edit_plot(col = 8, row = 9, which = "ci",
+            gp = gpar(col = "blue", fill = "blue")) |>
+  # Change the background of the total row
+  # You need to change both fill and col if you don't want to see a gap between cells
+  edit_plot(col = 1:7,
+            row = 9,
+            which = "background",
+            gp = gpar(fill = "#f6eff7", col = "#f6eff7")) |>
+  # Align text to center
+  edit_plot(col = 9:14,
+            which = "text",
+            hjust = unit(0.5, "npc"),
+            x = unit(0.5, "npc"))
 g
 ```
 
@@ -251,15 +252,13 @@ add_text(g, text = txt,
          gp = gpar(fontsize = 8))
 ```
 
-As you can see, the second line is not left-aligned. To address this, we can use `add_grob` to leverage other packages that create `grob` objects. In this case, we will use the [gridmicrotex](https://CRAN.R-project.org/package=gridmicrotex) package, which renders LaTeX directly as `grid` grobs without requiring a LaTeX installation. More details about this package can be found [here](https://adayim.github.io/gridmicrotex/). Passing the LaTeX string through `latex_grob` gives us both the math expressions and full control over the line breaks.
+As you can see, the second line is not left-aligned. To address this, we can use `add_grob` to leverage other packages that create `grob` objects. In this case, we will use the [gridmicrotex](https://CRAN.R-project.org/package=gridmicrotex) package, which renders LaTeX directly as `grid` grobs without requiring a LaTeX installation. More details about this package can be found [here](https://adayim.github.io/gridmicrotex/). Passing the LaTeX string through `latex_grob` or markdown with `markdown_grob` gives us both the math expressions and full control over the line breaks.
 
 With `input_mode = "math"` the whole string is treated as math, so `\\` starts a new line and `\text{}` marks the parts that should be typeset as prose rather than math. Both lines are flush left, which is what we were after. Individual pieces can be styled with the usual LaTeX commands, such as `\textcolor` and `\textbf`. Note that `%` is a comment character in LaTeX and must be escaped as `\%`. Using an R raw string (`r"(...)"`) avoids having to double every backslash.
 
 ```{r gridmicrotex-metaplot, out.width="95%", fig.width = 10.6, fig.height = 3.6, fig.keep = "last"}
-txt <- r"(
-\text{Heterogeneity: } \tau^{2} = 0.22;\ \chi^{2} = 9.39,\ \text{df} = 6\ (P = 0.15);\ I^{2} = 36\%\\
-\textcolor{blue}{\textbf{Test for overall effect:}}\ Z = 1.15\ (P = 0.25)
-)"
+txt <- r"(Heterogeneity: $\tau^2 = 0.22$; $\chi^2 = 9.39$, df = 6 (P = 0.15); $I^2 = 36\%$
+\textcolor{blue}{\textbf{Test for overall effect:}} Z = 1.15 (P = 0.25))"
 
 add_grob(g,
          row = 11,
@@ -269,8 +268,6 @@ add_grob(g,
          tex = txt,
          gp = gpar(fontsize = 8),
          hjust = 0, vjust = 1,
-         input_mode = "math",
-         render_mode = "path",
          x = unit(0, "npc"), y = unit(1, "npc"))
 ```
 

@@ -106,6 +106,6 @@ add_text <- function(plot,
                           clip = "off",
                           name = "text.add")
 
-  return(plot)
+  return(mark_edited(plot))
 
 }

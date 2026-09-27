@@ -8,8 +8,18 @@
 
 ## New features
 
-* New `size_method` and `size_range` arguments to `forest()` to scale study weights into point sizes, following `metafor` and `meta`. The default `"none"` keeps the previous behaviour ([#37](https://github.com/adayim/forestploter/issues/37)).
-* `forest()` warns when `sizes` falls outside 0.1 to 2, and when grouped confidence intervals are likely to overlap given `nudge_y`.
+* The plot is now built step by step with the pipe `|>`. `forest()` draws the table and the confidence intervals, and the rest is added with `set_xaxis()` (limits, tick marks, scale and vertical lines), `set_labs()` (title, x-axis labels, footnote, arrow labels and legend text), `scale_sizes()` (point sizes from study weights) and `set_style()`. They must be used before the plot is edited with `edit_plot()` and the other editing functions.
+* Graphical parameters are set with `forest_style()`, which takes one `gpar()` for each part of the plot and is given to the new `style` argument of `forest()`. `forest_theme()` is superseded but keeps working, also with `set_style()`; `?forest_theme` shows how its arguments map onto `forest_style()`.
+* New `fit` of `forest_style()` lets the plot use the space it is drawn in: `"width"` gives the free width to the CI columns and `"both"` also shares the free height between the rows. The default `"none"` keeps the natural size of the plot, as before. The `autofit` argument of `print()` will be deprecated in favour of it.
+* New `scale_sizes()` to scale study weights into point sizes, following `metafor` and `meta`. Without it, `sizes` are used as they are ([#37](https://github.com/adayim/forestploter/issues/37)).
+* A warning is given when the plot is drawn if `sizes` falls outside 0.1 to 2, or if grouped confidence intervals are likely to overlap given `nudge_y`.
+* In the new functions, an argument left out keeps its current value and `NULL` goes back to the default. `NA` is only used for a CI column left at its default, as in `xlim = list(c(0, 4), NA)`.
+
+## Superseded
+
+* The arguments of `forest()` that the functions above replace are still accepted and draw the same plot. Each of them gives a message once per session pointing to its replacement: `xlim`, `ticks_at`, `ticks_digits`, `ticks_minor`, `x_trans` and `vert_line` to `set_xaxis()`, and `arrow_lab`, `xlab`, `title` and `footnote` to `set_labs()`, and `theme` to `style`. They will be removed in 2.0.0.
+* `forest()` now stops on an argument in `...` that neither `fn_ci`, `fn_summary` nor `index_args` takes, instead of dropping it silently.
+* The package now requires R >= 4.1.0 for the native pipe used in the examples.
 
 ## Bug fixes
 
