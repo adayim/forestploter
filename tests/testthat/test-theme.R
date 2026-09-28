@@ -3,13 +3,13 @@
 test_that("Test themes default value", {
   tm <- forest_theme()
   expect_type(tm, "list")
-  expect_equal(names(tm), c('legend', 'ci', 'xaxis', 'footnote', "title",
-                            'arrow', 'refline', 'vertline', 'summary',
-                            'tab_theme'))
+  expect_equal(names(tm), c("base_size", "legend", "ci", "xaxis", "footnote", "title",
+                            "arrow", "refline", "vertline", "xlab",
+                            "summary", "tab_theme"))
 
-  expect_identical(tm$legend, list(gp = gpar(fontsize = 12, fontfamily = ""),
+  expect_identical(tm$legend, list(gp = gpar(fontsize = 12, fontfamily = "", cex=1),
                                    'name' = "Group", 'position' = "right",
-                                   'label' = ""))
+                                   'label' = "", "ncol" = 1, "byrow" = TRUE))
 
   expect_identical(tm$ci, list('pch' = 15, 'col' = "black",
                                'fill' = NULL, 'lty' = 1, 'alpha' = 1,
@@ -21,9 +21,10 @@ test_that("Set theme", {
   tm <- forest_theme(legend_value = c("Gp1", "Gp2"))
   expect_type(tm, "list")
 
-  expect_identical(tm$legend, list(gp = gpar('fontsize' = 12, 'fontfamily' = ""),
+  expect_identical(tm$legend, list(gp = gpar('fontsize' = 12, 'fontfamily' = "", "cex"=1),
                                    'name' = "Group", 'position' = "right",
-                                   'label' = c("Gp1", "Gp2")))
+                                   'label' = c("Gp1", "Gp2"), "ncol" = 1,
+                                   "byrow" = TRUE))
 
   expect_identical(tm$ci, list('pch' = c(15, 15), 'col' = c("#e41a1c","#377eb8"),
                                'fill' = c("#e41a1c","#377eb8"),
@@ -41,7 +42,7 @@ test_that("Set theme", {
 
 test_that("Test errors", {
   expect_error(forest_theme(ci_fill = c("#e41a1c","#377eb8")),
-                 "legend_value should be provided each groups.")
+                 "legend_value should be provided for each group.")
 
   expect_warning(forest_theme(ci_fill = "#e41a1c", ci_pch = 1),
                  "`ci_pch` is not within 15:25, `ci_fill` will be ignored.")

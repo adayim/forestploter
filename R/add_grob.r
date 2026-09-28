@@ -6,12 +6,12 @@
 #' @param plot A forest plot object.
 #' @param row A numeric value or vector indicating row(s) to draw a grob.
 #' @param col A numeric value or vector indicating the columns to draw a grob.
-#' @param part The border will be added to \code{"body"} (default) or
+#' @param part The grob will be added to \code{"body"} (default) or
 #' \code{"header"}.
 #' @param order Order in which the grobs should be plotted. Use \code{'top'} 
 #' (default) to draw the grob above everything, \code{'text'} on the top of text 
-#' given by plot data but below eveything else, \code{'backgroud'} plot on the 
-#' top of backgroud but below everything else, \code{'back'} below everything.
+#' given by plot data but below everything else, \code{'background'} plot on the 
+#' top of background but below everything else, \code{'bottom'} below everything.
 #' @param gb_fn Grob function
 #' @param ... Other parameters to be passed to \code{gb_fn}.
 #'
@@ -23,18 +23,18 @@ add_grob <- function(plot,
                      row = NULL,
                      col = NULL,
                      part = c("body", "header"),
-                     order = c("top", "text", "backgroud", "back"),
+                     order = c("top", "text", "background", "bottom"),
                      gb_fn,
                      ...){
   
   dots <- list(...)
   arg <- match(names(formals(gb_fn)), names(dots))
-  dots[arg[!is.na(arg)]]
-  
-  if(length(row) != 1 & !all(diff(row) == 1))
+  dots <- dots[arg[!is.na(arg)]]
+
+  if(length(row) != 1 && !all(diff(row) == 1))
     stop("row must be scalar value or a consecutive vector.")
-  
-  if(length(col) != 1 & !all(diff(col) == 1))
+
+  if(length(col) != 1 && !all(diff(col) == 1))
     stop("col must be scalar value or a consecutive vector.")
 
   if(!inherits(plot, "forestplot"))
@@ -43,6 +43,9 @@ add_grob <- function(plot,
 
   part <- match.arg(part)
   order <- match.arg(order)
+
+  if(part == "body" && is.null(row))
+    stop("Row must be defined if the grob is added to body.")
 
   l <- plot$layout
 
@@ -77,7 +80,7 @@ add_grob <- function(plot,
   # Get the order of the grob
   if(order == "top")
     z <- Inf
-  if(order == "back")
+  if(order == "bottom")
     z <- -Inf
   if(order == "text"){
     if(part == "header")
@@ -86,7 +89,7 @@ add_grob <- function(plot,
       z <- max(l$z[which(l$name == "core-fg")])
   }
 
-  if(order == "backgroud"){
+  if(order == "background"){
     if(part == "header")
       z <- max(l$z[which(l$name == "colhead-bg")])
     else
@@ -102,7 +105,7 @@ add_grob <- function(plot,
                           clip = "off",
                           name = paste("custom.grob", row_name, col_name, sep = "-"))
 
-  return(plot)
+  return(mark_edited(plot))
 
 }
 

@@ -1,3 +1,63 @@
+# forestploter 1.2.0
+
+## Breaking changes
+
+* `sizes` is now a multiple of one line of text for both points and summary diamonds, where it used to be `char` for one and a fraction of the row height for the other. **Summary diamonds are flatter than in 1.1.4**; pass a larger `sizes` to restore the old look.
+* Point size now follows the theme's `base_size` instead of the pointsize of whichever device happened to be open. Unchanged at the default `base_size`.
+* Summary rows in grouped plots grow to the height the group offsets need, rather than always doubling.
+
+## New features
+
+* The plot is now built step by step with the pipe `|>`. `forest()` draws the table and the confidence intervals, and the rest is added with `set_xaxis()` (limits, tick marks, scale and vertical lines), `set_labs()` (title, x-axis labels, footnote, arrow labels and legend text), `scale_sizes()` (point sizes from study weights) and `set_style()`. They must be used before the plot is edited with `edit_plot()` and the other editing functions.
+* Graphical parameters are set with `forest_style()`, which takes one `gpar()` for each part of the plot and is given to the new `style` argument of `forest()`. `forest_theme()` is superseded but keeps working, also with `set_style()`; `?forest_theme` shows how its arguments map onto `forest_style()`.
+* New `fit` of `forest_style()` lets the plot use the space it is drawn in: `"width"` gives the free width to the CI columns and `"both"` also shares the free height between the rows. The default `"none"` keeps the natural size of the plot, as before. The `autofit` argument of `print()` will be deprecated in favour of it.
+* New `scale_sizes()` to scale study weights into point sizes, following `metafor` and `meta`. Without it, `sizes` are used as they are ([#37](https://github.com/adayim/forestploter/issues/37)).
+* A warning is given when the plot is drawn if `sizes` falls outside 0.1 to 2, or if grouped confidence intervals are likely to overlap given `nudge_y`.
+* In the new functions, an argument left out keeps its current value and `NULL` goes back to the default. `NA` is only used for a CI column left at its default, as in `xlim = list(c(0, 4), NA)`.
+
+## Superseded
+
+* The arguments of `forest()` that the functions above replace are still accepted and draw the same plot. Each of them gives a message once per session pointing to its replacement: `xlim`, `ticks_at`, `ticks_digits`, `ticks_minor`, `x_trans` and `vert_line` to `set_xaxis()`, and `arrow_lab`, `xlab`, `title` and `footnote` to `set_labs()`, and `theme` to `style`. They will be removed in 2.0.0.
+* `forest()` now stops on an argument in `...` that neither `fn_ci`, `fn_summary` nor `index_args` takes, instead of dropping it silently.
+* The package now requires R >= 4.1.0 for the native pipe used in the examples.
+
+## Bug fixes
+
+* Fix automatic `ticks_digits` dropping decimals on linear axes, which rendered fractional ticks with duplicated labels (e.g. `1, 1.5, 2` as "1", "2", "2").
+* Fix error when `gp` is passed to `forest` with summary rows.
+* Error if the length of `est` is not a multiple of the length of `ci_column`, instead of silently dropping the extra series.
+* Replace `gridtext` with `gridmicrotex` in the vignettes, so the annotation examples are typeset as real LaTeX math. 
+
+# forestploter 1.1.4
+
+* Deprecated some parameters in `forest_theme`.
+* Remove gap between cells.
+* Better ticks break.
+* Code base improvement.
+* Fix typos.
+
+# forestploter 1.1.3
+
+* Extend vertical line to the top and the bottom.
+* Allow multiple lines of legend with `legend_ncol` in `forest_theme`.
+* Allow control legend fills with `legend_byrow` in `forest_theme`.
+* Fix error in vignette.
+
+
+# forestploter 1.1.2
+
+* Draw reference line and other vertical lines below whiskers.
+* Allow minor ticks and groups for diamond shapes.
+* Able to change legend size.
+* Able to change all graphical parameters of title, legends, x-axis, arrow labs, footnote and reference line.
+
+# forestploter 1.1.1
+
+* Improved `ticks_digits` auto calculation.
+* Remove self righteousness cell height adjustment. 
+* Able to change the fontsize and alignment of the `xlab`.
+* Miss seplled `backgroud` parameter in `add_grob`.
+
 # forestploter 1.1.0
 
 * New function `make_boxplot` to draw boxplot inside the plot.
@@ -17,7 +77,7 @@
 
 * Fixed a bug of legend point estimation color not changing.
 * There's a new function `add_border` to add border to any cell at any side.
-* Digitis rounding now respect `ticks_digits`.
+* Digits rounding now respect `ticks_digits`.
 
 # forestploter 0.2.2
 

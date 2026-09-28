@@ -56,11 +56,11 @@ test_that("CI outside forestplot", {
 test_that("Apply theme", {
 
   tm <- forest_theme(base_size = 10,
-                     refline_col = "red",
+                     refline_gp = gpar(col = "red"),
                      ci_lty = 1,
                      ci_lwd = 1,
                      ci_Theight = 0.2,
-                     footnote_col = "blue")
+                     footnote_gp = gpar(col = "blue"))
 
   p <- forest(dt[,c(1:3, 20:21)],
               est = dt$est,
@@ -72,9 +72,9 @@ test_that("Apply theme", {
               arrow_lab = c("Placebo Better", "Treatment Better"),
               xlim = c(0, 4),
               ticks_at = c(0.5, 1, 2, 3),
-              ticks_digits = 1,
+              ticks_digits = 1L,
               footnote = "This is only a demo",
-              theme = tm)
+              style = tm)
 
   vdiffr::expect_doppelganger("Simple forest plot with theme", p)
 
@@ -107,7 +107,8 @@ test_that("Apply theme", {
 
   # Edit background of row 5
   g <- edit_plot(g, row = 5, which = "background",
-                 gp = gpar(fill = "darkolivegreen1"))
+                 gp = gpar(fill = "darkolivegreen1",
+                           col = "darkolivegreen1"))
 
   # Insert text
   g <- insert_text(g,
@@ -142,11 +143,11 @@ test_that("Apply theme", {
 test_that("Multiple column", {
 
   tm <- forest_theme(base_size = 10,
-                     refline_col = "green",
+                     refline_gp = gpar(col = "green"),
                      ci_lty = c(1, 3),
                      ci_lwd = 1.5,
                      ci_Theight = 0.2,
-                     footnote_col = "blue",
+                     footnote_gp = gpar(col = "blue"),
                      legend_name = "GP",
                      legend_value = c("Trt 1", "Trt 2"))
 
@@ -169,7 +170,7 @@ test_that("Multiple column", {
               nudge_y = 0.2,
               xlim = c(0, 4),
               ticks_digits = 1,
-              theme = tm)
+              style = tm)
 
   vdiffr::expect_doppelganger("Multiple columns", p)
 })
@@ -178,11 +179,11 @@ test_that("Multiple column", {
 test_that("Multiple column and Multi parameters", {
 
   tm <- forest_theme(base_size = 10,
-                     refline_col = "green",
+                     refline_gp = gpar(col = "green"),
                      ci_lty = c(1, 3),
                      ci_lwd = 1.5,
                      ci_Theight = 0.2,
-                     footnote_col = "blue",
+                     footnote_gp = gpar(col = "blue"),
                      legend_name = "GP",
                      legend_value = c("Trt 1", "Trt 2"))
 
@@ -209,7 +210,7 @@ test_that("Multiple column and Multi parameters", {
               ticks_digits = list(1, 1L),
               xlab = c("OR", "Beta"),
               nudge_y = 0.2,
-              theme = tm)
+              style = tm)
 
   vdiffr::expect_doppelganger("Multiple columns and multi parameters", p)
 })
@@ -228,23 +229,17 @@ test_that("Summary CI", {
                      ci_lwd = 1.5,
                      ci_Theight = 0.2, # Set an T end at the end of CI
                      # Reference line width/type/color
-                     refline_lwd = 1,
-                     refline_lty = "dashed",
-                     refline_col = "grey20",
+                     refline_gp = gpar(lwd = 1, lty = "dashed", col = "grey20"),
                      # Vertical line width/type/color
-                     vertline_lwd = 1,
-                     vertline_lty = "dashed",
-                     vertline_col = "grey20",
+                     vertline_gp = gpar(lwd = 1, lty = "dashed", col = "grey20"),
                      # Change summary color for filling and borders
                      summary_fill = "#4575b4",
                      summary_col = "#4575b4",
                      # Footnote font size/face/color
-                     footnote_cex = 0.6,
-                     footnote_fontface = "italic",
-                     footnote_col = "blue",
+                     footnote_gp = gpar(cex = 0.6, fontface = "italic", col = "blue"),
                      # Title
                      title_just = "center",
-                     title_col = "red")
+                     title_gp = gpar(col = "red"))
 
   p <- forest(dt_tmp[,c(1:3, 20:21)],
               est = dt_tmp$est,
@@ -257,10 +252,10 @@ test_that("Summary CI", {
               arrow_lab = c("Placebo Better", "Treatment Better"),
               xlim = c(0, 4),
               ticks_at = c(0.5, 1, 2, 3),
-              ticks_digits = 1,
+              ticks_digits = 1L,
               title = "This is a title",
               footnote = "This is the demo data. Please feel free to change\nanything you want.",
-              theme = tm)
+              style = tm)
 
   vdiffr::expect_doppelganger("Summary CI", p)
 })
@@ -278,7 +273,7 @@ test_that("forestplot check ERRORS", {
                       ref_line = 1,
                       x_trans = "log",
                       ci_column = 4),
-               "est, lower, upper, ref_line, vert_line and xlim should be larger than 0")
+               "est, lower, upper, ref_line, vline and xlim should be larger than 0")
 
   dt$se_n <- - dt$se
   expect_error(forest(dt[,c(1:3, 20:21)],
@@ -295,9 +290,9 @@ test_that("forestplot check ERRORS", {
 test_that("check arrow", {
 
   dt <- dt[1:10, ]
-  tm <- forest_theme(arrow_cex = .5,
+  tm <- forest_theme(arrow_gp = gpar(cex = .5),
                      arrow_label_just = "end",
-                     xaxis_cex = .5,
+                     xaxis_gp = gpar(cex = .5),
                      arrow_length = 0.1,
                      arrow_type = "closed")
 
@@ -309,13 +304,13 @@ test_that("check arrow", {
               ref_line = 1,
               arrow_lab = c("This Placebo Better", " text Bet"),
               ticks_digits = 2L,
-              theme = tm)
+              style = tm)
 
   vdiffr::expect_doppelganger("arrow end", p)
 
-  tm <- forest_theme(arrow_cex = .5,
+  tm <- forest_theme(arrow_gp = gpar(cex = .5),
                      arrow_label_just = "start",
-                     xaxis_cex = .5,
+                     xaxis_gp = gpar(cex = .5),
                      arrow_length = 0.1,
                      arrow_type = "closed")
 
@@ -327,7 +322,7 @@ test_that("check arrow", {
               ref_line = 1,
               arrow_lab = c("Worse", "Better"),
               ticks_digits = 2L,
-              theme = tm)
+              style = tm)
 
   vdiffr::expect_doppelganger("arrow start", p)
 
@@ -374,7 +369,8 @@ test_that("x-scale trans", {
               upper = dt$hi,
               ci_column = 4,
               vert_line = 5,
-              ticks_at = c(0.1, 0.5, 1, 5, 15, 20),
+              ticks_at = c(0.1, 0.5, 1, 5, 20),
+              ticks_minor = c(0.1, 0.3, 1, 2.5, 5, 10),
               x_trans = "log10",
               xlim = c(0.09, 24),
               ticks_digits = 1L)
@@ -412,11 +408,11 @@ test_that("Test multiple group", {
   dt <- dt[1:6, ]
 
   tm <- forest_theme(base_size = 10,
-                     refline_lty = "solid",
+                     refline_gp = gpar(lty = "solid"),
                      ci_pch = c(15, 18, 16, 17, 19),
                      ci_col = c("#808080", "#00FF00", "royalblue3", "maroon3", "red"),
                      ci_lwd = 2,
-                     footnote_col = "blue",
+                     footnote_gp = gpar(col = "blue"),
                      legend_name = "Model:   ", legend_position = "bottom",
                      legend_value = c("Cox  ", "Normal  ", "Clayton  ",  "Frank", "Gumbel"),
                      vertline_lty = c("dashed", "dotdash"),
@@ -443,8 +439,35 @@ test_that("Test multiple group", {
               arrow_lab = c("Placebo Better", "Treatment Better"),
               nudge_y = 0.2,
               xlim = c(0, 4),
-              theme = tm)
+              style = tm)
 
   vdiffr::expect_doppelganger("multiple-groups", p)
+
+})
+
+
+test_that("Summary row with user gp passed via dots", {
+
+  dt <- dt[1:6, ]
+
+  # Regression: `gp` supplied through `...` used to be wrapped in a list when
+  # merged into the summary gpar, breaking polygonGrob at draw time.
+  p <- forest(dt[,c(1:3, 20:21)],
+              est = dt$est,
+              lower = dt$low,
+              upper = dt$hi,
+              ci_column = 4,
+              ref_line = 1,
+              is_summary = c(TRUE, rep(FALSE, 5)),
+              gp = gpar(lwd = 2))
+
+  expect_s3_class(p, "forestplot")
+
+  smry <- p$grobs[[grep("ci-1-4", p$layout$name)]]
+  expect_s3_class(smry$gp, "gpar")
+
+  pdf(NULL)
+  on.exit(dev.off(), add = TRUE)
+  expect_no_error(print(p))
 
 })

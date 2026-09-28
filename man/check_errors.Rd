@@ -4,24 +4,7 @@
 \alias{check_errors}
 \title{Checking error for forest plot}
 \usage{
-check_errors(
-  data,
-  est,
-  lower,
-  upper,
-  sizes,
-  ref_line,
-  vert_line,
-  ci_column,
-  is_summary,
-  xlim,
-  x_trans,
-  ticks_at,
-  ticks_digits,
-  title,
-  arrow_lab,
-  xlab
-)
+check_errors(data, est, lower, upper, sizes, ref_line, ci_column, is_summary)
 }
 \arguments{
 \item{data}{Data to be displayed in the forest plot}
@@ -35,58 +18,28 @@ and considered as different groups.}
 
 \item{upper}{Upper bound of the confidence interval, same as \code{est}.}
 
-\item{sizes}{Size of the point estimation box, can be a unit, vector or a list.
-Values will be used as it is, no transformation will be applied.}
+\item{sizes}{Size of the point estimation box, can be a vector or a list.
+The value is a multiple of one line of text, so \code{1} draws a point as tall
+as the \code{base_size} of the theme. The same scale applies to the summary
+diamond. Values are used as they are, unless \code{\link{scale_sizes}} is
+used to read them as study weights; useful values are roughly between
+\code{0.2} and \code{1.5}, and a warning is given when the plot is drawn if
+they are outside \code{0.1} to \code{2}.}
 
-\item{ref_line}{X-axis coordinates of zero line, default is 1. Provide an atomic
-vector if different reference line for each \code{ci_column} is desired.}
-
-\item{vert_line}{Numerical vector, add additional vertical line at given value.
-Provide a list of numerical vector element if different vertical line for each
-\code{ci_column} is desired.}
+\item{ref_line}{X-axis coordinates of the reference line, the value of no
+effect. If \code{NULL} (default), it is 1 if the x-axis is on a log scale
+(see \code{\link{set_xaxis}}) and 0 otherwise. Provide an atomic vector if
+different reference line for each \code{ci_column} is desired.}
 
 \item{ci_column}{Column number of the data the CI will be displayed.}
 
 \item{is_summary}{A logical vector indicating if the value is a summary value,
-which will have a diamond shape for the estimate. Can not be used with multiple
-group \code{forestplot}.}
-
-\item{xlim}{Limits for the x axis as a vector of length 2, i.e. c(low, high). It
-will take the minimum and maximum of the lower and upper value if not provided.
-This will apply to all CI columns if provided, and will be calculated automatically
-for each column if not provided. This should be a list with the same length of
-\code{ci_column} if different \code{xlim} for different column is desired.}
-
-\item{x_trans}{Change axis scale, Allowed values are one of c("none", "log", "log2",
-"log10"). Default is \code{"none"}, no transformation will be applied.
-The formatted label will be used for \code{scale  = "log2"} or \code{"log10"}, change
-this in \code{x_trans}. Set this to \code{"log"} if x-axis tick marks assume values
-are exponential, e.g. for logistic regression (OR), survival estimates (HR), Poisson
-regression etc.}
-
-\item{ticks_at}{Set X-axis tick-marks point. This will apply to all CI columns if
-provided, and will be calculated automatically for each column if not provided.
-This should be a list if different \code{ticks_at} for different column is desired.
-Although many efforts have been made to automatically get a pretty ticks break,
-it will not give a perfect solution, especially if \code{'log2'} and \code{'log10'}
-defined for \code{x_trans}. Please provide this value if possible.}
-
-\item{ticks_digits}{Number of digits for the x-axis, default is \code{1L}. This
-should be a numerical vector if different rounding will be applied to different
-column. If an integer is specified, for example \code{1L}, trailing zeros after
-the decimal mark will be dropped. Specify numeric, for example \code{1}, to keep
-the trailing zero after the decimal mark.}
-
-\item{title}{The text for the title.}
-
-\item{arrow_lab}{Labels for the arrows, string vector of length two (left and
-right). The theme of arrow will inherit from the x-axis. This should be a list
-if different arrow labels for each column is desired.}
-
-\item{xlab}{X-axis labels, it will be put under the x-axis. An atomic vector should
-be provided if different \code{xlab} for different column is desired.}
+which will have a diamond shape for the estimate. With multiple groups the
+diamonds are stacked in the same cell and the summary rows are made taller to
+fit them, so a larger \code{nudge_y} may be wanted.}
 }
 \description{
-Checking error for forest plot
+The settings of the x-axis and the labels are checked by
+\code{\link{set_xaxis}} and \code{\link{set_labs}}.
 }
 \keyword{internal}

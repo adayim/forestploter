@@ -12,7 +12,10 @@
 \arguments{
 \item{x}{forestplot to display}
 
-\item{autofit}{If true, the plot will be autofit.}
+\item{autofit}{If true, the page is shared equally between the columns and
+between the rows of the plot. This will be deprecated, use \code{fit} of
+\code{\link{forest_style}} instead, which also works with
+\code{ggplot2::ggsave} and \code{patchwork}.}
 
 \item{...}{other arguments not used by this method}
 }

@@ -14,32 +14,57 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  dpi=300,
+  dpi = 300,
   comment = "#>"
 )
 ```
 
-[Forest plots](https://en.wikipedia.org/wiki/Forest_plot) are commonly used in the medical research publications, especially in [meta-analysis](https://en.wikipedia.org/wiki/Meta-analysis). And it can also be used to report the coefficients and confidence intervals (CIs) of the regression models.
+# Introduction
 
-There are lots of packages out there can be used to draw a forest plot. The most popular one is [forestplot](https://CRAN.R-project.org/package=forestplot). Packages specialised for the meta-analysis, like [meta](https://CRAN.R-project.org/package=meta), [metafor](https://CRAN.R-project.org/package=metafor) and [rmeta](https://CRAN.R-project.org/package=rmeta). Some other packages, like [ggforestplot](https://nightingalehealth.github.io/ggforestplot/index.html) uses [ggplot2](https://CRAN.R-project.org/package=ggplot2) to draw a forest plot, it is not available on the CRAN yet.
+The `forestploter` package provides a flexible way to draw forest plots. The layout of the plot is determined by the dataset, and all plot elements are placed in cells, making it easy to edit any element by specifying its row and column. The graphical parameters of each element can be further customized within its respective cell. This vignette will demonstrate how to create a simple forest plot.
 
-The main differences of the `forestploter` from the other packages are:
+The plotting steps demonstrated in this vignette may not be optimal. Other R packages may be better suited for the plots shown here. Please choose the one that best suits your needs. The final plot is shown below:
 
-* Focus on the forest plot.
-* Treat the forest plot as a table, elements are aligned in rows and columns. User has full control on what and how to display in the forest plot contents.
-* Graphical parameters are controlled with a theme.
-* Allowing post-hoc plot editing.
-* CIs in multiple columns and by groups.
+![Final Plot](https://raw.githubusercontent.com/adayim/forestploter/main/inst/extdata/forestploter-intro-final.png)
 
-# Basic forest plot
+[Forest plots](https://en.wikipedia.org/wiki/Forest_plot) are commonly used in medical research publications, especially in [meta-analysis](https://en.wikipedia.org/wiki/Meta-analysis). They can also be used to report the coefficients and confidence intervals (CIs) of regression models.
 
-The layout of the forest plot is determined by the dataset provided. Please check out the other vignette if you want change the text or backgroud, add or insert text, add borders to cells, edit color of the CI in some cells. 
+There are many packages available for drawing forest plots. The most popular one is [forestplot](https://CRAN.R-project.org/package=forestplot). Other packages specialized for meta-analysis include [meta](https://CRAN.R-project.org/package=meta), [metafor](https://CRAN.R-project.org/package=metafor), and [rmeta](https://CRAN.R-project.org/package=rmeta). Some packages, like [ggforestplot](https://nightingalehealth.github.io/ggforestplot/index.html), use [ggplot2](https://CRAN.R-project.org/package=ggplot2) to draw forest plots, though ggforestplot is not yet available on CRAN.
 
-## Simple forest plot
+The main differences between `forestploter` and other packages are:
 
-The first step is to prepare a `data.frame` to be used as a basic layout of the forest plot. Column names of the data will be drawn as the header, and contents inside the data will be displayed in the forest plot. One or multiple blank columns without any content (blanks) should be provided to draw confidence interval. **Width of the box to draw the CI is determined by the width of this column. Increase the number of space in the column to give more space to draw CI**. 
+* Focuses specifically on forest plots.
+* Treats the forest plot as a table, where elements are aligned in rows and columns. Users have full control over what and how to display the forest plot contents.
+* Graphical parameters are controlled with a style.
+* The plot is built step by step with the pipe `|>`.
+* Allows post-hoc plot editing.
+* Supports CIs in multiple columns and by groups.
 
-First we need to get the data ready to plot.
+# Basic Forest Plot
+
+The layout of the forest plot is determined by the dataset provided. Please refer to the other vignette for instructions on changing text or background, adding or inserting text, adding borders to cells, and editing the color of the CI in specific cells.
+
+`forest()` draws the table and the confidence intervals. The rest is added with functions that take the plot as their first argument, so they can be chained with the pipe `|>`:
+
+* `set_xaxis()`: limits, tick marks and scale of the x-axis, and vertical lines.
+* `set_labs()`: title, x-axis labels, footnote, arrow labels and legend labels.
+* `scale_sizes()`: point sizes scaled by study weights.
+* `set_style()`: graphical parameters, see `forest_style()`.
+
+A few rules apply to them:
+
+* The plot is built at each step and is always a `gtable`, so the result of any step can be printed, saved with `ggplot2::ggsave()` or combined with other plots, for example with `patchwork::wrap_elements()`.
+* Arguments left out keep their current value, and `NULL` removes a label or goes back to the default. For example, `set_labs(p, footnote = NULL)` removes the footnote and keeps the title, and `set_xaxis(p, xlim = NULL)` goes back to the default limits. In settings with one value for each CI column, `NA` leaves that column at its default.
+* They build the plot again, so they must be used before the plot is edited with the functions described in the other vignette, such as `edit_plot()` and `insert_text()`.
+* Warnings about point sizes are given when the plot is drawn, since `scale_sizes()` may still follow in the pipe.
+
+The arguments of `forest()` used before version 1.2.0, such as `xlim` or `footnote`, and themes created with `forest_theme()` still work and give the same plots. The old arguments give a message pointing to `set_xaxis()` or `set_labs()` the first time each of them is used in a session, and `?forest_theme` shows how the theme settings map onto `forest_style()`.
+
+## Simple Forest Plot
+
+The first step is to prepare a `data.frame` that will serve as the basic layout of the forest plot. The column names of the data will be drawn as the header, and the content will be displayed in the forest plot body. One or more blank columns should be provided to draw the confidence intervals (CIs). **The width of the CI is determined by the width of its corresponding column. To provide more space for the CI, increase the number of spaces in the blank column.**
+
+First, we need to prepare the data for plotting.
 
 ```{r prepare-data}
 library(grid)
@@ -49,189 +74,238 @@ library(forestploter)
 dt <- read.csv(system.file("extdata", "example_data.csv", package = "forestploter"))
 
 # Keep needed columns
-dt <- dt[,1:6]
+dt <- dt[, 1:6]
 
-# indent the subgroup if there is a number in the placebo column
+# Indent the subgroup if there is a number in the placebo column
 dt$Subgroup <- ifelse(is.na(dt$Placebo), 
                       dt$Subgroup,
                       paste0("   ", dt$Subgroup))
 
-# NA to blank or NA will be transformed to carachter.
+# Replace NA with blank or NA will be transformed to character
 dt$Treatment <- ifelse(is.na(dt$Treatment), "", dt$Treatment)
 dt$Placebo <- ifelse(is.na(dt$Placebo), "", dt$Placebo)
-dt$se <- (log(dt$hi) - log(dt$est))/1.96
+dt$se <- (log(dt$hi) - log(dt$est)) / 1.96
 
-# Add blank column for the forest plot to display CI.
-# Adjust the column width with space, increase number of space below 
-# to have a larger area to draw the CI. 
+# Add a blank column for the forest plot to display CI
+# Adjust the column width with spaces; increase the number of spaces below 
+# to provide a larger area for drawing the CI
 dt$` ` <- paste(rep(" ", 20), collapse = " ")
 
-# Create confidence interval column to display
+# Create a confidence interval column to display
 dt$`HR (95% CI)` <- ifelse(is.na(dt$se), "",
                              sprintf("%.2f (%.2f to %.2f)",
                                      dt$est, dt$low, dt$hi))
 head(dt)
 ```
 
-The data we have above will be used as basic layout of the forest plot. The example below shows how to draw a simple forest plot. A footnote was added as a demonstration.
+The data prepared above will serve as the basic layout of the forest plot. The example below demonstrates how to draw a simple forest plot, with a footnote added for demonstration.
 
-```{r simple-plot, out.width="80%", fig.width  = 8, fig.height = 6}
-p <- forest(dt[,c(1:3, 8:9)],
+```{r simple-plot, out.width="80%", fig.width = 8, fig.height = 6}
+p <- forest(dt[, c(1:3, 8:9)],
             est = dt$est,
-            lower = dt$low, 
+            lower = dt$low,
             upper = dt$hi,
             sizes = dt$se,
             ci_column = 4,
-            ref_line = 1,
-            arrow_lab = c("Placebo Better", "Treatment Better"),
-            xlim = c(0, 4),
-            ticks_at = c(0.5, 1, 2, 3),
-            footnote = "This is the demo data. Please feel free to change\nanything you want.")
+            ref_line = 1) |>
+  set_xaxis(xlim = c(0, 4), ticks_at = c(0.5, 1, 2, 3)) |>
+  set_labs(arrow = c("Placebo Better", "Treatment Better"),
+           footnote = "This is the demo data. Please feel free to change\nanything you want.")
 
 # Print plot
 plot(p)
-
 ```
 
-## Change theme
+## Changing the Style
 
-Now we will use the same data above, and add a summary point. We also want to change the graphical parameters for confidence interval and other parts of the plot. Theme of the forest plot can be adjusted with `forest_theme` function, check out the manual for more details.
+We will now use the same data as above but add a summary point. Additionally, we will change the graphical parameters for the confidence interval and other parts of the plot. The style of the forest plot is set with the `forest_style` function, which takes a `gpar()` for each part of the plot. Only the settings given are changed, everything else keeps its default. A style can be passed to the `style` argument of `forest()`, or applied later with `set_style()`. Refer to the manual for more details.
 
-```{r simple-plot-theme, out.width="80%", fig.width  = 7, fig.height = 3.3}
+```{r simple-plot-theme, out.width="80%", fig.width = 7, fig.height = 3.3}
 dt_tmp <- rbind(dt[-1, ], dt[1, ])
 dt_tmp[nrow(dt_tmp), 1] <- "Overall"
 dt_tmp <- dt_tmp[1:11, ]
-# Define theme
 
-tm <- forest_theme(base_size = 10,
+# Define a style
+st <- forest_style(base_size = 10,
                    # Confidence interval point shape, line type/color/width
                    ci_pch = 15,
-                   ci_col = "#762a83",
-                   ci_fill = "black",
-                   ci_alpha = 0.8,
-                   ci_lty = 1,
-                   ci_lwd = 1.5,
-                   ci_Theight = 0.2, # Set an T end at the end of CI 
+                   ci = gpar(col = "#762a83", fill = "black", alpha = 0.8,
+                             lty = 1, lwd = 1.5),
+                   ci_t_height = 0.2, # Set a T end at the end of CI
                    # Reference line width/type/color
-                   refline_lwd = 1,
-                   refline_lty = "dashed",
-                   refline_col = "grey20",
+                   ref_line = gpar(lwd = 1, lty = "dashed", col = "grey20"),
                    # Vertical line width/type/color
-                   vertline_lwd = 1,
-                   vertline_lty = "dashed",
-                   vertline_col = "grey20",
+                   vline = gpar(lwd = 1, lty = "dashed", col = "grey20"),
                    # Change summary color for filling and borders
-                   summary_fill = "#4575b4",
-                   summary_col = "#4575b4",
+                   summary = gpar(fill = "#4575b4", col = "#4575b4"),
                    # Footnote font size/face/color
-                   footnote_cex = 0.6,
-                   footnote_fontface = "italic",
-                   footnote_col = "blue")
+                   footnote = gpar(cex = 0.6, fontface = "italic", col = "blue"))
 
-
-pt <- forest(dt_tmp[,c(1:3, 8:9)],
-            est = dt_tmp$est,
-            lower = dt_tmp$low, 
-            upper = dt_tmp$hi,
-            sizes = dt_tmp$se,
-            is_summary = c(rep(FALSE, nrow(dt_tmp)-1), TRUE),
-            ci_column = 4,
-            ref_line = 1,
-            arrow_lab = c("Placebo Better", "Treatment Better"),
-            xlim = c(0, 4),
-            ticks_at = c(0.5, 1, 2, 3),
-            footnote = "This is the demo data. Please feel free to change\nanything you want.",
-            theme = tm)
+pt <- forest(dt_tmp[, c(1:3, 8:9)],
+             est = dt_tmp$est,
+             lower = dt_tmp$low,
+             upper = dt_tmp$hi,
+             sizes = dt_tmp$se,
+             is_summary = c(rep(FALSE, nrow(dt_tmp) - 1), TRUE),
+             ci_column = 4,
+             ref_line = 1,
+             style = st) |>
+  set_xaxis(xlim = c(0, 4), ticks_at = c(0.5, 1, 2, 3)) |>
+  set_labs(arrow = c("Placebo Better", "Treatment Better"),
+           footnote = "This is the demo data. Please feel free to change\nanything you want.")
 
 # Print plot
 plot(pt)
-
 ```
 
+Besides the graphical parameters, `forest_style()` also sets how some parts are placed, such as `title_just` for the title, `arrow_type` for the arrows, `legend_position` for the legend and `fit` for how the plot uses the space it is drawn in (see [Saving the Plot](#saving-the-plot)). A style can be changed later with `set_style()`, for example `set_style(pt, title = gpar(col = "red"))`, which keeps the rest of the style.
 
-## Text justification and background with theme
-By default, all cells are left aligned. But it is possible to justify any cells in the forest plot by setting parameters in `forest_theme`. Set `core=list(fg_params=list(hjust=0, x=0))` to left align content, and `rowhead=list(fg_params=list(hjust=0.5, x=0.5)` to center header. Set `hjust=1` and `x=0.9` to right align text. **You can also change the justification of text by with `edit_plot`, see details in another vignette.** 
+## Text Justification and Background
 
+By default, all cells are left-aligned. However, it is possible to justify any cell in the forest plot by passing table settings to `forest_style`. For example, `core = list(fg_params = list(hjust = 0, x = 0))` left-aligns the content, while `colhead = list(fg_params = list(hjust = 0.5, x = 0.5))` centers the header. To right-align text, set `hjust = 1` and `x = 0.9`. **You can also change the text justification with `edit_plot`, as detailed in another vignette.**
 
-Same rule apply to change the background color by setting `core=list(bg_params=list(fill = c("#edf8e9", "#c7e9c0", "#a1d99b")))`. Change settings in `core` if you want to change graphical parameters of contents, `colhead` for header. Change settings in `fg_params` to modify the text, see parameters for `textGrob()` in `grid` package. Change `bg_params` to modify settings for background graphical parameters, see `gpar()` in `grid` package. You should pass parameters as a list. More details can be found [here](https://CRAN.R-project.org/package=gridExtra/vignettes/tableGrob.html).  
+The background color of the body is set with the `fill` of `body`, for example `body = gpar(fill = c("#edf8e9", "#c7e9c0", "#a1d99b"))`, and `header` does the same for the header. The other settings of `body` and `header`, such as `col` or `fontface`, change the text. Other table settings go in `core` for the content and `colhead` for the header: `fg_params` for the text (see `textGrob()` in the `grid` package) and `bg_params` for the background (see `gpar()` in the `grid` package). Parameters should be passed as a list. More details can be found [here](https://CRAN.R-project.org/package=gridExtra/vignettes/tableGrob.html).
 
-Provide a single value if you want cells have the same justification or vector for each cells. As you can notice that the second example justify text by row using the provided vector, and the vector will be recycled.
+Provide a single value for uniform justification across all cells or a vector for varied justification. As shown in the second example, text is justified by row using the provided vector, which will be recycled as needed.
 
-```{r text-justification, out.width="80%", fig.width  = 7, fig.height = 2}
+```{r text-justification, out.width="80%", fig.width = 7, fig.height = 2}
 dt <- dt[1:4, ]
 
 # Header center and content right
-tm <- forest_theme(core=list(fg_params=list(hjust = 1, x = 0.9),
-                             bg_params=list(fill = c("#edf8e9", "#c7e9c0", "#a1d99b"))),
-                   colhead=list(fg_params=list(hjust=0.5, x=0.5)))
+st <- forest_style(body = gpar(fill = c("#edf8e9", "#c7e9c0", "#a1d99b")),
+                   core = list(fg_params = list(hjust = 1, x = 0.9)),
+                   colhead = list(fg_params = list(hjust = 0.5, x = 0.5)))
 
-p <- forest(dt[,c(1:3, 8:9)],
+p <- forest(dt[, c(1:3, 8:9)],
             est = dt$est,
-            lower = dt$low, 
+            lower = dt$low,
             upper = dt$hi,
             sizes = dt$se,
             ci_column = 4,
-            title = "Header center content right",
-            theme = tm)
+            style = st) |>
+  set_labs(title = "Header center content right")
 
 # Print plot
 plot(p)
 
 # Mixed justification
-tm <- forest_theme(core=list(fg_params=list(hjust=c(1, 0, 0, 0.5),
-                                            x=c(0.9, 0.1, 0, 0.5)),
-                             bg_params=list(fill = c("#f6eff7", "#d0d1e6", "#a6bddb", "#67a9cf"))),
-                   colhead=list(fg_params=list(hjust=c(1, 0, 0, 0, 0.5),
-                                               x=c(0.9, 0.1, 0, 0, 0.5))))
+st <- forest_style(body = gpar(fill = c("#f6eff7", "#d0d1e6", "#a6bddb", "#67a9cf")),
+                   core = list(fg_params = list(hjust = c(1, 0, 0, 0.5),
+                                                x = c(0.9, 0.1, 0, 0.5))),
+                   colhead = list(fg_params = list(hjust = c(1, 0, 0, 0, 0.5),
+                                                   x = c(0.9, 0.1, 0, 0, 0.5))))
 
-p <- forest(dt[,c(1:3, 8:9)],
+p <- forest(dt[, c(1:3, 8:9)],
             est = dt$est,
-            lower = dt$low, 
+            lower = dt$low,
             upper = dt$hi,
             sizes = dt$se,
             ci_column = 4,
-            title = "Mixed justification",
-            theme = tm)
+            style = st) |>
+  set_labs(title = "Mixed justification")
 plot(p)
-
 ```
 
+## Text Parsing
 
-# Multiple CI columns
+Similar to text justification, you can parse text in any cell. However, parsing all text will remove blanks from the data, which will also affect the blank columns used for drawing the whiskers.
 
-Sometimes one may want to have multiple CI columns, each column may represent different outcome. If this is the case, one only needs to provide a vector of the position of the columns to be drawn in the data. If the number of columns provided to draw the CI columns are same as number of `est`, one CI will be drawn into each CI columns. If the number of columns provided is less than number of `est`, the extra `est` will be considered as a group and will be drawn to the CI columns sequentially. In the latter case, group number equals to number of `est` devided by number of `ci_column` and multiple columns will be drawn into one cell. As seen in the example below, the CI will be drawn in the column 3 and 5. The first and second elements in `est`, `lower` and `upper` will be drawn in column 3 and column 5.
+```{r text-parsing, out.width="80%", fig.width = 7, fig.height = 2, fig.keep = "last"}
+# Check out the `plotmath` function for math expression.
+dt <- data.frame(
+  Study = c("Study ~1^a", "Study ~2^b", "NO[2]"),
+  low = c(0.2, -0.03, 1.11),
+  est = c(0.71, 0.35, 1.79),
+  hi = c(1.22, 0.74, 2.47)
+)
 
-In a multiple groups example, two or more CI in one cell. The solution is simple, provide all the values sequentially to `est`, `lower` and `upper`. Which means, the first `n` elements in the `est`, `lower` and `upper` are considered as same group, same for next `n` elements. The `n` is determined by the number of `ci_column`. As it is shown in the example below, `est_gp1` and `est_gp2` will be drawn in column 3 and column 5, considered as **group 1**. The `est_gp3` and `est_gp4` will be drawn in column 3 and column 5, considered as **group 2**. 
+dt$SMD <- sprintf("%.2f (%.2f, %.2f)", dt$est, dt$low, dt$hi)
+dt$` ` <- paste(rep(" ", 20), collapse = " ")
+
+fig_dt <- dt[, c(1, 5:6)]
+
+# Get a matrix of which row and columns to parse
+parse_mat <- matrix(FALSE, 
+                    nrow = nrow(fig_dt),
+                    ncol = ncol(fig_dt))
+
+# Here we want to parse the first column only, you can amend this to whatever you want.
+parse_mat[, 1] <- TRUE  
+
+# Remove this if you don't want to parse the column head.
+st <- forest_style(colhead = list(fg_params = list(parse = TRUE)),
+                   core = list(fg_params = list(parse = parse_mat)))
+
+p <- forest(fig_dt,
+            est = dt$est,
+            lower = dt$low,
+            upper = dt$hi,
+            ci_column = 3,
+            style = st)
+
+# Add customized footnote.
+# Due to the limitation of the textGrob, passing a parsed text with linebreak
+# has some issues. We use a different approach here.
+txt <- r"(${}^{a}$ This is study A<br>${}^{b}$ This is study B)"
+
+add_grob(p,
+         row = 4,
+         col = 1:2,
+         order = "background",
+         gb_fn = gridmicrotex::markdown_grob,
+         md = txt,
+         gp = gpar(fontsize = 8),
+         hjust = 0, vjust = 1,
+         x = unit(0, "npc"), y = unit(1, "npc"))
+```
+
+# Multiple CI Columns
+
+You may want to have multiple CI columns, with each representing a different outcome. To achieve this, provide a vector of column positions where the CIs will be drawn. If the number of CI columns matches the number of `est` values, one CI will be drawn in each specified column. If there are fewer CI columns than `est` values, the extra `est` values will be treated as a group and drawn sequentially in the available CI columns. In this case, the group number is determined by dividing the number of `est` values by the number of `ci_column`, and multiple CIs will be drawn in a single cell. As shown in the example below, the CIs are drawn in columns 3 and 5, with the first and second elements of `est`, `lower`, and `upper` corresponding to columns 3 and 5, respectively.
+
+In an example with multiple groups, two or more CIs can be displayed in one cell. The solution is to provide all values sequentially to `est`, `lower`, and `upper`. This means that the first `n` elements in `est`, `lower`, and `upper` are treated as the same group, and the same applies to the next `n` elements, where `n` is determined by the number of `ci_column`. As demonstrated in the example below, `est_gp1` and `est_gp2` are drawn in columns 3 and 5 as **group 1**, while `est_gp3` and `est_gp4` are drawn in the same columns as **group 2**.
 
 This is an example of multiple CI columns and groups:
 
-```{r multiple-group, out.width="80%", fig.width  = 8, fig.height = 6.5}
+```{r multiple-group, out.width="80%", fig.width = 8, fig.height = 5}
 dt <- read.csv(system.file("extdata", "example_data.csv", package = "forestploter"))
-# indent the subgroup if there is a number in the placebo column
+dt <- dt[1:7, ]
+# Indent the subgroup if there is a number in the placebo column
 dt$Subgroup <- ifelse(is.na(dt$Placebo), 
                       dt$Subgroup,
                       paste0("   ", dt$Subgroup))
 
-# NA to blank or NA will be transformed to carachter.
+# Replace NA with blank or NA will be transformed to character
 dt$n1 <- ifelse(is.na(dt$Treatment), "", dt$Treatment)
 dt$n2 <- ifelse(is.na(dt$Placebo), "", dt$Placebo)
 
-# Add two blank column for CI
+# Add two blank columns for CI
 dt$`CVD outcome` <- paste(rep(" ", 20), collapse = " ")
 dt$`COPD outcome` <- paste(rep(" ", 20), collapse = " ")
 
-# Set-up theme
-tm <- forest_theme(base_size = 10,
-                   refline_lty = "solid",
-                   ci_pch = c(15, 18),
-                   ci_col = c("#377eb8", "#4daf4a"),
-                   footnote_col = "blue",
-                   legend_name = "Group",
-                   legend_value = c("Trt 1", "Trt 2"),
-                   vertline_lty = c("dashed", "dotted"),
-                   vertline_col = c("#d6604d", "#bababa"))
+# Generate point estimation and 95% CI. Paste two CIs together and separate by line break.
+dt$ci1 <- paste(sprintf("%.1f (%.1f, %.1f)", dt$est_gp1, dt$low_gp1, dt$hi_gp1),
+                sprintf("%.1f (%.1f, %.1f)", dt$est_gp3, dt$low_gp3, dt$hi_gp3),
+                sep = "\n")
+dt$ci1[grepl("NA", dt$ci1)] <- "" # Any NA to blank
 
-p <- forest(dt[,c(1, 19, 21, 20, 22)],
+dt$ci2 <- paste(sprintf("%.1f (%.1f, %.1f)", dt$est_gp2, dt$low_gp2, dt$hi_gp2),
+                sprintf("%.1f (%.1f, %.1f)", dt$est_gp4, dt$low_gp4, dt$hi_gp4),
+                sep = "\n")
+dt$ci2[grepl("NA", dt$ci2)] <- ""
+
+# Set-up the style
+st <- forest_style(base_size = 10,
+                   ref_line = gpar(lty = "solid"),
+                   ci_pch = c(15, 18),
+                   ci = gpar(col = c("#377eb8", "#4daf4a")),
+                   footnote = gpar(col = "blue"),
+                   vline = gpar(lty = c("dashed", "dotted"),
+                                   col = c("#d6604d", "#bababa")),
+                   # Table cell padding, width 4 and heights 3
+                   core = list(padding = unit(c(4, 3), "mm")))
+
+p <- forest(dt[, c(1, 19, 23, 21, 20, 24, 22)],
             est = list(dt$est_gp1,
                        dt$est_gp2,
                        dt$est_gp3,
@@ -239,26 +313,30 @@ p <- forest(dt[,c(1, 19, 21, 20, 22)],
             lower = list(dt$low_gp1,
                          dt$low_gp2,
                          dt$low_gp3,
-                         dt$low_gp4), 
+                         dt$low_gp4),
             upper = list(dt$hi_gp1,
                          dt$hi_gp2,
                          dt$hi_gp3,
                          dt$hi_gp4),
-            ci_column = c(3, 5),
+            ci_column = c(4, 7),
             ref_line = 1,
-            vert_line = c(0.5, 2),
-            nudge_y = 0.2,
-            theme = tm)
+            nudge_y = 0.4,
+            style = st) |>
+  set_xaxis(vline = c(0.5, 2)) |>
+  set_labs(legend_title = "Group", legend_labels = c("Trt 1", "Trt 2"))
 
 plot(p)
 ```
 
-# Different parameters for different CI columns
+It is clear that `forest` uses the provided data as the skeleton for the forest plot. You can use your imagination to place any content in a cell, including line breaks. Please refer to the other vignette for instructions on how to modify text alignment.
 
-If the desired forest plot is multiple column, some may want to have different settings for different columns. For example, different CI column has different xlim, x-axis ticks, x-axis labels, x_trans, reference line, vertical line or arrow labels. This can be easily done by providing a list or vector. Provide a list for `xlim`, `vert_line`, `arrow_lab` and `ticks_at`, atomic vector for `xlab`, `x_trans` and `ref_line`. See the example below.
+The legend title and labels are set with `set_labs()`, and its position (`"right"`, `"top"`, `"bottom"` or `"none"`) and layout with `legend_position`, `legend_ncol` and `legend_byrow` of `forest_style()`.
 
-```{r multiple-param, out.width="70%", fig.width  = 10, fig.height = 6.5}
+# Different Parameters for Different CI Columns
 
+When a forest plot has multiple columns, you may want to apply different settings to each one. For example, different CI columns can have distinct `xlim`, x-axis ticks, x-axis labels, `x_trans` transformations, reference lines, vertical lines, or arrow labels. This can be easily achieved by providing a list or a vector. Use an atomic vector for `ref_line` in `forest()`. In `set_xaxis()`, use a list for `xlim`, `ticks_at` and `vline`, and an atomic vector for `x_trans`. In `set_labs()`, use a list for `arrow` and an atomic vector for `xlab`. See the example below for a demonstration.
+
+```{r multiple-param, out.width="70%", fig.width = 10, fig.height = 6.5}
 dt$`HR (95% CI)` <- ifelse(is.na(dt$est_gp1), "",
                              sprintf("%.2f (%.2f to %.2f)",
                                      dt$est_gp1, dt$low_gp1, dt$hi_gp1))
@@ -266,40 +344,39 @@ dt$`Beta (95% CI)` <- ifelse(is.na(dt$est_gp2), "",
                              sprintf("%.2f (%.2f to %.2f)",
                                      dt$est_gp2, dt$low_gp2, dt$hi_gp2))
 
-tm <- forest_theme(arrow_type = "closed",
-                   arrow_label_just = "end")
-
-p <- forest(dt[,c(1, 21, 23, 22, 24)],
+p <- forest(dt[, c(1, 21, 23, 22, 24)],
             est = list(dt$est_gp1,
                        dt$est_gp2),
             lower = list(dt$low_gp1,
-                         dt$low_gp2), 
+                         dt$low_gp2),
             upper = list(dt$hi_gp1,
                          dt$hi_gp2),
             ci_column = c(2, 4),
             ref_line = c(1, 0),
-            vert_line = list(c(0.3, 1.4), c(0.6, 2)),
-            x_trans = c("log", "none"),
-            arrow_lab = list(c("L1", "R1"), c("L2", "R2")),
+            nudge_y = 0.2,
+            style = forest_style(arrow_type = "closed",
+                                 arrow_label_just = "end")) |>
+  set_xaxis(x_trans = c("log", "none"),
             xlim = list(c(0, 3), c(-1, 3)),
             ticks_at = list(c(0.1, 0.5, 1, 2.5), c(-1, 0, 2)),
-            xlab = c("OR", "Beta"),
-            nudge_y = 0.2,
-            theme = tm)
+            vline = list(c(0.3, 1.4), c(0.6, 2))) |>
+  set_labs(arrow = list(c("L1", "R1"), c("L2", "R2")),
+           xlab = c("OR", "Beta"))
 
 plot(p)
 ```
 
 # Custom CIs
-It is possible to pass custom CI drawing function to `forest`. The `fn_ci` accepts CI drawing function for normal confidence interval and `fn_summary` for summary CI. Other parameters for the those functions can be passed via `forest`. If you need to row values as `est` and `lower` to those functions, you need to define the name of the parameters you have passed via `index_args`. This is an advanced technique and not the purpose of this vignette to show how to create a function to draw CI, but you can find some tutorial [here](https://www.stat.auckland.ac.nz/~paul/RG3e/chapter8.html) if you are interested. Below is an example of the useage for a box plot CI with the built in `make_boxplot` function. 
 
-```{r custom-ci, out.width="70%", fig.width  = 3, fig.height = 3}
+It is possible to pass a custom CI drawing function to `forest`. The `fn_ci` argument accepts a CI drawing function for normal confidence intervals, while `fn_summary` is used for summary CIs. Other parameters for these functions can be passed via `forest`. If you need to pass row values such as `est` and `lower` to these functions, you must define the names of the parameters you have passed in `index_args`. This is an advanced technique, and this vignette does not cover how to create a CI drawing function. However, you can find tutorials [here](https://www.stat.auckland.ac.nz/~paul/RG3e/chapter8.html) if you are interested. Below is an example of how to use a box plot CI with the built-in `make_boxplot` function.
+
+```{r custom-ci, out.width="70%", fig.width = 3, fig.height = 3}
 # Function to calculate Box plot values
 box_func <- function(x){
   iqr <- IQR(x)
   q3 <- quantile(x, probs = c(0.25, 0.5, 0.75), names = FALSE)
-  c("min" = q3[1] - 1.5*iqr, "q1" = q3[1], "med" = q3[2],
-    "q3" = q3[3], "max" = q3[3] + 1.5*iqr)
+  c("min" = q3[1] - 1.5 * iqr, "q1" = q3[1], "med" = q3[2],
+    "q3" = q3[3], "max" = q3[3] + 1.5 * iqr)
 }
 # Prepare data
 val <- split(ToothGrowth$len, list(ToothGrowth$supp, ToothGrowth$dose))
@@ -311,10 +388,10 @@ dat <- data.frame(Dose = row.names(dat),
 
 dat$Box <- paste(rep(" ", 20), collapse = " ")
 
-# Draw single group box plot
-tm <- forest_theme(ci_Theight = 0.2)
+# Draw a single group box plot
+st <- forest_style(ci_t_height = 0.2)
 
-p <- forest(dat[,c(1, 7)],
+p <- forest(dat[, c(1, 7)],
             est = dat$med,
             lower = dat$min,
             upper = dat$max,
@@ -327,16 +404,28 @@ p <- forest(dat[,c(1, 7)],
             # values of the lowhinge and uphinge will be used as row values
             index_args = c("lowhinge", "uphinge"), 
             gp_box = gpar(fill = "black", alpha = 0.4),
-            theme = tm
+            style = st
 )
 p
-
 ```
 
-# Saving plot
-One can use the base method or use `ggsave` function to save plot. For the `ggsave` function, please don't ignore the `plot` parameter. The width and height should be tuned to get a desired plot. You can also set `autofit=TRUE` in the `print` or `plot` function to auto fit the plot, but this may change not be compact as it should be. 
+# Saving the Plot
+
+The rows and columns of a forest plot are sized to fit their content, which gives the plot a natural size. `get_wh` returns this size, and saving the plot at it gives the most compact layout.
 
 ```{r eval=FALSE}
+# Get width and height
+p_wh <- get_wh(plot = p, unit = "in")
+png('rplot.png', res = 300, width = p_wh[1], height = p_wh[2], units = "in")
+p
+dev.off()
+```
+
+By default, a plot drawn in a larger space keeps its natural size and is centred, and a plot drawn in a smaller space is cut off. To let the plot use the space it is given, set `fit` in `forest_style()`. With `fit = "width"` the CI columns take the free width, in proportion to their natural width, and become narrower when space is short. With `fit = "both"` the rows of the table also take the free height. Text always keeps its size. The plot can then be saved at any size, for example with the base R method or the `ggsave` function, and fills its panel when combined with other plots with `patchwork`. When using `ggsave`, be sure to specify the `plot` parameter.
+
+```{r eval=FALSE}
+p <- set_style(p, fit = "width")
+
 # Base method
 png('rplot.png', res = 300, width = 7.5, height = 7.5, units = "in")
 p
@@ -348,23 +437,16 @@ ggplot2::ggsave(filename = "rplot.png", plot = p,
                 width = 7.5, height = 7.5, units = "in")
 ```
 
-Or you can get the width and height of the forestplot with `get_wh`, and use this width and height for saving. 
+To scale the whole plot, text included, to a given size, work out the scale from the natural size and pass it to `ggsave`.
 
 ```{r eval=FALSE}
-# Get width and height
-p_wh <- get_wh(plot = p, unit = "in")
-png('rplot.png', res = 300, width = p_wh[1], height = p_wh[2], units = "in")
-p
-dev.off()
-
-# Or get scale
 get_scale <- function(plot,
                       width_wanted,
                       height_wanted,
                       unit = "in"){
   h <- convertHeight(sum(plot$heights), unit, TRUE)
   w <- convertWidth(sum(plot$widths), unit, TRUE)
-  max(c(w/width_wanted,  h/height_wanted))
+  max(c(w / width_wanted,  h / height_wanted))
 }
 p_sc <- get_scale(plot = p, width_wanted = 6, height_wanted = 4, unit = "in")
 ggplot2::ggsave(filename = "rplot.png", 
@@ -376,24 +458,41 @@ ggplot2::ggsave(filename = "rplot.png",
                 scale = p_sc)
 ```
 
-
 # FAQs
 
-**Q: The whisker/CI plot area is too narrow, pelase help!**
+**Q: The whisker/CI plot area is too narrow. What should I do?**
 
-**A:** I have to admit that vignettes were not well written, but you should be able to get the idea of if you looked the vignette creafully and checked the examples. Increase the widths by having more blank space in the column that the CI to be drawn. Please checkout the first example on how to do this. 
+**A:** The vignettes may not be perfectly written, but you should be able to resolve this by carefully reviewing the examples. To widen the CI plot area, increase the number of blank spaces in the column where the CI is drawn. Please refer to the first example for a demonstration of how to do this.
 
-**Q: Can I modify the width and height of each row and columns?**
+**Q: Can I modify the width and height of each row and column?**
 
-**A:** Yes, althoug the content in of the data decide the heights and widths of the rows and columns, you can also modify these after you have finished plotting. See [this here for details](https://github.com/adayim/forestploter/issues/30#issuecomment-1459038988).
+**A:** Yes. Although the data's content determines the initial dimensions of the rows and columns, you can modify them after plotting. For details, see the discussion [here](https://github.com/adayim/forestploter/issues/30#issuecomment-1459038988). You can also add padding to each cell by using `core = list(padding = unit(c(4, 3), "mm"))` in `forest_style`. To let the CI columns and the rows take the space the plot is drawn in, use `fit` of `forest_style`, see [Saving the Plot](#saving-the-plot).
 
-**Q: How should I use weight for sizes?**
+**Q: How should I use weights for sizes?**
 
-**A:** The `forest` function will not transform the size thus it will be used as it is. If you want to weight the size on your own, checkout [here for some options](https://github.com/adayim/forestploter/issues/37#issuecomment-1450208581)
+**A:** Pass the weights to `sizes` and add `scale_sizes()`. The weights are square-rooted first, so that the *area* of each point is proportional to its weight, and then mapped onto `range`:
 
+```{r weight-sizes, eval = FALSE}
+forest(dt_fig,
+       est = dt$est,
+       lower = dt$lb,
+       upper = dt$ub,
+       sizes = dt$weights,        # weights, not sizes
+       ci_column = 8) |>
+  scale_sizes(method = "range",   # or "proportional"
+              range = c(0.2, 0.8))
+```
 
-**Q: How can I plot grouped forestplot?**
+`"range"` puts the smallest weight on `range[1]` and the largest on `range[2]`, the way `metafor::forest.rma()` does with its `plim` argument. `"proportional"` keeps the areas strictly proportional to the weights and only clamps the smallest points up so that they do not disappear into the confidence interval line, the way `meta::forest.meta()` does.
 
-**A:** You can leave few blank lines to indicate the group break. You can also use `arrangeGrob` from `gridExtra` package to combine two or more forestplot.
+Without `scale_sizes()` the values in `sizes` are used as they are. In that case remember that `sizes` is a multiple of one line of text, so `1` draws a point as tall as the `base_size` of the style. Useful values are roughly between 0.2 and 1.5, and a warning is given when the plot is drawn if they are outside 0.1 to 2.
+
+**Q: Can I combine a forest plot with other plots?**
+
+**A:** Yes. The forest plot is a `gtable`, which is a `grob`, so it can be combined with `ggplot2` plots using `patchwork::wrap_elements()`, `cowplot::plot_grid()` or `gridExtra::arrangeGrob()`, and saved with `ggplot2::ggsave()`. The plot is built at each step of the pipe, so it can be used right away. With `fit = "width"` or `fit = "both"` in `forest_style()`, the forest plot fills the space it is given.
+
+**Q: How can I create a grouped forest plot?**
+
+**A:** You can indicate group breaks by leaving a few blank lines in your data. Alternatively, you can combine multiple forest plots using `arrangeGrob` from the `gridExtra` package or `wrap_elements` from `patchwork`.
 
 

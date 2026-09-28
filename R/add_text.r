@@ -2,10 +2,10 @@
 
 #' Add text to forest plot
 #'
-#' This function can be used to add text to forest plot. The text can be span to
-#' multiple rows and columns. The height of the row will be changed accordingly
-#' if the text is added to only one row. The width of the text may exceeds the
-#' columns provided if the text is too long.
+#' This function can be used to add text to a forest plot. The text can span
+#' multiple rows and columns. The height of the row will be adjusted
+#' accordingly if the text is added to only one row. The width of the text may
+#' exceed the columns provided if the text is too long.
 #'
 #' @param plot A forest plot object.
 #' @param text A character or expression vector, see \code{\link[grid]{textGrob}}.
@@ -13,18 +13,18 @@
 #' "header".
 #' @param col A numeric value or vector indicating the columns the text will be
 #' added. The text will span over the column if a vector is given.
-#' @param part Part to add text, body (default) or header.
+#' @param part Part to add text, \code{"body"} (default) or \code{"header"}.
 #' @param just The justification of the text, \code{"center"} (default),
 #' \code{"left"} or \code{"right"}.
 #' @param gp An object of class \code{"gpar"}, this is the graphical parameter
 #'  settings of the text. See \code{\link[grid]{gpar}}.
 #' @param padding Padding of the text, default is \code{unit(1, "mm")}
-#' @param parse Logical, behaviour for parsing text as plotmath, see 
-#' \code{\link[grDevices]{plotmath}} 
+#' @param parse Logical, behaviour for parsing text as plotmath, see
+#' \code{\link[grDevices]{plotmath}}
 #'
 #' @return A \code{\link[gtable]{gtable}} object.
-#' @seealso \code{\link[gtable]{gtable}} \code{\link[grid]{gpar}} \code{\link[grid]{textGrob}} 
-#' \code{\link[gtable]{gtable_add_grob}} 
+#' @seealso \code{\link[gtable]{gtable}} \code{\link[grid]{gpar}} \code{\link[grid]{textGrob}}
+#' \code{\link[gtable]{gtable_add_grob}}
 #' @export
 #'
 add_text <- function(plot,
@@ -36,7 +36,7 @@ add_text <- function(plot,
                      gp = gpar(),
                      padding = unit(1, "mm"),
                      parse = FALSE){
-  
+
   if(parse)
     text <- tryCatch(parse(text = text), error = function(e) text)
 
@@ -53,8 +53,8 @@ add_text <- function(plot,
   just <- match.arg(just)
 
   # Row must be provided for the body
-  if(part == "body" & is.null(row))
-    stop("Row must be defined if the text is interting to body.")
+  if(part == "body" && is.null(row))
+    stop("Row must be defined if the text is added to body.")
 
   # Align text
   tx_x <- switch(just,
@@ -76,7 +76,7 @@ add_text <- function(plot,
 
   # Span to whole plot if col is missing
   if(is.null(col))
-    col <- 2:max(l$r)
+    col <- min(l$l):max(l$r)
   else
     col <- 1 + col # Add 1 to account for padding of the plot
 
@@ -106,6 +106,6 @@ add_text <- function(plot,
                           clip = "off",
                           name = "text.add")
 
-  return(plot)
+  return(mark_edited(plot))
 
 }

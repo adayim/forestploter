@@ -9,23 +9,28 @@ make_ticks(at = NULL, xlim, refline = 1, x_trans = "none")
 \arguments{
 \item{at}{Numerical vector, create ticks at given values.}
 
-\item{xlim}{Limits for the x axis as a vector of length 2, i.e. c(low, high). It
-will take the minimum and maximum of the lower and upper value if not provided.
-This will apply to all CI columns if provided, and will be calculated automatically
-for each column if not provided. This should be a list with the same length of
-\code{ci_column} if different \code{xlim} for different column is desired.}
+\item{xlim}{Limits for the x-axis as a vector of length 2, i.e.
+\code{c(low, high)}. By default the minimum and maximum of the lower and
+upper values are used.}
 
-\item{x_trans}{Change axis scale, Allowed values are one of c("none", "log", "log2",
-"log10"). Default is \code{"none"}, no transformation will be applied.
-The formatted label will be used for \code{scale  = "log2"} or \code{"log10"}, change
-this in \code{x_trans}. Set this to \code{"log"} if x-axis tick marks assume values
-are exponential, e.g. for logistic regression (OR), survival estimates (HR), Poisson
-regression etc.}
+\item{x_trans}{Scale of the axis, one of \code{"none"} (default),
+\code{"log"}, \code{"log2"} or \code{"log10"}. Use \code{"log"} if the
+values are exponential, e.g. odds ratios or hazard ratios. The default
+reference line of \code{\link{forest}} is 1 for log scales and 0 otherwise.}
 }
 \value{
-A vector
+A vector of tick coordinates in the transformed space.
 }
 \description{
-Create ticks points.
+Pick tick positions in the (already-transformed) \code{xlim} space.
+}
+\details{
+For \code{x_trans} in \code{"none"} / \code{"scientific"} this delegates to
+\code{\link[base]{pretty}}. For \code{"log"} / \code{"log2"} / \code{"log10"}
+it converts \code{xlim} back to the original scale, runs
+\code{\link{log_pretty}} to get base-aware ticks (e.g. \code{0.1, 1, 10}
+rather than \code{0.22, 0.61, 2.72}), and re-applies the transform. The
+reference line value is included as a tick when it falls inside the range,
+so forest plots always label their visual anchor.
 }
 \keyword{internal}

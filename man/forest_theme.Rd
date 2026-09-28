@@ -17,31 +17,26 @@ forest_theme(
   legend_name = "Group",
   legend_position = "right",
   legend_value = "",
-  xaxis_lwd = 0.6,
-  xaxis_cex = 1,
-  refline_lwd = 1,
-  refline_lty = "dashed",
-  refline_col = "grey20",
+  legend_gp = gpar(),
+  legend_ncol = 1,
+  legend_byrow = TRUE,
+  xaxis_gp = gpar(),
+  refline_gp = gpar(),
   vertline_lwd = 1,
   vertline_lty = "dashed",
   vertline_col = "grey20",
   summary_col = "#4575b4",
   summary_fill = summary_col,
-  footnote_cex = 0.6,
-  footnote_fontface = "plain",
-  footnote_col = "black",
+  footnote_gp = gpar(),
+  footnote_parse = TRUE,
   title_just = c("left", "right", "center"),
-  title_cex = 1.2,
-  title_fontface = "bold",
-  title_col = "black",
-  title_fontfamily = base_family,
+  title_gp = gpar(),
   arrow_type = c("open", "closed"),
   arrow_label_just = c("start", "end"),
   arrow_length = 0.05,
-  arrow_lwd = xaxis_lwd,
-  arrow_fill = "black",
-  arrow_col = arrow_fill,
-  arrow_cex = xaxis_cex,
+  arrow_gp = gpar(),
+  xlab_adjust = c("refline", "center"),
+  xlab_gp = gpar(),
   ...
 )
 }
@@ -53,26 +48,26 @@ forest_theme(
 \item{ci_pch}{Shape of the point estimation. It will be reused if the
 forest plot is grouped.}
 
-\item{ci_col}{Color of the CI. A vector of color should be provided for
-the grouped forest plot. An internal color set will be if only not.}
+\item{ci_col}{Color of the CI. A vector of colors should be provided for
+a grouped forest plot. An internal color set will be used if not provided.}
 
-\item{ci_alpha}{Scalar value, alpha channel for transparency of point estimation.
-A small vertical line will be added to indicate the point estimation if this
-is not equals to 1.}
+\item{ci_alpha}{Scalar value, alpha channel for transparency of the point
+estimate. A small vertical line will be added to mark the location of the
+point estimate if this is not equal to 1.}
 
-\item{ci_fill}{Color fill the point estimation. A vector of color should be
-provided for the grouped forest plot. If this is \code{NULL} (default), the
-value will inherit from \code{"ci_col"}. This is valid only if
-\code{ci_pch} within 15:25.}
+\item{ci_fill}{Fill color of the point estimation. A vector of colors should
+be provided for a grouped forest plot. If this is \code{NULL} (default),
+the value will be inherited from \code{ci_col}. This is only effective if
+\code{ci_pch} is within 15:25.}
 
-\item{ci_lty}{Line type of the CI. A vector of line type should be provided
-for the grouped forest plot.}
+\item{ci_lty}{Line type of the CI. A vector of line types should be provided
+for a grouped forest plot.}
 
-\item{ci_lwd}{Line width of the CI. A vector of line type should be provided
-for the grouped forest plot.}
+\item{ci_lwd}{Line width of the CI. A vector of line widths should be provided
+for a grouped forest plot.}
 
-\item{ci_Theight}{A unit specifying the height of the T end of CI. If set to
-\code{NULL} (default), no T end will be drawn.}
+\item{ci_Theight}{A unit specifying the height of the T end of the CI. If set
+to \code{NULL} (default), no T end will be drawn.}
 
 \item{legend_name}{Title of the legend.}
 
@@ -80,21 +75,21 @@ for the grouped forest plot.}
 \code{"bottom"} or \code{"none"} to suppress the legend.}
 
 \item{legend_value}{Legend labels (expressions). A vector should be provided
-for the grouped forest plot. A "Group 1" etc will be created if not a vector
-for a grouped forest plot.}
+for a grouped forest plot. Defaults to "Group 1", "Group 2", ... if not
+provided.}
 
-\item{xaxis_lwd}{Line width for x-axis.}
+\item{legend_gp}{\code{gpar} graphical parameters of legend, see \code{\link[grid]{gpar}}.}
 
-\item{xaxis_cex}{Multiplier applied to font size for x-axis.}
+\item{legend_ncol}{integer; the number of columns, see \code{\link[grid]{legendGrob}}.}
 
-\item{refline_lwd}{Line width for reference line.}
+\item{legend_byrow}{logical indicating whether rows of the legend are filled first, see \code{\link[grid]{legendGrob}}.}
 
-\item{refline_lty}{Line type for reference line.}
+\item{xaxis_gp}{\code{gpar} graphical parameters of x-axis, see \code{\link[grid]{gpar}}.}
 
-\item{refline_col}{Line color for the reference line.}
+\item{refline_gp}{\code{gpar} graphical parameters of reference line, see \code{\link[grid]{gpar}}.}
 
 \item{vertline_lwd}{Line width for extra vertical line. A vector can be provided
-for each vertical line, and the values will be recycled if no enough values are
+for each vertical line, and the values will be recycled if not enough values are
 given.}
 
 \item{vertline_lty}{Line type for extra vertical line. Works same as \code{vertline_lwd}.}
@@ -105,21 +100,13 @@ given.}
 
 \item{summary_fill}{Color for filling the summary diamond shape.}
 
-\item{footnote_cex}{Multiplier applied to font size for footnote.}
+\item{footnote_gp}{\code{gpar} graphical parameters of footnote, see \code{\link[grid]{gpar}}.}
 
-\item{footnote_fontface}{The font face for footnote.}
-
-\item{footnote_col}{Color of the footnote.}
+\item{footnote_parse}{Parse footnote text (default).}
 
 \item{title_just}{The justification of the title, default is \code{'left'}.}
 
-\item{title_cex}{Multiplier applied to font size for title.}
-
-\item{title_fontface}{The font face for title, default is \code{'bold'}.}
-
-\item{title_col}{Color of title.}
-
-\item{title_fontfamily}{Font family of title.}
+\item{title_gp}{\code{gpar} graphical parameters of title, see \code{\link[grid]{gpar}}.}
 
 \item{arrow_type}{Type of the arrow below x-axis, see \code{\link[grid]{arrow}}.}
 
@@ -130,13 +117,11 @@ the ending point of the arrow \code{"end"}.}
 \item{arrow_length}{The length of the arrow head, default is \code{0.05}.
 See \code{\link[grid]{arrow}}.}
 
-\item{arrow_lwd}{Line width of the arrow, same as \code{xaxis_lwd} by default.}
+\item{arrow_gp}{\code{gpar} graphical parameters of arrow, see \code{\link[grid]{gpar}}.}
 
-\item{arrow_fill}{Filling color of the arrow head, default is \code{"black"}.}
+\item{xlab_adjust}{Control the alignment of xlab to reference line (default) or center of the x-axis.}
 
-\item{arrow_col}{Line and text color of the arrow, same as \code{arrow_fill} by default.}
-
-\item{arrow_cex}{Multiplier applied to font size for arrow label, same as \code{xaxis_cex} by default.}
+\item{xlab_gp}{\code{gpar} graphical parameters of xlab, see \code{\link[grid]{gpar}}.}
 
 \item{...}{Other parameters passed to table. See \code{\link[gridExtra]{tableGrob}}
 for details.}
@@ -145,23 +130,64 @@ for details.}
 A list.
 }
 \description{
-Default theme for the forest plot, but can pass other parameters. The
-parameters will be passed to corresponding elements of the forest plot.
+Default theme for the forest plot. Other parameters can also be passed and
+will be forwarded to the corresponding elements of the forest plot.
+
+\code{forest_theme} is superseded by \code{\link{forest_style}}, see the
+section below for how its arguments map onto the new functions.
 
 \itemize{
-\item{\code{ci_*}}{Control the graphical parameters of confidence intervals}
-\item{\code{legend_*}}{Control the graphical parameters of legend}
-\item{\code{xaxis_*}}{Control the graphical parameters of x-axis}
-\item{\code{refline_*}}{Control the graphical parameters of reference line}
-\item{\code{vertline_*}}{Control the graphical parameters of vertical line}
-\item{\code{summary_*}}{Control the graphical parameters of diamond shaped summary CI}
-\item{\code{footnote_*}}{Control the graphical parameters of footnote}
-\item{\code{title_*}}{Control the graphical parameters of title}
-\item{\code{arrow_*}}{Control the graphical parameters of arrow}
+\item \code{ci_*} Control the graphical parameters of confidence intervals
+\item \code{legend_*} Control the graphical parameters of legend
+\item \code{xaxis_*} Control the graphical parameters of x-axis
+\item \code{refline_*} Control the graphical parameters of reference line
+\item \code{vertline_*} Control the graphical parameters of vertical line
+\item \code{summary_*} Control the graphical parameters of diamond shaped summary CI
+\item \code{footnote_*} Control the graphical parameters of footnote
+\item \code{title_*} Control the graphical parameters of title
+\item \code{arrow_*} Control the graphical parameters of arrow
 }
 
 See \code{\link[grid]{gpar}} for more details.
 }
+\section{Moving to forest_style()}{
+
+\code{\link{forest_style}} takes one \code{\link[grid]{gpar}} for each part
+of the plot, and the text of the legend is set with \code{\link{set_labs}}.
+Themes created with \code{forest_theme} still work: give them to the
+\code{style} argument of \code{\link{forest}} or to
+\code{\link{set_style}}.
+\itemize{
+\item \code{base_size}, \code{base_family}, \code{ci_pch},
+\code{xlab_adjust}, \code{title_just}, \code{arrow_type},
+\code{arrow_length}, \code{arrow_label_just}, \code{legend_position},
+\code{legend_ncol}, \code{legend_byrow}: the same arguments of
+\code{forest_style}.
+\item \code{ci_col}, \code{ci_fill}, \code{ci_lty}, \code{ci_lwd},
+\code{ci_alpha}: \code{forest_style(ci = gpar(col, fill, lty, lwd, alpha))}.
+\item \code{ci_Theight}: \code{forest_style(ci_t_height)}.
+\item \code{summary_col}, \code{summary_fill}:
+\code{forest_style(summary = gpar(col, fill))}.
+\item \code{vertline_lwd}, \code{vertline_lty}, \code{vertline_col}:
+\code{forest_style(vline = gpar(lwd, lty, col))}.
+\item \code{refline_gp}: \code{forest_style(ref_line)}.
+\item \code{xaxis_gp}, \code{xlab_gp}, \code{title_gp},
+\code{footnote_gp}, \code{arrow_gp}, \code{legend_gp}: the arguments of
+\code{forest_style} without \code{_gp}, e.g.
+\code{forest_style(title = gpar(col = "red"))}.
+\item \code{footnote_parse}: \code{forest_style(parse)}, which also
+applies to the title, x-axis labels, arrow labels and legend labels.
+\item \code{legend_name}, \code{legend_value}: \code{legend_title} and
+\code{legend_labels} of \code{\link{set_labs}}.
+\item The fill of \code{core} and \code{colhead}, e.g.
+\code{core = list(bg_params = list(fill = "white"))}:
+\code{forest_style(body = gpar(fill = "white"))} and
+\code{forest_style(header = gpar(fill = "white"))}.
+\item Other table settings in \code{...}: passed to \code{...} of
+\code{forest_style} in the same way.
+}
+}
+
 \seealso{
 \code{\link[gridExtra]{tableGrob}} \code{\link{forest}} \code{\link[grid]{textGrob}}
 \code{\link[grid]{gpar}} \code{\link[grid]{arrow}} \code{\link[grid]{segmentsGrob}}

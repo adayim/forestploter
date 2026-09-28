@@ -30,7 +30,7 @@ make_boxplot(
 \item{lowhinge}{Lower hinge, a standard whisker will be drawn if this
 is missing.}
 
-\item{uphinge}{Ppper hinge, a standard whisker will be drawn if this
+\item{uphinge}{Upper hinge, a standard whisker will be drawn if this
 is missing.}
 
 \item{hinge_height}{Height of the hinge, default is 0.2.}
@@ -38,8 +38,13 @@ is missing.}
 \item{pch}{Numeric or character vector indicating what sort of plotting
 symbol to use. See \code{\link[grid]{pointsGrob}}.}
 
-\item{sizes}{Size of the point estimation box, can be a unit, vector or a list.
-Values will be used as it is, no transformation will be applied.}
+\item{sizes}{Size of the point estimation box, can be a vector or a list.
+The value is a multiple of one line of text, so \code{1} draws a point as tall
+as the \code{base_size} of the theme. The same scale applies to the summary
+diamond. Values are used as they are, unless \code{\link{scale_sizes}} is
+used to read them as study weights; useful values are roughly between
+\code{0.2} and \code{1.5}, and a warning is given when the plot is drawn if
+they are outside \code{0.1} to \code{2}.}
 
 \item{gp}{Graphical parameters of \code{\link[grid]{gpar}}. Please refer
 to \code{\link{forest_theme}} for more details.}
@@ -95,7 +100,7 @@ p <- forest(dat[,c(1, 7)],
             hinge_height = 0.2,
             index_args = c("lowhinge", "uphinge"),
             gp_box = gpar(fill = "black", alpha = 0.4),
-            theme = tm
+            style = tm
 )
 p
 
@@ -121,7 +126,7 @@ p <- forest(dat,
             uphinge = list(dat_oj$q3, dat_vc$q3),
             hinge_height = 0.2,
             index_args = c("lowhinge", "uphinge"),
-            theme = tm
+            style = tm
 )
 
 p

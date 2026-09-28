@@ -14,32 +14,27 @@ make_xlim(
 )
 }
 \arguments{
-\item{xlim}{Limits for the x axis as a vector of length 2, i.e. c(low, high). It
-will take the minimum and maximum of the lower and upper value if not provided.
-This will apply to all CI columns if provided, and will be calculated automatically
-for each column if not provided. This should be a list with the same length of
-\code{ci_column} if different \code{xlim} for different column is desired.}
+\item{xlim}{Limits for the x-axis as a vector of length 2, i.e.
+\code{c(low, high)}. By default the minimum and maximum of the lower and
+upper values are used.}
 
 \item{lower}{Lower bound of the confidence interval, same as \code{est}.}
 
 \item{upper}{Upper bound of the confidence interval, same as \code{est}.}
 
-\item{ref_line}{X-axis coordinates of zero line, default is 1. Provide an atomic
-vector if different reference line for each \code{ci_column} is desired.}
+\item{ref_line}{X-axis coordinates of the reference line, the value of no
+effect. If \code{NULL} (default), it is 1 if the x-axis is on a log scale
+(see \code{\link{set_xaxis}}) and 0 otherwise. Provide an atomic vector if
+different reference line for each \code{ci_column} is desired.}
 
-\item{ticks_at}{Set X-axis tick-marks point. This will apply to all CI columns if
-provided, and will be calculated automatically for each column if not provided.
-This should be a list if different \code{ticks_at} for different column is desired.
-Although many efforts have been made to automatically get a pretty ticks break,
-it will not give a perfect solution, especially if \code{'log2'} and \code{'log10'}
-defined for \code{x_trans}. Please provide this value if possible.}
+\item{ticks_at}{Tick mark positions. By default, ticks are computed
+automatically: \code{\link[base]{pretty}} for linear axes and a decade-aware
+helper for log scales (e.g. \code{0.1, 1, 10, 100} for a wide log10 range).}
 
-\item{x_trans}{Change axis scale, Allowed values are one of c("none", "log", "log2",
-"log10"). Default is \code{"none"}, no transformation will be applied.
-The formatted label will be used for \code{scale  = "log2"} or \code{"log10"}, change
-this in \code{x_trans}. Set this to \code{"log"} if x-axis tick marks assume values
-are exponential, e.g. for logistic regression (OR), survival estimates (HR), Poisson
-regression etc.}
+\item{x_trans}{Scale of the axis, one of \code{"none"} (default),
+\code{"log"}, \code{"log2"} or \code{"log10"}. Use \code{"log"} if the
+values are exponential, e.g. odds ratios or hazard ratios. The default
+reference line of \code{\link{forest}} is 1 for log scales and 0 otherwise.}
 }
 \value{
 A list

@@ -1,3 +1,4 @@
+library(grid)
 # Read provided sample example data
 dt <- read.csv(system.file("extdata", "example_data.csv", package = "forestploter"))
 
@@ -23,12 +24,12 @@ dt$`HR (95% CI)` <- ifelse(is.na(dt$se), "",
                              sprintf("%.2f (%.2f to %.2f)",
                                      dt$est, dt$low, dt$hi))
 
-# Define theme
-tm <- forest_theme(base_size = 10,
-                   refline_col = "red",
-                   footnote_col = "#636363",
-                   footnote_fontface = "italic")
+# Define a style
+st <- forest_style(base_size = 10,
+                   ref_line = gpar(col = "red"),
+                   footnote = gpar(col = "#636363", fontface = "italic"))
 
+# Draw the plot and add the axis and labels with a pipe
 p <- forest(dt[,c(1:3, 8:9)],
             est = dt$est,
             lower = dt$low,
@@ -36,11 +37,11 @@ p <- forest(dt[,c(1:3, 8:9)],
             sizes = dt$se,
             ci_column = 4,
             ref_line = 1,
-            arrow_lab = c("Placebo Better", "Treatment Better"),
-            xlim = c(0, 4),
-            ticks_at = c(0.5, 1, 2, 3),
-            footnote = "This is the demo data. Please feel free to change\nanything you want.",
-            theme = tm)
+            style = st) |>
+  set_xaxis(xlim = c(0, 4), ticks_at = c(0.5, 1, 2, 3)) |>
+  set_labs(arrow = c("Placebo Better", "Treatment Better"),
+           footnote = "This is the demo data. Please feel free to change\nanything you want.")
 
 # Print plot
 plot(p)
+

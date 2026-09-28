@@ -32,6 +32,13 @@ test_that("check_errors works", {
 
   expect_error(forest(dt[,c(1:3, 20:21)],
                       est = dt$est,
+                      lower = dt$low,
+                      upper = dt$hi,
+                      ci_column = 99),
+               "ci_column must be within seq_len\\(ncol\\(data\\)\\).")
+
+  expect_error(forest(dt[,c(1:3, 20:21)],
+                      est = dt$est,
                       lower = dt$low[-1],
                       upper = dt$hi,
                       ci_column = 3),
@@ -43,7 +50,7 @@ test_that("check_errors works", {
                       upper = dt$hi,
                       is_summary = rep(F, nrow(dt)-1),
                       ci_column = 3),
-               "is_summary should have same legnth as data rownumber")
+               "is_summary should have the same length as the number of rows in data")
 
   expect_error(forest(dt[,c(1:3, 20:21)],
                       est = dt$est,
@@ -78,6 +85,15 @@ test_that("check_errors works", {
                       xlab = c("OR", "HR"),
                       ci_column = 3),
                "xlab must be of length 1 or the same length as ci_column.")
+
+  # 3 series over 2 CI columns: neither 1 nor 2 groups, previously the extra
+  # series was silently dropped
+  expect_error(forest(dt[,c(1:3, 20:21)],
+                      est = list(dt$est, dt$est_gp1, dt$est_gp2),
+                      lower = list(dt$low, dt$low_gp1, dt$low_gp2),
+                      upper = list(dt$hi, dt$hi_gp1, dt$hi_gp2),
+                      ci_column = c(3, 5)),
+               "Length of est should be a multiple of the length of ci_column.")
 
 
 })

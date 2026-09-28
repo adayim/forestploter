@@ -22,7 +22,7 @@ knitr::opts_chunk$set(
 [![Codecov test coverage](https://codecov.io/gh/adayim/forestploter/branch/main/graph/badge.svg)](https://app.codecov.io/gh/adayim/forestploter?branch=main)
 <!-- badges: end -->
 
-The goal of `forestploter` is to create a publication-ready forest plot with little effort. This package provide some extra displays compared to other packages. The dataset will be used as a basic layout for the forest plot. Width of the column to draw the confidence interval can be controlled with the string length of the column. Can use space to control this. The elements in the plot are put in the row and columns, think the plot as a table.
+The goal of `forestploter` is to create publication-ready forest plots with minimal effort. This package offers more flexibility and customization options compared to other packages. The layout of the forest plot is determined by the provided dataset, and its elements are organized in a grid-like structure of rows and columns, much like a table. This design allows for easy manipulation of any plot component. For instance, the width of the confidence interval column can be controlled by adjusting the number of spaces in a blank character column.
 
 ## Installation
 
@@ -39,9 +39,16 @@ install.packages("forestploter")
 devtools::install_github("adayim/forestploter")
 ```
 
-## Basic usage
+## Basic Usage
 
-The column names of the provided data will be used as the header. This is a basic example which shows you how to create a `forestplot`:
+The column names of the provided data will be used as the header of the plot. `forest()` draws the table and the confidence intervals. The rest is added with the pipe `|>`:
+
+* `set_xaxis()` sets the limits, tick marks and scale of the x-axis, and adds vertical lines.
+* `set_labs()` sets the title, x-axis labels, footnote, arrow labels and legend labels.
+* `scale_sizes()` scales the point sizes by study weights.
+* `forest_style()` and `set_style()` set the graphical parameters.
+
+This is a basic example that demonstrates how to create a `forestplot`:
 
 ```{r example, dpi=300, fig.width  = 12, fig.height = 5.8, out.height = '40%'}
 library(grid)
@@ -49,8 +56,8 @@ library(forestploter)
 
 dt <- read.csv(system.file("extdata", "example_data.csv", package = "forestploter"))
 
-# indent the subgroup if there is a number in the placebo column
-dt$Subgroup <- ifelse(is.na(dt$Placebo), 
+# Indent the subgroup if there is a number in the placebo column
+dt$Subgroup <- ifelse(is.na(dt$Placebo),
                       dt$Subgroup,
                       paste0("   ", dt$Subgroup))
 
@@ -59,8 +66,8 @@ dt$Treatment <- ifelse(is.na(dt$Treatment), "", dt$Treatment)
 dt$Placebo <- ifelse(is.na(dt$Placebo), "", dt$Placebo)
 dt$se <- (log(dt$hi) - log(dt$est))/1.96
 
-# Add blank column for the forest plot to display CI.
-# Adjust the column width with space. 
+# Add a blank column for the forest plot to display CI.
+# Adjust the column width with space.
 dt$` ` <- paste(rep(" ", 20), collapse = " ")
 
 # Create confidence interval column to display
@@ -68,91 +75,79 @@ dt$`HR (95% CI)` <- ifelse(is.na(dt$se), "",
                              sprintf("%.2f (%.2f to %.2f)",
                                      dt$est, dt$low, dt$hi))
 
-# Define theme
-tm <- forest_theme(base_size = 10,
-                   refline_col = "red",
+# Define a style, it can be reused for other plots
+st <- forest_style(base_size = 10,
                    arrow_type = "closed",
-                   footnote_col = "blue")
+                   footnote = gpar(col = "blue", cex = 0.6))
 
 p <- forest(dt[,c(1:3, 20:21)],
             est = dt$est,
-            lower = dt$low, 
+            lower = dt$low,
             upper = dt$hi,
             sizes = dt$se,
             ci_column = 4,
             ref_line = 1,
-            arrow_lab = c("Placebo Better", "Treatment Better"),
-            xlim = c(0, 4),
-            ticks_at = c(0.5, 1, 2, 3),
-            footnote = "This is the demo data. Please feel free to change\nanything you want.",
-            theme = tm)
+            style = st) |>
+  set_xaxis(xlim = c(0, 4), ticks_at = c(0.5, 1, 2, 3)) |>
+  set_labs(arrow = c("Placebo Better", "Treatment Better"),
+           footnote = "This is the demo data. Please feel free to change\nanything you want.")
 
 # Print plot
 plot(p)
 
 ```
 
-## Editing plot
-Sometimes one may want to change the color or font face of some columns. Or one may want to insert text into certain rows. Or may want an underline to separate by group. The function `edit_plot`, `add_text`, `insert_text` and `add_border` can achieve these. Below is how to do this:
+The plot is a `gtable`, so it can be saved with `ggplot2::ggsave()` and combined with other plots, for example with `patchwork::wrap_elements()`. Set `fit` in `forest_style()` to let the plot fill the space it is given. The arguments of `forest()` used before version 1.2.0, such as `xlim` or `footnote`, and themes created with `forest_theme()` still work. The old arguments give a message pointing to `set_xaxis()` or `set_labs()`, and `?forest_theme` shows how the theme settings map onto `forest_style()`.
+
+## Editing the Plot
+
+You may want to change the color or font of certain columns, insert text into specific rows, or add an underline to separate groups. The `edit_plot`, `add_text`, `insert_text`, and `add_border` functions are designed for these purposes. They can be chained with the pipe as well, after `set_xaxis()`, `set_labs()`, `scale_sizes()` and `set_style()`, which build the plot again:
 
 ```{r edit, dpi=300, fig.width  = 12, fig.height = 6.3, out.height = '40%'}
-# Edit text in row 3
-g <- edit_plot(p, row = 3, gp = gpar(col = "red", fontface = "italic"))
+g <- p |>
+  # Edit text in row 3
+  edit_plot(row = 3, gp = gpar(col = "red", fontface = "italic")) |>
+  # Bold grouping text
+  edit_plot(row = c(2, 5, 8, 11, 15, 18),
+            gp = gpar(fontface = "bold")) |>
+  # Insert text at the top
+  insert_text(text = "Treatment group",
+              col = 2:3,
+              part = "header",
+              gp = gpar(fontface = "bold")) |>
+  # Add underline at the bottom of the header
+  add_border(part = "header", row = 1, where = "top") |>
+  add_border(part = "header", row = 2, where = "bottom") |>
+  add_border(part = "header", row = 1, col = 2:3,
+             gp = gpar(lwd = 2)) |>
+  # Edit the background of row 5
+  edit_plot(row = 5, which = "background",
+            gp = gpar(fill = "darkolivegreen1")) |>
+  # Insert text
+  insert_text(text = "This is a long text. Age and gender summarised above.\nBMI is next",
+              row = 10,
+              just = "left",
+              gp = gpar(cex = 0.6, col = "green", fontface = "italic")) |>
+  add_border(row = 10, col = 1:3, where = "top")
 
-# Bold grouping text
-g <- edit_plot(g,
-               row = c(2, 5, 8, 11, 15, 18),
-               gp = gpar(fontface = "bold"))
-
-# Insert text at top
-g <- insert_text(g,
-                 text = "Treatment group",
-                 col = 2:3,
-                 part = "header",
-                 gp = gpar(fontface = "bold"))
-
-# Add underline at the bottom of the header
-g <- add_border(g, part = "header", row = 1, where = "top")
-g <- add_border(g, part = "header", row = 2, where = "bottom")
-g <- add_border(g, part = "header", row = 1, col = 2:3, 
-                gp = gpar(lwd = 2))
-
-# Edit background of row 5
-g <- edit_plot(g, row = 5, which = "background",
-               gp = gpar(fill = "darkolivegreen1"))
-
-# Insert text
-g <- insert_text(g,
-                 text = "This is a long text. Age and gender summarised above.\nBMI is next",
-                 row = 10,
-                 just = "left",
-                 gp = gpar(cex = 0.6, col = "green", fontface = "italic"))
-g <- add_border(g, row = 10, col = 1:3, where = "top")
 plot(g)
 
 ```
 
-Remember to add 1 to the row number if you have inserted any text before. The row number will be changed after inserting a text.
+Remember to add 1 to the row number if you have inserted any text before, as the row number will change after inserting text.
 
-## Complex usage
+## Complex Usage
 
-If you want to draw CI to multiple columns, only need to provide a vector of the position of the columns to be drawn in the data. As seen in the example below, the CI will be drawn in the column 3 and 5. The first and second `est`, `lower` and `upper` will be drawn in column 3 and column 5. 
+If you want to draw CIs in multiple columns, you only need to provide a vector of the column positions in the data. As shown in the example below, the CIs will be drawn in columns 3 and 5, with the first and second `est`, `lower`, and `upper` values corresponding to those columns.
 
-For a more complex example, you may want to draw CI by groups. The solution is simple, just provide another set of `est`, `lower` and `upper`. If the number of provided `est`, `lower` and `upper` are larger than the column number to draw CI, then the `est`, `lower` and `upper` will be reused. As it is shown in the example below, `est_gp1` and `est_gp2` will be drawn in column 3 and column 5 as normal. But `est_gp3` and `est_gp4` hasn't been used, those will be drawn to column 3 and column 5 again. So, the `est_gp1` and `est_gp2` will be considered as group 1, `est_gp3` and `est_gp4` group 2.
+For more complex scenarios, such as drawing CIs by groups, you can provide an additional set of `est`, `lower`, and `upper` values. If the number of `est`, `lower`, and `upper` sets is greater than the number of CI columns, the values will be reused. In the example below, `est_gp1` and `est_gp2` are drawn in columns 3 and 5 as **group 1**, while `est_gp3` and `est_gp4` are drawn in the same columns as **group 2**.
 
 This is an example of multiple CI columns and groups:
 
 ```{r multiple,  dpi=300, fig.width  = 12, fig.height = 7.3, out.height = '80%'}
 
-# Add blank column for the second CI column
+# Add a blank column for the second CI column
 dt$`   ` <- paste(rep(" ", 20), collapse = " ")
-
-# Set-up theme
-tm <- forest_theme(base_size = 10,
-                   refline_col = "red",
-                   footnote_col = "blue",
-                   legend_name = "GP",
-                   legend_value = c("Trt 1", "Trt 2"))
 
 p <- forest(dt[,c(1:2, 20, 3, 22)],
             est = list(dt$est_gp1,
@@ -162,21 +157,22 @@ p <- forest(dt[,c(1:2, 20, 3, 22)],
             lower = list(dt$low_gp1,
                          dt$low_gp2,
                          dt$low_gp3,
-                         dt$low_gp4), 
+                         dt$low_gp4),
             upper = list(dt$hi_gp1,
                          dt$hi_gp2,
                          dt$hi_gp3,
                          dt$hi_gp4),
             ci_column = c(3, 5),
             ref_line = 1,
-            arrow_lab = c("Placebo Better", "Treatment Better"),
             nudge_y = 0.2,
-            x_trans = "log",
-            theme = tm)
+            style = forest_style(base_size = 10,
+                                 footnote = gpar(col = "blue"))) |>
+  set_xaxis(x_trans = "log") |>
+  set_labs(arrow = c("Placebo Better", "Treatment Better"),
+           legend_title = "GP",
+           legend_labels = c("Trt 1", "Trt 2"))
 
 plot(p)
 
 
 ```
-
-

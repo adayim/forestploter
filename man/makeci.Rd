@@ -30,24 +30,30 @@ and considered as different groups.}
 \item{pch}{Numeric or character vector indicating what sort of plotting
 symbol to use. See \code{\link[grid]{pointsGrob}}.}
 
-\item{sizes}{Size of the point estimation box, can be a unit, vector or a list.
-Values will be used as it is, no transformation will be applied.}
+\item{sizes}{Size of the point estimation box, can be a vector or a list.
+The value is a multiple of one line of text, so \code{1} draws a point as tall
+as the \code{base_size} of the theme. The same scale applies to the summary
+diamond. Values are used as they are, unless \code{\link{scale_sizes}} is
+used to read them as study weights; useful values are roughly between
+\code{0.2} and \code{1.5}, and a warning is given when the plot is drawn if
+they are outside \code{0.1} to \code{2}.}
 
 \item{gp}{Graphical parameters of \code{\link[grid]{gpar}}. Please refer
 to \code{\link{forest_theme}} for more details.}
 
-\item{t_height}{The height confidence interval line end vertices. If
-value is \code{NULL} (default), no vertices will be drawn.}
+\item{t_height}{The height of the confidence interval line end vertices.
+If the value is \code{NULL} (default), no vertices will be drawn.}
 
-\item{xlim}{Limits for the x axis as a vector of length 2, i.e. c(low, high). It
-will take the minimum and maximum of the lower and upper value if not provided.
-This will apply to all CI columns if provided, and will be calculated automatically
-for each column if not provided. This should be a list with the same length of
-\code{ci_column} if different \code{xlim} for different column is desired.}
+\item{xlim}{Limits for the x-axis as a vector of length 2, i.e.
+\code{c(low, high)}. By default the minimum and maximum of the lower and
+upper values are used.}
 
-\item{nudge_y}{Horizontal adjustment to nudge groups by, must be within 0 to 1.}
+\item{nudge_y}{Vertical adjustment to nudge groups by, must be within 0 to 1.
+Defaults to \code{0}; for grouped forest plots a value of \code{0} is bumped
+to \code{0.1} automatically so that group CIs do not overplot. Set explicitly
+to override.}
 
-\item{name}{name of the grob.}
+\item{name}{Name of the grob.}
 }
 \value{
 A gTree object

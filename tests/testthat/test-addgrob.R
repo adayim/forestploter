@@ -28,6 +28,9 @@ test_that("Add grob", {
                      arrow_label_just = "end",
                      arrow_type = "closed")
 
+  expect_equal(tm$tab_theme$core$bg_params$fill,
+               tm$tab_theme$core$bg_params$col)
+
   p <- forest(dt_fig,
               est = dt$est,
               lower = dt$lb,
@@ -40,12 +43,12 @@ test_that("Add grob", {
               arrow_lab = c("Favours caffeine","Favours decaf"),
               xlim = c(0.05, 100),
               ticks_at = c(0.1, 1, 10, 100),
-              theme = tm)
+              style = tm)
 
   g <- add_grob(p,
                 row = 1:c(nrow(dt_fig) - 1),
                 col = 9:14,
-                order = "backgroud",
+                order = "background",
                 gb_fn = roundrectGrob,
                 r = unit(0.05, "snpc"),
                 gp = gpar(lty = "dotted",
@@ -80,6 +83,13 @@ test_that("Add grob", {
   wh <- get_wh(g)
   expect_equal(unname(wh), c(10.43, 3.64),
                tolerance = 0.01)
+
+  # Body grobs without an explicit row should error rather than silently
+  # producing numeric(0)/Inf indices.
+  expect_error(add_grob(p,
+                        col = 9:14,
+                        gb_fn = roundrectGrob),
+               "Row must be defined")
 
 })
 

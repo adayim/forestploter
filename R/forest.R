@@ -1,8 +1,31 @@
 
 #' Forest plot
 #'
+#' @description
+#'
 #' A data frame will be used for the basic layout of the forest plot.
-#' Graphical parameters can be set using the \code{\link{forest_theme}} function.
+#' Graphical parameters can be set using the \code{\link{forest_style}}
+#' function.
+#'
+#' \code{forest} draws the table and the confidence intervals. The other parts
+#' of the plot are added with functions that take the plot as their first
+#' argument, so they can be chained with the pipe \code{|>}:
+#'
+#' \itemize{
+#'   \item \code{\link{set_xaxis}} Limits, tick marks and scale of the x-axis,
+#'   and vertical lines
+#'   \item \code{\link{set_labs}} Title, x-axis labels, footnote, arrow labels
+#'   and legend labels
+#'   \item \code{\link{scale_sizes}} Point sizes scaled by study weights
+#'   \item \code{\link{set_style}} Graphical parameters
+#' }
+#'
+#' These functions build the plot again, so they must be used before the plot
+#' is edited with \code{\link{edit_plot}}, \code{\link{add_text}},
+#' \code{\link{insert_text}}, \code{\link{add_border}} or
+#' \code{\link{add_grob}}. The plot stays a \code{\link[gtable]{gtable}} at
+#' every step, and can be combined with other plots, e.g. with
+#' \code{patchwork::wrap_elements}.
 #'
 #' @param data Data to be displayed in the forest plot
 #' @param est Point estimation. Can be a list for multiple columns
@@ -11,49 +34,26 @@
 #' and considered as different groups.
 #' @param lower Lower bound of the confidence interval, same as \code{est}.
 #' @param upper Upper bound of the confidence interval, same as \code{est}.
-#' @param sizes Size of the point estimation box, can be a unit, vector or a list.
-#' Values will be used as it is, no transformation will be applied.
-#' @param ref_line X-axis coordinates of zero line, default is 1. Provide an atomic
-#'  vector if different reference line for each \code{ci_column} is desired.
-#' @param vert_line Numerical vector, add additional vertical line at given value.
-#' Provide a list of numerical vector element if different vertical line for each
-#'  \code{ci_column} is desired.
+#' @param sizes Size of the point estimation box, can be a vector or a list.
+#' The value is a multiple of one line of text, so \code{1} draws a point as tall
+#' as the \code{base_size} of the theme. The same scale applies to the summary
+#' diamond. Values are used as they are, unless \code{\link{scale_sizes}} is
+#' used to read them as study weights; useful values are roughly between
+#' \code{0.2} and \code{1.5}, and a warning is given when the plot is drawn if
+#' they are outside \code{0.1} to \code{2}.
+#' @param ref_line X-axis coordinates of the reference line, the value of no
+#' effect. If \code{NULL} (default), it is 1 if the x-axis is on a log scale
+#' (see \code{\link{set_xaxis}}) and 0 otherwise. Provide an atomic vector if
+#' different reference line for each \code{ci_column} is desired.
 #' @param ci_column Column number of the data the CI will be displayed.
 #' @param is_summary A logical vector indicating if the value is a summary value,
-#' which will have a diamond shape for the estimate. Can not be used with multiple
-#' group `forestplot`.
-#' @param xlim Limits for the x axis as a vector of length 2, i.e. c(low, high). It
-#' will take the minimum and maximum of the lower and upper value if not provided.
-#' This will apply to all CI columns if provided, and will be calculated automatically
-#' for each column if not provided. This should be a list with the same length of
-#' \code{ci_column} if different \code{xlim} for different column is desired.
-#' @param ticks_at Set X-axis tick-marks point. This will apply to all CI columns if
-#' provided, and will be calculated automatically for each column if not provided.
-#' This should be a list if different \code{ticks_at} for different column is desired.
-#' Although many efforts have been made to automatically get a pretty ticks break,
-#' it will not give a perfect solution, especially if \code{'log2'} and \code{'log10'}
-#' defined for \code{x_trans}. Please provide this value if possible.
-#' @param ticks_digits Number of digits for the x-axis, default is \code{1L}. This
-#' should be a numerical vector if different rounding will be applied to different
-#' column. If an integer is specified, for example \code{1L}, trailing zeros after
-#' the decimal mark will be dropped. Specify numeric, for example \code{1}, to keep
-#' the trailing zero after the decimal mark.
-#' @param arrow_lab Labels for the arrows, string vector of length two (left and
-#' right). The theme of arrow will inherit from the x-axis. This should be a list
-#' if different arrow labels for each column is desired.
-#' @param x_trans Change axis scale, Allowed values are one of c("none", "log", "log2",
-#' "log10"). Default is \code{"none"}, no transformation will be applied.
-#' The formatted label will be used for \code{scale  = "log2"} or \code{"log10"}, change
-#' this in \code{x_trans}. Set this to \code{"log"} if x-axis tick marks assume values
-#'  are exponential, e.g. for logistic regression (OR), survival estimates (HR), Poisson
-#'  regression etc.
-#' @param xlab X-axis labels, it will be put under the x-axis. An atomic vector should
-#' be provided if different \code{xlab} for different column is desired.
-#' @param footnote Footnote for the forest plot, will be aligned at left bottom
-#' of the plot. Please adjust the line length with line break to avoid the overlap
-#' with the arrow and/or x-axis.
-#' @param title The text for the title.
-#' @param nudge_y Horizontal adjustment to nudge groups by, must be within 0 to 1.
+#' which will have a diamond shape for the estimate. With multiple groups the
+#' diamonds are stacked in the same cell and the summary rows are made taller to
+#' fit them, so a larger \code{nudge_y} may be wanted.
+#' @param nudge_y Vertical adjustment to nudge groups by, must be within 0 to 1.
+#' Defaults to \code{0}; for grouped forest plots a value of \code{0} is bumped
+#' to \code{0.1} automatically so that group CIs do not overplot. Set explicitly
+#' to override.
 #' @param fn_ci Name of the function to draw confidence interval, default is
 #' \code{\link{makeci}}. You can specify your own drawing function to draw the
 #' confidence interval, but the function needs to accept arguments \code{
@@ -67,17 +67,32 @@
 #' Please refer to the \code{\link{make_summary}} function for the details of
 #'  these parameters.
 #' @param index_args A character vector, name of the arguments used for indexing
-#'  the row and coloumn. This should be the name of the arguments that is working
+#'  the row and column. This should be the name of the arguments that is working
 #' the same way as \code{est}, \code{lower} and \code{upper}. Check out the
 #' examples in the \code{\link{make_boxplot}}.
-#' @param theme Theme of the forest plot, see \code{\link{forest_theme}} for
-#' details.
-#' @param ... Other arguments passed on to the \code{fn_ci} and \code{fn_summary}.
+#' @param style Style of the forest plot created with
+#' \code{\link{forest_style}}. A theme created with the superseded
+#' \code{\link{forest_theme}} is also accepted. The style can also be set or
+#' changed later with \code{\link{set_style}}.
+#' @param ... Other arguments passed on to the \code{fn_ci} and
+#' \code{fn_summary}, or named in \code{index_args}. An argument none of them
+#' takes gives an error, as it would not be used.
+#' The arguments of earlier versions are also accepted here, with a message the
+#' first time each of them is used in a session: use \code{\link{set_xaxis}}
+#' instead of \code{xlim}, \code{ticks_at}, \code{ticks_digits},
+#' \code{ticks_minor}, \code{x_trans} and \code{vert_line},
+#' \code{\link{set_labs}} instead of \code{arrow_lab}, \code{xlab},
+#' \code{title} and \code{footnote}, and \code{style} instead of \code{theme}.
+#'
+#' @importFrom stats na.omit
+#' @importFrom utils relist
 #'
 #'
-#' @return A \code{\link[gtable]{gtable}} object.
+#' @return A forest plot object, a \code{\link[gtable]{gtable}} of class
+#' \code{forestplot}.
 #' @seealso \code{\link[gtable]{gtable}} \code{\link[gridExtra]{tableGrob}}
-#'  \code{\link{forest_theme}} \code{\link{make_boxplot}}
+#'  \code{\link{forest_style}} \code{\link{set_xaxis}} \code{\link{set_labs}}
+#'  \code{\link{scale_sizes}} \code{\link{set_style}} \code{\link{make_boxplot}}
 #' \code{\link{makeci}}  \code{\link{make_summary}}
 #' @example inst/examples/forestplot-example.R
 #' @export
@@ -89,528 +104,125 @@ forest <- function(data,
                    lower,
                    upper,
                    sizes = 0.4,
-                   ref_line = ifelse(x_trans %in% c("log", "log2", "log10"), 1, 0),
-                   vert_line = NULL,
+                   ref_line = NULL,
                    ci_column,
                    is_summary = NULL,
-                   xlim = NULL,
-                   ticks_at = NULL,
-                   ticks_digits = 1L,
-                   arrow_lab = NULL,
-                   x_trans = "none",
-                   xlab = NULL,
-                   footnote = NULL,
-                   title = NULL,
                    nudge_y = 0,
                    fn_ci = makeci,
                    fn_summary = make_summary,
                    index_args = NULL,
-                   theme = NULL,
+                   style = NULL,
                    ...){
 
   dot_args <- list(...)
+  dot_names <- names(dot_args)
+  if(is.null(dot_names))
+    dot_names <- rep("", length(dot_args))
+
+  # Arguments of earlier versions are still accepted, and taken out of `...` so
+  # that they do not reach `fn_ci` and `fn_summary`
+  old_args <- dot_args[dot_names %in% names(superseded_args)]
+  dot_args <- dot_args[!dot_names %in% names(superseded_args)]
+  signal_superseded(names(old_args))
+
+  if("theme" %in% names(old_args)){
+    if(!is.null(style))
+      stop("Give the style of the plot to `style`, not to both `style` and `theme`.")
+    style <- old_args[["theme"]]
+  }
 
   # Check arguments
   args_ci <- names(formals(fn_ci))
   if(!all(c("est", "lower", "upper", "sizes", "xlim", "pch", "gp", "t_height", "nudge_y") %in% args_ci))
-    stop("arguments \"est\", \"lower\", \"upper\", \"sizes\", \"xlim\", \"pch\", \"gp\", \"t_height\" and \"nudge_y\" must be provided in the function `fn_ci`.")
+    stop("`fn_ci` must accept arguments \"est\", \"lower\", \"upper\", \"sizes\", \"xlim\", \"pch\", \"gp\", \"t_height\", and \"nudge_y\".")
 
   args_summary <- names(formals(fn_summary))
   if(any(unlist(is_summary))){
-    if(!all(c("est", "lower", "upper", "sizes", "xlim", "gp") %in% args_summary))
-    stop("arguments \"est\", \"lower\", \"upper\", \"sizes\", \"xlim\",and \"gp\" must be provided in the function `fn_summary`.")
+    if(!all(c("est", "lower", "upper", "sizes", "xlim", "gp", "nudge_y") %in% args_summary))
+    stop("`fn_summary` must accept arguments \"est\", \"lower\", \"upper\", \"sizes\", \"xlim\", \"gp\", and \"nudge_y\".")
+  }
+
+  # Anything else in `...` is only used if `fn_ci`, `fn_summary` or
+  # `index_args` take it, so a misspelt argument is reported instead of being
+  # dropped silently
+  if(length(dot_args) > 0 && !"..." %in% c(args_ci, args_summary)){
+    unknown <- setdiff(names(dot_args), c(args_ci, args_summary, index_args, ""))
+    if(length(unknown) > 0)
+      stop("Unknown arguments: ", paste0("`", unknown, "`", collapse = ", "),
+           ". They are not used by `fn_ci`, `fn_summary` or `index_args`, see ?forest.")
   }
 
   check_errors(data = data, est = est, lower = lower, upper = upper, sizes = sizes,
-               ref_line = ref_line, vert_line = vert_line, ci_column = ci_column,
-               is_summary = is_summary, xlim = xlim, ticks_at = ticks_at,
-               ticks_digits = ticks_digits, arrow_lab = arrow_lab, xlab = xlab,
-               title = title, x_trans = x_trans)
+               ref_line = ref_line, ci_column = ci_column, is_summary = is_summary)
 
-  # Set theme
-  if(is.null(theme)){
-    theme <- forest_theme()
+  # Values that can differ between CI columns are kept with one element per CI
+  # column, `NULL` meaning not set
+  n_col <- length(ci_column)
+
+  # A style of `forest_style()` is kept apart from a theme of `forest_theme()`
+  theme <- NULL
+  if(!inherits(style, "forest_style")){
+    theme <- style
+    style <- NULL
   }
 
-  # For multiple ci_column
-  if(length(ref_line) == 1)
-    ref_line <- rep(ref_line, length(ci_column))
-
-  if(!is.null(vert_line) && !inherits(vert_line, "list"))
-    vert_line <- rep(list(vert_line), length(ci_column))
-
-  if(length(x_trans) == 1)
-    x_trans <- rep(x_trans, length(ci_column))
-
-  if(!is.null(xlim) && !inherits(xlim, "list"))
-    xlim <- rep(list(xlim), length(ci_column))
-
-  if(!is.null(ticks_at) && !inherits(ticks_at, "list"))
-    ticks_at <- rep(list(ticks_at), length(ci_column))
-
-  # ticks digits to accommodate ticks_at
-  if(length(ticks_digits) == 1 & !is.list(ticks_digits)){
-    if(ticks_digits == 1L & !is.null(ticks_at)){
-      if(is.list(ticks_at))
-        ticks_digits <- sapply(ticks_at, function(x){
-          max(nchar(gsub(".*\\.|^[^.]+$", "", as.character(x))))
-        })
-      else
-        ticks_digits <- max(nchar(gsub(".*\\.|^[^.]+$", "", as.character(ticks_digits))))
-    }
-  }
-
-
-  if(length(ci_column) != length(ticks_digits))
-    ticks_digits <- rep(ticks_digits, length(ci_column))
-
-  if(!is.null(arrow_lab) && !inherits(arrow_lab, "list"))
-    arrow_lab <- rep(list(arrow_lab), length(ci_column))
-
-  if(length(xlab) == 1)
-    xlab <- rep(xlab, length(ci_column))
-
-    # Replicate sizes
-  if(inherits(est, "list") & length(sizes) == 1)
-    sizes <- rapply(est, function(x) ifelse(is.na(x), NA, sizes), how = "replace")
-
-  if(is.atomic(est)){
-    est <- list(est)
-    lower <- list(lower)
-    upper <- list(upper)
-    if(length(sizes) == 1)
-      sizes <- rep(sizes, nrow(data))
-    sizes <- list(sizes)
-  }
-
-  # Check index_var
-  if(!is.null(index_args)){
-    for(ind_v in index_args){
-      if(!is.list(dot_args[[ind_v]]))
-        dot_args[[ind_v]] <- list(dot_args[[ind_v]])
-
-      est_len <- vapply(est, length, FUN.VALUE = 1L)
-      arg_len <- vapply(dot_args[[ind_v]], length, FUN.VALUE = 1L)
-      if(length(dot_args[[ind_v]]) != length(est) || length(unique(c(est_len, arg_len))) != 1)
-        stop("index_args should have the same length as est.")
-    }
-  }
-
-  # Calculate group number
-  group_num <- length(est)/length(ci_column)
-  ci_col_list <- rep(ci_column, group_num)
-
-  theme <- make_group_theme(theme = theme, group_num = group_num)
-
-  # Get color and pch
-  color_list <- rep(theme$ci$col, each = length(ci_column))
-  fill_list <- rep(theme$ci$fill, each = length(ci_column))
-  alpha_list <- rep(theme$ci$alpha, each = length(ci_column))
-  pch_list <- rep(theme$ci$pch, each = length(ci_column))
-  lty_list <- rep(theme$ci$lty, each = length(ci_column))
-  lwd_list <- rep(theme$ci$lwd, each = length(ci_column))
-
-  # Check nudge_y
-  if(nudge_y >= 1 || nudge_y < 0)
-    stop("`nudge_y` must be within 0 to 1.")
-
-  # Check nudge_y
-  if(group_num > 1 & nudge_y == 0)
-    nudge_y <- 0.1
-
-  # Create nudge_y vector
-  if(group_num > 1){
-    if((group_num %% 2) == 0){
-      rep_tm <- cumsum(c(nudge_y/2, rep(nudge_y, group_num)))
-      nudge_y <- c(rep_tm[1:(group_num/2)], -rep_tm[1:(group_num/2)])
-    }else{
-      rep_tm <- cumsum(c(0, rep(nudge_y, group_num %/% 2)))
-      nudge_y <- unique(c(rep_tm, - rep_tm))
-    }
-
-    nudge_y <- sort(nudge_y, decreasing = TRUE)
-
-  }
-
-  nudge_y <- rep(nudge_y, each = length(ci_column))
-
-
-  if(group_num > 1 || is.null(is_summary)){
-    if(!is.null(is_summary))
-      warning("Summary CI is not supported for multiple groups and will be ignored.")
-    is_summary <- rep(FALSE, nrow(data))
-  }
-
-  # Transform sizes if not unique and transformation is required.
-  # if(length(unique(stats::na.omit(unlist(sizes)))) != 1 & sizes_trans & group_num == 1){
-  #   # Get the maximum reciprocal of size
-  #   max_sizes <- sapply(sizes, function(x){
-  #     x <- sqrt(x)
-  #     max(x[!is_summary], na.rm = TRUE)
-  #   }, USE.NAMES = FALSE)
-  #
-  #   sizes <- lapply(sizes, function(x){
-  #     wi <- sqrt(x)
-  #     wi <- wi/max(max_sizes, na.rm = TRUE)
-  #     wi[is_summary] <- 1/length(max_sizes)
-  #     return(wi)
-  #   })
-  # }
-
-  # Positions of values in ci_column
-  gp_list <- rep_len(1:(length(lower)/group_num), length(lower))
-
-  # Check exponential
-  if(any(x_trans %in% c("log", "log2", "log10"))){
-    for(i in seq_along(x_trans)){
-      if(x_trans[i] %in% c("log", "log2", "log10")){
-        sel_num <- gp_list == i
-        checks_ill <- c(any(unlist(est[sel_num]) <= 0, na.rm = TRUE),
-              any(unlist(lower[sel_num]) <= 0, na.rm = TRUE),
-              any(unlist(upper[sel_num]) <= 0, na.rm = TRUE),
-              (any(ref_line[i] <= 0)),
-              (!is.null(vert_line) && any(unlist(vert_line[[i]]) <= 0, na.rm = TRUE)),
-              (!is.null(xlim) && any(unlist(xlim[[i]]) < 0)))
-        zeros <- c("est", "lower", "upper", "ref_line", "vert_line", "xlim")
-        if (any(checks_ill)) {
-          message("found values equal or less than 0 in ", zeros[checks_ill])
-          stop("est, lower, upper, ref_line, vert_line and xlim should be larger than 0, if `x_trans` in \"log\", \"log2\", \"log10\".")
-        }
-      }
-    }
-  }
-
-  # Set xlim to minimum and maximum value of the CI
-  xlim <- lapply(seq_along(ci_column), function(i){
-    sel_num <- gp_list == i
-    make_xlim(xlim = xlim[[i]],
-              lower = lower[sel_num],
-              upper = upper[sel_num],
-              ref_line = ref_line[i],
-              ticks_at = ticks_at[[i]],
-              x_trans = x_trans[i])
-  })
-
-  # Set X-axis breaks if missing
-  ticks_at <- lapply(seq_along(xlim), function(i){
-    make_ticks(at = ticks_at[[i]],
-               xlim = xlim[[i]],
-               refline = ref_line[i],
-               x_trans = x_trans[i])
-  })
-
-  # Calculate heights
-  col_height <- apply(data, 1, function(x){
-                        max(convertHeight(stringHeight(x), "mm", valueOnly = TRUE))
-                      })
-  col_height <- unit(col_height, "mm")
-
-  # Add increase heights for multiple groups
-  if(group_num > 1){
-    heights <- group_num*0.7*col_height + theme$tab_theme$core$padding[2]
-    # Convert data to plot
-    gt <- tableGrob(data,
-                    theme = theme$tab_theme,
-                    heights = heights,
-                    rows = NULL)
-  }else{
-    gt <- tableGrob(data,
-                    theme = theme$tab_theme,
-                    rows = NULL)
-  }
-
-  # Do not clip text
-  gt$layout$clip <- "off"
-
-  # Column index
-  col_indx <- rep_len(1:length(ci_column), length(ci_col_list))
-
-  # Draw CI
-  for(col_num in seq_along(ci_col_list)){
-
-    # Get current CI column and group number
-    current_col <- ci_col_list[col_num]
-    current_gp <- sum(col_indx[1:col_num] == col_indx[col_num])
-
-    # Convert value is exponentiated
-    col_trans <- x_trans[col_indx[col_num]]
-    if(col_trans != "none"){
-      est[[col_num]] <- xscale(est[[col_num]], col_trans)
-      lower[[col_num]] <- xscale(lower[[col_num]], col_trans)
-      upper[[col_num]] <- xscale(upper[[col_num]], col_trans)
-
-      # Transform other indexing arguments
-      if(!is.null(index_args)){
-        for(ind_v in index_args){
-          if(any(unlist(dot_args[[ind_v]][[col_num]]) <= 0, na.rm = TRUE) & col_trans %in% c("log", "log2", "log10"))
-            stop(ind_v, " should be larger than 0, if `x_trans` in \"log\", \"log2\", \"log10\".")
-          dot_args[[ind_v]][[col_num]] <- xscale(dot_args[[ind_v]][[col_num]], col_trans)
-        }
-      }
-    }
-
-    for(i in 1:nrow(data)){
-      if(is.na(est[[col_num]][i]))
-        next
-
-      if(is.na(lower[[col_num]][i]) || is.na(upper[[col_num]][i])){
-        warning("Missing lower and/or upper limit on column", current_col, " row ", i)
-        next
-      }
-
-      dot_pass <- dot_args
-      if(!is.null(index_args)){
-        for(ind_v in index_args){
-          dot_pass[[ind_v]] <- dot_pass[[ind_v]][[col_num]][i]
-        }
-      }
-
-      if(is_summary[i]){
-        # Update graphical parameters
-        g_par <- theme$summary
-        if ("gp" %in% names(dot_pass)) {
-          g_par <- modifyList(list(dot_pass$gp), g_par)
-          dot_pass$gp <- NULL
-        }
-
-        dot_pass <- dot_pass[names(dot_pass) %in% args_summary]
-
-        draw_ci <- do.call(fn_summary, c(
-          list(est = est[[col_num]][i],
-               lower = lower[[col_num]][i],
-               upper = upper[[col_num]][i],
-               sizes = sizes[[col_num]][i],
-               xlim = xlim[[col_indx[col_num]]],
-               gp = g_par),
-          dot_pass
-        ))
-
-      }else {
-        # Update graphical parameters
-        g_par <- gpar(lty = lty_list[col_num],
-                      lwd = lwd_list[col_num],
-                      col = color_list[col_num],
-                      fill = fill_list[col_num],
-                      alpha = alpha_list[col_num])
-
-        if ("gp" %in% names(dot_pass)) {
-          g_par <- modifyList(dot_pass$gp, g_par)
-          dot_pass$gp <- NULL
-        }
-
-        dot_pass <- dot_pass[names(dot_pass) %in% args_ci]
-
-        draw_ci <- do.call(fn_ci, c(
-          list(est = est[[col_num]][i],
-               lower = lower[[col_num]][i],
-               upper = upper[[col_num]][i],
-               sizes = sizes[[col_num]][i],
-               xlim = xlim[[col_indx[col_num]]],
-               pch = pch_list[col_num],
-               gp = g_par,
-               t_height = theme$ci$t_height,
-               nudge_y = nudge_y[col_num]),
-          dot_pass
-        ))
-      }
-
-      # Skip if CI is outside xlim
-      if(upper[[col_num]][i] < min(xlim[[col_indx[col_num]]]) | lower[[col_num]][i] > max(xlim[[col_indx[col_num]]])){
-        message("The confidence interval of row ", i, ", column ", current_col, ", group ", current_gp,
-                " is outside of the xlim.")
-        next
-      }
-
-
-      gt <- gtable_add_grob(gt, draw_ci,
-                            t = i + 1,
-                            l = current_col,
-                            b = i + 1,
-                            r = current_col,
-                            clip = "off",
-                            name = paste0("ci-", i, "-", current_col, "-", current_gp))
-    }
-  }
-
-  tot_row <- nrow(gt)
-
-  # Prepare X axis
-  x_axis <- lapply(seq_along(xlim), function(i){
-    make_xaxis(at = ticks_at[[i]],
-               gp = theme$xaxis,
-               ticks_digits = ticks_digits[[i]],
-               x0 = ref_line[i],
-               xlim = xlim[[i]],
-               xlab = xlab[i],
-               x_trans = x_trans[i])
-  })
-
-  x_axht <- sapply(x_axis, function(x){
-    ht <- Reduce(`+`, lapply(x$children, grobHeight))
-    convertHeight(ht, unitTo = "mm", valueOnly = TRUE)
-  })
-
-  gt <- gtable_add_rows(gt, heights = unit(max(x_axht), "mm") + unit(.8, "lines"))
-
-  # Prepare arrow object and row to put it
-  if(!is.null(arrow_lab)){
-    arrow_grob <- lapply(seq_along(xlim), function(i){
-      make_arrow(x0 = ref_line[i],
-                 arrow_lab = arrow_lab[[i]],
-                 arrow_gp = theme$arrow,
-                 x_trans = x_trans[i],
-                 col_width = convertWidth(gt$widths[ci_column[i]], "char", valueOnly = TRUE),
-                 xlim = xlim[[i]])
-    })
-
-    lb_ht <- sapply(arrow_grob, function(x){
-      ht <- Reduce(`+`, lapply(x$children, heightDetails))
-      convertHeight(ht, unitTo = "mm", valueOnly = TRUE)
-    })
-
-    gt <- gtable_add_rows(gt, heights = unit(max(lb_ht), "mm"))
-
-  }
-
-  # Add footnote
-  if(!is.null(footnote)){
-    footnote_grob <- textGrob(label = footnote,
-                              gp = theme$footnote,
-                              x = 0,
-                              y = .8,
-                              just = "left",
-                              check.overlap = TRUE,
-                              name = "footnote")
-
-    gt <- gtable_add_grob(gt,
-                          footnote_grob,
-                          t = tot_row + 1,
-                          l = 1,
-                          b = nrow(gt), r = min(ci_column),
-                          clip = "off",
-                          name = "footnote")
-  }
-
-  for(j in ci_column){
-    idx <- which(ci_column == j)
-    # Add reference line
-    gt <- gtable_add_grob(gt,
-                          vert_line(x = ref_line[idx],
-                                    gp = theme$refline,
-                                    xlim = xlim[[idx]],
-                                    x_trans = x_trans[idx]),
-                          t = 2,
-                          l = j,
-                          b = tot_row, r = j,
-                          clip = "off",
-                          name = paste0("ref.line-", j))
-
-    # Add the X-axis
-    gt <- gtable_add_grob(gt, x_axis[[idx]],
-                          t = tot_row + 1,
-                          l = j,
-                          b = tot_row + 1, r = j,
-                          clip = "off",
-                          name = paste0("xaxis-", j))
-
-    # Add vertical line
-    if(!is.null(vert_line))
-      gt <- gtable_add_grob(gt,
-                            vert_line(x = vert_line[[idx]],
-                                      gp = theme$vertline,
-                                      xlim = xlim[[idx]],
-                                      x_trans = x_trans[idx]),
-                            t = 2,
-                            l = j,
-                            b = tot_row, r = j,
-                            clip = "off",
-                            name = paste0("vert.line-", j))
-
-    # Add arrow
-    if(!is.null(arrow_lab))
-      gt <- gtable_add_grob(gt, arrow_grob[[idx]],
-                            t = nrow(gt), l = j,
-                            b = nrow(gt), r = j,
-                            clip = "off",
-                            name = paste0("arrow-", j))
-
-  }
-
-  # Add legend
-  if(group_num > 1 & theme$legend$position != "none"){
-
-    by_row <- !theme$legend$position %in% c("top", "bottom")
-
-    legend <- theme$legend
-    legend$pch <- theme$ci$pch
-    legend$gp$col <- theme$ci$col
-    legend$gp$lty <- theme$ci$lty
-    legend$gp$fill <- theme$ci$fill
-
-
-    leg_grob <- do.call(legend_grob, legend)
-
-    if(by_row){
-      gt <- gtable_add_cols(gt, widths = max(grobWidth(leg_grob$children)) + unit(.5, "lines"))
-      gt <- gtable_add_grob(gt, leg_grob,
-                            t = 2, l = ncol(gt),
-                            b = nrow(gt)-1, r = ncol(gt),
-                            clip = "off",
-                            name = "legend")
-    }else{
-      add_pos <- ifelse(legend$position == "top", 0, -1)
-      gt <- gtable_add_rows(gt, heights = max(grobHeight(leg_grob$children)) + unit(.5, "lines"), pos = add_pos)
-      gt <- gtable_add_grob(gt, leg_grob,
-                            t = if(add_pos == 0) 1 else nrow(gt), l = 1,
-                            b = if(add_pos == 0) 1 else nrow(gt), r = ncol(gt),
-                            clip = "off",
-                            name = "legend")
-    }
-  }
-
-  if(!is.null(title)){
-    max_height <- max(convertHeight(stringHeight(title), "mm", valueOnly = TRUE))
-    gt <- gtable_add_rows(gt, unit(max_height, "mm") + unit(2, "mm"), pos = 0)
-    title_x <- switch(theme$title$just,
-                      right = unit(1, "npc"),
-                      left  = unit(0, "npc"),
-                      center = unit(.5, "npc"))
-    title_gb <- textGrob(label = title,
-                         gp = theme$title$gp,
-                         x = title_x,
-                         just = theme$title$just,
-                         check.overlap = TRUE,
-                         name = "plot.title")
-
-    gt <- gtable_add_grob(gt, title_gb,
-                          t = 1,
-                          b = 1,
-                          l = 1,
-                          r = ncol(gt),
-                          clip = "off",
-                          name = "plot.title")
-  }
-
-  # Add padding
-  gt <- gtable_add_padding(gt, unit(5, "mm"))
-
-  # Auto fit the page
-  # gt$widths <- unit(rep(1/ncol(gt), ncol(gt)), "npc")
-  # gt$heights <- unit(rep(1/nrow(gt), nrow(gt)), "npc")
-
-  class(gt) <- union("forestplot", class(gt))
-
-  return(gt)
+  # The recipe holds everything the plot is built from. An unset reference line
+  # stays unset, so that it follows the scale set with `set_xaxis()`.
+  recipe <- list(
+    data = data,
+    est = est,
+    lower = lower,
+    upper = upper,
+    sizes = sizes,
+    size_scale = NULL,
+    ref_line = ref_line,
+    ci_column = ci_column,
+    is_summary = is_summary,
+    ci = list(nudge_y = nudge_y,
+              fn_ci = fn_ci,
+              fn_summary = fn_summary,
+              index_args = index_args,
+              dots = dot_args),
+    xaxis = list(xlim = vector("list", n_col),
+                 ticks_at = vector("list", n_col),
+                 ticks_minor = vector("list", n_col),
+                 ticks_digits = vector("list", n_col),
+                 x_trans = rep("none", n_col),
+                 vline = vector("list", n_col)),
+    labs = list(title = NULL,
+                xlab = vector("list", n_col),
+                footnote = NULL,
+                arrow = vector("list", n_col)),
+    legend = list(),
+    theme = theme,
+    style = style,
+    seen = character()
+  )
+  class(recipe) <- "forest_recipe"
+
+  # The arguments of earlier versions go through the same checks as
+  # `set_xaxis()` and `set_labs()`
+  names(old_args)[names(old_args) == "vert_line"] <- "vline"
+  names(old_args)[names(old_args) == "arrow_lab"] <- "arrow"
+  recipe <- update_xaxis(recipe, old_args[names(old_args) %in% c("xlim", "ticks_at",
+                                                                "ticks_digits", "ticks_minor",
+                                                                "x_trans", "vline")])
+  recipe <- update_labs(recipe, old_args[names(old_args) %in% c("title", "xlab",
+                                                               "footnote", "arrow")])
+
+  build_plot(recipe)
 
 }
-
 
 #' Draw plot
 #'
 #' Print or draw forestplot.
 #'
 #' @param x forestplot to display
-#' @param autofit If true, the plot will be autofit.
+#' @param autofit If true, the page is shared equally between the columns and
+#' between the rows of the plot. This will be deprecated, use \code{fit} of
+#' \code{\link{forest_style}} instead, which also works with
+#' \code{ggplot2::ggsave} and \code{patchwork}.
 #' @param ... other arguments not used by this method
 #' @return Invisibly returns the original forestplot.
 #' @rdname print.forestplot
@@ -619,9 +231,15 @@ forest <- function(data,
 print.forestplot <- function(x, autofit = FALSE, ...){
 
   if(autofit){
-    # Auto fit the page
+    if(!exists("autofit", envir = superseded_seen, inherits = FALSE)){
+      message("autofit will be deprecated, use fit of forest_style() instead.")
+      assign("autofit", TRUE, envir = superseded_seen)
+    }
+
+    # Auto fit the page, in place of the `fit` of the style
     x$widths <- unit(rep(1/ncol(x), ncol(x)), "npc")
     x$heights <- unit(rep(1/nrow(x), nrow(x)), "npc")
+    attr(x, "forest_fit") <- "none"
   }
 
   grid.newpage()
@@ -634,3 +252,302 @@ print.forestplot <- function(x, autofit = FALSE, ...){
 #' @rdname print.forestplot
 #' @export
 plot.forestplot <- print.forestplot
+
+# The plot takes the space it is drawn in when the `fit` of its style asks for
+# it. This is done when the plot is drawn, as only then the space is known,
+# which covers printing, `ggsave()` and patchwork alike. The plot itself keeps
+# its natural size.
+#' @export
+makeContext.forestplot <- function(x){
+  fit <- attr(x, "forest_fit", exact = TRUE)
+  if(is.null(fit))
+    fit <- get_recipe(x)$style[["fit"]]
+
+  if(!is.null(fit) && fit != "none")
+    x <- fit_layout(x, fit)
+
+  NextMethod()
+}
+
+# Share the free space between the CI columns in proportion to their natural
+# width, and with `fit = "both"` the free height between the rows of the table.
+# CI columns become narrower when space is short, down to one line of text;
+# other columns and rows keep their size. The columns and rows are found from
+# the layout, so that edited plots fit as well.
+fit_layout <- function(x, fit){
+
+  l <- x$layout
+  ci_col <- sort(unique(l$l[grepl("^xaxis-", l$name)]))
+  if(length(ci_col) == 0)
+    return(x)
+
+  nat_w <- convertWidth(x$widths, "mm", valueOnly = TRUE)
+  free_w <- convertWidth(unit(1, "npc"), "mm", valueOnly = TRUE) - sum(nat_w)
+  min_w <- convertWidth(unit(1, "lines"), "mm", valueOnly = TRUE)
+  ci_w <- nat_w[ci_col] + free_w * nat_w[ci_col] / sum(nat_w[ci_col])
+  x$widths[ci_col] <- unit(pmax(ci_w, min_w), "mm")
+
+  # Arrows are laid out again for the width of their column, and tick labels
+  # that would overlap in a narrow column are left out
+  for(i in which(grepl("^arrow-", l$name))){
+    arrow_args <- x$grobs[[i]]$arrow_args
+    if(is.null(arrow_args))
+      next
+    arrow_args$col_width <- convertWidth(x$widths[l$l[i]], "char", valueOnly = TRUE)
+    x$grobs[[i]] <- do.call(make_arrow, arrow_args)
+  }
+
+  for(i in which(grepl("^xaxis-", l$name)))
+    x$grobs[[i]] <- editGrob(x$grobs[[i]], "label", check.overlap = TRUE)
+
+  if(fit == "both"){
+    # The rows between the header and the x-axis, rows inserted included
+    body <- seq(max(l$b[grepl("^colhead-", l$name)]) + 1,
+                min(l$t[grepl("^xaxis-", l$name)]) - 1)
+    nat_h <- convertHeight(x$heights, "mm", valueOnly = TRUE)
+    free_h <- convertHeight(unit(1, "npc"), "mm", valueOnly = TRUE) - sum(nat_h)
+    if(free_h > 0)
+      x$heights[body] <- unit(nat_h[body] + free_h / length(body), "mm")
+  }
+
+  x
+}
+
+# Warnings held back while the plot was built are given when it is first drawn,
+# which covers printing, `grid.draw()`, `ggsave()` and patchwork alike.
+#' @export
+makeContent.forestplot <- function(x){
+  state <- get_recipe(x)$state
+
+  if(is.environment(state) && !isTRUE(state$warned) && length(state$warnings) > 0){
+    state$warned <- TRUE
+    for(msg in state$warnings)
+      warning(msg, call. = FALSE)
+  }
+
+  NextMethod()
+}
+
+
+# A forest plot is a built gtable that carries the inputs it was built from
+# (the recipe) in `attr(plot, "forest_recipe")`. `set_xaxis()`, `set_labs()`,
+# `scale_sizes()` and `set_style()` change the recipe and build the plot again,
+# so they have to be used before the gtable is edited.
+
+# Build a plot from its recipe and attach the recipe to it.
+#
+# Messages and warnings already given by the previous build of the same plot
+# are not repeated, so a chain of functions shows each of them once.
+build_plot <- function(recipe){
+
+  recipe$state <- new.env(parent = emptyenv())
+
+  shown <- character()
+  muffle <- function(cond, restart){
+    msg <- conditionMessage(cond)
+    shown <<- c(shown, msg)
+    if(msg %in% recipe$seen)
+      invokeRestart(restart)
+  }
+
+  plot <- withCallingHandlers(
+    draw_forest(recipe),
+    message = function(m) muffle(m, "muffleMessage"),
+    warning = function(w) muffle(w, "muffleWarning")
+  )
+  recipe$seen <- shown
+
+  set_recipe(plot, recipe)
+}
+
+# Recipe of a plot that is going to be built again
+recipe_to_update <- function(plot, fn){
+
+  if(!inherits(plot, "forestplot"))
+    stop("plot must be a forestplot object.")
+
+  recipe <- get_recipe(plot)
+
+  if(is.null(recipe))
+    stop("`", fn, "()` needs a plot created by `forest()` of forestploter ",
+         "1.2.0 or later, please create the plot again.")
+
+  if(isTRUE(recipe$edited) || !identical(recipe$sig, plot_sig(plot)))
+    stop("`", fn, "()` builds the plot again, so it must be used before the ",
+         "plot is edited, e.g. with `edit_plot()`, `add_text()`, ",
+         "`insert_text()`, `add_border()`, `add_grob()` or gtable functions. ",
+         "Create the plot again with `forest()` to change this.")
+
+  recipe
+}
+
+# The table is the slowest part of a build, so the last one is kept and reused
+# while the data and the table theme stay the same. It is kept here rather than
+# in the recipe, so that saved plots do not carry a second copy of it.
+table_cache <- new.env(parent = emptyenv())
+
+cached_table <- function(data, tab_theme){
+  if(!is.null(table_cache$table) &&
+     identical(table_cache$data, data) &&
+     identical(table_cache$tab_theme, tab_theme))
+    return(table_cache$table)
+
+  table <- tableGrob(data, theme = tab_theme, rows = NULL)
+
+  table_cache$table <- table
+  table_cache$data <- data
+  table_cache$tab_theme <- tab_theme
+  table_cache$n_built <- if(is.null(table_cache$n_built)) 1 else table_cache$n_built + 1
+
+  table
+}
+
+# Get the recipe of a plot, `NULL` if it has none
+get_recipe <- function(plot){
+  attr(plot, "forest_recipe", exact = TRUE)
+}
+
+# Attach a recipe to a plot, together with a fingerprint of the plot as it is
+set_recipe <- function(plot, recipe){
+  recipe$sig <- plot_sig(plot)
+  attr(plot, "forest_recipe") <- recipe
+  plot
+}
+
+# Mark a plot as edited by the editing functions, as the plot cannot be built
+# again without losing the edits
+mark_edited <- function(plot){
+  recipe <- get_recipe(plot)
+  if(!is.null(recipe)){
+    recipe$edited <- TRUE
+    attr(plot, "forest_recipe") <- recipe
+  }
+  plot
+}
+
+# Fingerprint of a plot, used to tell whether the gtable has been changed
+# since it was built. Units and grobs are kept as text, as the units of the
+# table hold the grobs they are measured from.
+plot_sig <- function(plot){
+  list(layout = plot$layout,
+       widths = as.character(plot$widths),
+       heights = as.character(plot$heights),
+       grobs = vapply(plot$grobs, function(x) paste(class(x)[1], x$name),
+                      FUN.VALUE = character(1)))
+}
+
+# Arguments of `forest()` that moved to the pipe functions, with the function
+# that replaces them
+superseded_args <- c(xlim = "set_xaxis()",
+                     ticks_at = "set_xaxis()",
+                     ticks_digits = "set_xaxis()",
+                     ticks_minor = "set_xaxis()",
+                     x_trans = "set_xaxis()",
+                     vert_line = "set_xaxis()",
+                     arrow_lab = "set_labs()",
+                     xlab = "set_labs()",
+                     title = "set_labs()",
+                     footnote = "set_labs()",
+                     theme = "style of forest()")
+
+# Arguments of `forest()` already reported in this session
+superseded_seen <- new.env(parent = emptyenv())
+
+# Give a message the first time a superseded argument of `forest()` is used in
+# a session, in the same form as the old arguments of `forest_theme()`
+signal_superseded <- function(args){
+  args <- setdiff(args, ls(superseded_seen))
+  if(length(args) == 0)
+    return(invisible())
+
+  for(fn in unique(superseded_args[args])){
+    message(paste(args[superseded_args[args] == fn], collapse = ", "),
+            " will be deprecated, use ", fn, " instead.")
+  }
+
+  for(arg in args)
+    assign(arg, TRUE, envir = superseded_seen)
+
+  invisible()
+}
+
+# Reference line used when none is given, 1 on a log scale and 0 otherwise
+default_ref_line <- function(x_trans){
+  ifelse(x_trans %in% c("log", "log2", "log10"), 1, 0)
+}
+
+# Keep a warning to give when the plot is first drawn
+defer_warning <- function(recipe, ...){
+  recipe$state$warnings <- c(recipe$state$warnings, paste0(...))
+}
+
+# Arguments given to the pipe function calling this, as a list. Arguments left
+# out are not in the list, so that they keep their current value, while a
+# `NULL` given is kept, as it goes back to the default.
+given_args <- function(env){
+  args <- setdiff(names(formals(sys.function(sys.parent()))), "plot")
+  given <- args[!vapply(args, function(x){
+    eval(call("missing", as.name(x)), env)
+  }, FUN.VALUE = logical(1))]
+
+  mget(given, envir = env)
+}
+
+# Check a setting against the values it can take, as `match.arg` does but with
+# the name of the setting in the message
+match_choice <- function(value, choices, name){
+  if(identical(value, choices))
+    return(choices[1])
+
+  ind <- if(is.character(value) && length(value) == 1) pmatch(value, choices) else NA_integer_
+  if(is.na(ind))
+    stop("`", name, "` must be one of ",
+         paste0("\"", choices, "\"", collapse = ", "), ".")
+
+  choices[ind]
+}
+
+# Whether `x` is a single missing value, used for a CI column left at its
+# default
+is_na <- function(x){
+  is.atomic(x) && length(x) == 1 && is.na(x)
+}
+
+# Spread a value over CI columns: an atomic value is used for every column and
+# a list is taken as one element per column. `NULL` and `NA` mean not set.
+by_column <- function(x, n_col){
+  if(is.null(x) || is_na(x))
+    return(vector("list", n_col))
+
+  if(!inherits(x, "list"))
+    return(rep(list(x), n_col))
+
+  lapply(x, function(val){
+    if(is.null(val) || is_na(val)) NULL else val
+  })
+}
+
+# One label for each CI column from a vector, `NULL` for a column without one
+labels_by_column <- function(x, n_col){
+  if(is.null(x) || is_na(x))
+    return(vector("list", n_col))
+
+  if(length(x) == 1)
+    x <- rep(x, n_col)
+
+  lapply(seq_len(n_col), function(i){
+    if(is_na(x[i])) NULL else x[i]
+  })
+}
+
+# Number of digits for each CI column from a vector or a list, keeping whether
+# each is an integer
+digits_by_column <- function(x, n_col){
+  if(is.null(x) || is_na(x))
+    return(vector("list", n_col))
+
+  x <- as.list(rep(x, length.out = n_col))
+  lapply(x, function(val){
+    if(is.null(val) || is_na(val)) NULL else val
+  })
+}

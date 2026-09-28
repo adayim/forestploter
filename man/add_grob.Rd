@@ -9,7 +9,7 @@ add_grob(
   row = NULL,
   col = NULL,
   part = c("body", "header"),
-  order = c("top", "text", "backgroud", "back"),
+  order = c("top", "text", "background", "bottom"),
   gb_fn,
   ...
 )
@@ -21,13 +21,13 @@ add_grob(
 
 \item{col}{A numeric value or vector indicating the columns to draw a grob.}
 
-\item{part}{The border will be added to \code{"body"} (default) or
+\item{part}{The grob will be added to \code{"body"} (default) or
 \code{"header"}.}
 
 \item{order}{Order in which the grobs should be plotted. Use \code{'top'}
 (default) to draw the grob above everything, \code{'text'} on the top of text
-given by plot data but below eveything else, \code{'backgroud'} plot on the
-top of backgroud but below everything else, \code{'back'} below everything.}
+given by plot data but below everything else, \code{'background'} plot on the
+top of background but below everything else, \code{'bottom'} below everything.}
 
 \item{gb_fn}{Grob function}
 

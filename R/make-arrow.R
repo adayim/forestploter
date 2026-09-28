@@ -2,6 +2,8 @@
 #' Make arrow
 #'  
 #' @inheritParams forest
+#' @inheritParams set_xaxis
+#' @param arrow_lab Labels for the arrows, a vector of length two.
 #' @param x0 Position of vertical line for 0 or 1.
 #' @param col_width Width of the column arrow to be fitted.
 #' @param arrow_gp Graphical parameters for arrow.
@@ -9,23 +11,29 @@
 #' @keywords internal
 make_arrow <- function(x0 = 1, arrow_lab, arrow_gp, col_width, xlim, x_trans = "none"){
 
+  # Kept with the arrows to lay them out again for another column width, see
+  # `fit_layout()`
+  arrow_args <- list(x0 = x0, arrow_lab = arrow_lab, arrow_gp = arrow_gp,
+                     xlim = xlim, x_trans = x_trans)
+
   if(x_trans != "none")
     x0 <- xscale(x0, scale = x_trans)
 
   gp <- arrow_gp$gp
 
-  # Calculate width of left and right width
-  left_col_w <- col_width * abs(x0 - xlim[1])/(abs(xlim[1]) + abs(xlim[2]))
-  right_col_w <- col_width * abs(xlim[2] - x0)/(abs(xlim[1]) + abs(xlim[2]))
+  # Calculate width of left and right column relative to x0
+  denom <- xlim[2] - xlim[1]
+  left_col_w <- col_width * (x0 - xlim[1]) / denom
+  right_col_w <- col_width * (xlim[2] - x0) / denom
 
-  txt_len <- sapply(arrow_lab, function(txt){
+  txt_len <- vapply(arrow_lab, function(txt){
     tx_gb <- textGrob(txt, gp = gp)
     convertWidth(grobWidth(tx_gb), "char", valueOnly = TRUE)
-  }, USE.NAMES = FALSE)
+  }, FUN.VALUE = numeric(1), USE.NAMES = FALSE)
 
 
   # Left side
-  if(arrow_gp$label_just == "start" | txt_len[1] > left_col_w){
+  if(arrow_gp$label_just == "start" || txt_len[1] > left_col_w){
     l_just <- "right"
     x_pos_l <- unit(x0, "native") - unit(0.05, "inches")
   }else{
@@ -34,7 +42,7 @@ make_arrow <- function(x0 = 1, arrow_lab, arrow_gp, col_width, xlim, x_trans = "
   }
 
   # Right side
-  if(arrow_gp$label_just == "start" | txt_len[2] > right_col_w){
+  if(arrow_gp$label_just == "start" || txt_len[2] > right_col_w){
     r_just <- "left"
     x_pos_r <- unit(x0, "native") + unit(0.05, "inches")
   }else{
@@ -90,8 +98,11 @@ make_arrow <- function(x0 = 1, arrow_lab, arrow_gp, col_width, xlim, x_trans = "
                                       type = arrow_gp$type),
                         name="arrow.right")
 
-  grobTree(gList(t_lft, s_lft, t_rgt, s_rgt),
-           vp = viewport(xscale = xlim),
-           name = "arrow")
+  arrow_gb <- grobTree(gList(t_lft, s_lft, t_rgt, s_rgt),
+                       vp = viewport(xscale = xlim),
+                       name = "arrow")
+  arrow_gb$arrow_args <- arrow_args
+
+  arrow_gb
 
 }
