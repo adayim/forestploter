@@ -90,6 +90,6 @@ add_border <- function(plot,
     }
   }
 
-  return(plot)
+  return(mark_edited(plot))
 
 }

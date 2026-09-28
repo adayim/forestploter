@@ -133,6 +133,9 @@ A list.
 Default theme for the forest plot. Other parameters can also be passed and
 will be forwarded to the corresponding elements of the forest plot.
 
+\code{forest_theme} is superseded by \code{\link{forest_style}}, see the
+section below for how its arguments map onto the new functions.
+
 \itemize{
 \item \code{ci_*} Control the graphical parameters of confidence intervals
 \item \code{legend_*} Control the graphical parameters of legend
@@ -147,6 +150,44 @@ will be forwarded to the corresponding elements of the forest plot.
 
 See \code{\link[grid]{gpar}} for more details.
 }
+\section{Moving to forest_style()}{
+
+\code{\link{forest_style}} takes one \code{\link[grid]{gpar}} for each part
+of the plot, and the text of the legend is set with \code{\link{set_labs}}.
+Themes created with \code{forest_theme} still work: give them to the
+\code{style} argument of \code{\link{forest}} or to
+\code{\link{set_style}}.
+\itemize{
+\item \code{base_size}, \code{base_family}, \code{ci_pch},
+\code{xlab_adjust}, \code{title_just}, \code{arrow_type},
+\code{arrow_length}, \code{arrow_label_just}, \code{legend_position},
+\code{legend_ncol}, \code{legend_byrow}: the same arguments of
+\code{forest_style}.
+\item \code{ci_col}, \code{ci_fill}, \code{ci_lty}, \code{ci_lwd},
+\code{ci_alpha}: \code{forest_style(ci = gpar(col, fill, lty, lwd, alpha))}.
+\item \code{ci_Theight}: \code{forest_style(ci_t_height)}.
+\item \code{summary_col}, \code{summary_fill}:
+\code{forest_style(summary = gpar(col, fill))}.
+\item \code{vertline_lwd}, \code{vertline_lty}, \code{vertline_col}:
+\code{forest_style(vline = gpar(lwd, lty, col))}.
+\item \code{refline_gp}: \code{forest_style(ref_line)}.
+\item \code{xaxis_gp}, \code{xlab_gp}, \code{title_gp},
+\code{footnote_gp}, \code{arrow_gp}, \code{legend_gp}: the arguments of
+\code{forest_style} without \code{_gp}, e.g.
+\code{forest_style(title = gpar(col = "red"))}.
+\item \code{footnote_parse}: \code{forest_style(parse)}, which also
+applies to the title, x-axis labels, arrow labels and legend labels.
+\item \code{legend_name}, \code{legend_value}: \code{legend_title} and
+\code{legend_labels} of \code{\link{set_labs}}.
+\item The fill of \code{core} and \code{colhead}, e.g.
+\code{core = list(bg_params = list(fill = "white"))}:
+\code{forest_style(body = gpar(fill = "white"))} and
+\code{forest_style(header = gpar(fill = "white"))}.
+\item Other table settings in \code{...}: passed to \code{...} of
+\code{forest_style} in the same way.
+}
+}
+
 \seealso{
 \code{\link[gridExtra]{tableGrob}} \code{\link{forest}} \code{\link[grid]{textGrob}}
 \code{\link[grid]{gpar}} \code{\link[grid]{arrow}} \code{\link[grid]{segmentsGrob}}

@@ -2,12 +2,19 @@
 #' Make arrow
 #'  
 #' @inheritParams forest
+#' @inheritParams set_xaxis
+#' @param arrow_lab Labels for the arrows, a vector of length two.
 #' @param x0 Position of vertical line for 0 or 1.
 #' @param col_width Width of the column arrow to be fitted.
 #' @param arrow_gp Graphical parameters for arrow.
 #'
 #' @keywords internal
 make_arrow <- function(x0 = 1, arrow_lab, arrow_gp, col_width, xlim, x_trans = "none"){
+
+  # Kept with the arrows to lay them out again for another column width, see
+  # `fit_layout()`
+  arrow_args <- list(x0 = x0, arrow_lab = arrow_lab, arrow_gp = arrow_gp,
+                     xlim = xlim, x_trans = x_trans)
 
   if(x_trans != "none")
     x0 <- xscale(x0, scale = x_trans)
@@ -91,8 +98,11 @@ make_arrow <- function(x0 = 1, arrow_lab, arrow_gp, col_width, xlim, x_trans = "
                                       type = arrow_gp$type),
                         name="arrow.right")
 
-  grobTree(gList(t_lft, s_lft, t_rgt, s_rgt),
-           vp = viewport(xscale = xlim),
-           name = "arrow")
+  arrow_gb <- grobTree(gList(t_lft, s_lft, t_rgt, s_rgt),
+                       vp = viewport(xscale = xlim),
+                       name = "arrow")
+  arrow_gb$arrow_args <- arrow_args
+
+  arrow_gb
 
 }

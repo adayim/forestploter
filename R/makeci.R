@@ -2,6 +2,7 @@
 #' Create confidence interval grob
 #'
 #' @inheritParams forest
+#' @inheritParams set_xaxis
 #' @param pch Numeric or character vector indicating what sort of plotting
 #' symbol to use. See \code{\link[grid]{pointsGrob}}.
 #' @param gp Graphical parameters of \code{\link[grid]{gpar}}. Please refer
@@ -137,6 +138,7 @@ makeci_static <- function(est, lower, upper, pch, size = 1, gp = gpar(),
 #' Create pooled summary diamond shape
 #'
 #' @inheritParams forest
+#' @inheritParams set_xaxis
 #' @param gp Graphical parameters of \code{\link[grid]{gpar}}.
 #'  Please refer to \code{\link{forest_theme}} for more details.
 #' 

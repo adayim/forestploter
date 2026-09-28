@@ -9,26 +9,20 @@ make_arrow(x0 = 1, arrow_lab, arrow_gp, col_width, xlim, x_trans = "none")
 \arguments{
 \item{x0}{Position of vertical line for 0 or 1.}
 
-\item{arrow_lab}{Labels for the arrows, string vector of length two (left and
-right). The theme of arrow will inherit from the x-axis. This should be a list
-if different arrow labels for each column is desired.}
+\item{arrow_lab}{Labels for the arrows, a vector of length two.}
 
 \item{arrow_gp}{Graphical parameters for arrow.}
 
 \item{col_width}{Width of the column arrow to be fitted.}
 
-\item{xlim}{Limits for the x axis as a vector of length 2, i.e. c(low, high). It
-will take the minimum and maximum of the lower and upper value if not provided.
-This will apply to all CI columns if provided, and will be calculated automatically
-for each column if not provided. This should be a list with the same length of
-\code{ci_column} if different \code{xlim} for different column is desired.}
+\item{xlim}{Limits for the x-axis as a vector of length 2, i.e.
+\code{c(low, high)}. By default the minimum and maximum of the lower and
+upper values are used.}
 
-\item{x_trans}{Change axis scale, Allowed values are one of c("none", "log", "log2",
-"log10"). Default is \code{"none"}, no transformation will be applied.
-The formatted label will be used for \code{scale  = "log2"} or \code{"log10"}, change
-this in \code{x_trans}. Set this to \code{"log"} if x-axis tick marks assume values
-are exponential, e.g. for logistic regression (OR), survival estimates (HR), Poisson
-regression etc.}
+\item{x_trans}{Scale of the axis, one of \code{"none"} (default),
+\code{"log"}, \code{"log2"} or \code{"log10"}. Use \code{"log"} if the
+values are exponential, e.g. odds ratios or hazard ratios. The default
+reference line of \code{\link{forest}} is 1 for log scales and 0 otherwise.}
 }
 \description{
 Make arrow

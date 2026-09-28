@@ -3,6 +3,8 @@
 #' This function used to x-axis for the forest plot.
 #'
 #' @inheritParams forest
+#' @inheritParams set_xaxis
+#' @param xlab X-axis label, see \code{\link{set_labs}}.
 #' @param at Numerical vector, create ticks at given values.
 #' @param at_minor Numerical vector, create ticks at given values without label.
 #' @param x0 Position of vertical line for 0 or 1.

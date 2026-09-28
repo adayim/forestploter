@@ -54,6 +54,7 @@ log_pretty <- function(range_orig, base = 10){
 #'
 #' @param at Numerical vector, create ticks at given values.
 #' @inheritParams forest
+#' @inheritParams set_xaxis
 #'
 #' @return A vector of tick coordinates in the transformed space.
 #'
@@ -96,6 +97,7 @@ make_ticks <- function(at = NULL,
 #' Create xlim based on value ranges.
 #'
 #' @inheritParams forest
+#' @inheritParams set_xaxis
 #'
 #' @return A list
 #'

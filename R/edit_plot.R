@@ -115,5 +115,5 @@ edit_cell <- function(plot, row, col, name="core-fg", ...){
     newgrob <- editGrob(plot$grobs[id][[1]], ...)
     plot$grobs[id][[1]] <- newgrob
   }
-  return(plot)
+  return(mark_edited(plot))
 }

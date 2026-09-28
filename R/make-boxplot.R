@@ -2,6 +2,7 @@
 #' Create horizontal boxplot grob
 #'
 #' @inheritParams forest
+#' @inheritParams set_xaxis
 #' @param est Median value.
 #' @param lower Lower whisker.
 #' @param upper Upper whisker.

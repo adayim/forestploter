@@ -152,6 +152,6 @@ insert_text <- function(plot,
 
   }
 
-  return(plot)
+  return(mark_edited(plot))
 
 }

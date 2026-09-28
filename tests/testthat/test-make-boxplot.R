@@ -32,7 +32,7 @@ test_that("Box plot single", {
               hinge_height = 0.2,
               index_args = c("lowhinge", "uphinge"),
               gp_box = gpar(fill = "black", alpha = 0.4),
-              theme = tm
+              style = tm
   )
 
   vdiffr::expect_doppelganger("boxplot-single", p)
@@ -64,7 +64,7 @@ test_that("Box plot with groups", {
               hinge_height = 0.2,
               nudge_y = 0.4,
               index_args = c("lowhinge", "uphinge"),
-              theme = tm
+              style = tm
   )
 
   vdiffr::expect_doppelganger("boxplot-groups", p)
@@ -106,7 +106,7 @@ test_that("Inside xlim box plot single", {
               hinge_height = 0.2,
               is_summary=c(rep(F, nrow(df)-1), T),
               index_args= c("lowhinge", "uphinge"),
-              theme=tm)
+              style=tm)
 
   vdiffr::expect_doppelganger("xlim-boxplot-single", p)
 

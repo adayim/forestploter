@@ -10,26 +10,14 @@ forest(
   lower,
   upper,
   sizes = 0.4,
-  size_method = c("none", "range", "proportional"),
-  size_range = c(0.2, 0.8),
-  ref_line = ifelse(x_trans \%in\% c("log", "log2", "log10"), 1, 0),
-  vert_line = NULL,
+  ref_line = NULL,
   ci_column,
   is_summary = NULL,
-  xlim = NULL,
-  ticks_at = NULL,
-  ticks_digits = NULL,
-  ticks_minor = NULL,
-  arrow_lab = NULL,
-  x_trans = "none",
-  xlab = NULL,
-  footnote = NULL,
-  title = NULL,
   nudge_y = 0,
   fn_ci = makeci,
   fn_summary = make_summary,
   index_args = NULL,
-  theme = NULL,
+  style = NULL,
   ...
 )
 }
@@ -48,36 +36,15 @@ and considered as different groups.}
 \item{sizes}{Size of the point estimation box, can be a vector or a list.
 The value is a multiple of one line of text, so \code{1} draws a point as tall
 as the \code{base_size} of the theme. The same scale applies to the summary
-diamond. Values are used as they are unless \code{size_method} is set; useful
-values are roughly between \code{0.2} and \code{1.5}, and a warning is given
-outside \code{0.1} to \code{2}.}
+diamond. Values are used as they are, unless \code{\link{scale_sizes}} is
+used to read them as study weights; useful values are roughly between
+\code{0.2} and \code{1.5}, and a warning is given when the plot is drawn if
+they are outside \code{0.1} to \code{2}.}
 
-\item{size_method}{How to turn \code{sizes} into point sizes. The default
-\code{"none"} uses the values as they are. Any other value reads \code{sizes}
-as study weights and takes their square root, so that the \emph{area} of the
-point is proportional to the weight, before mapping onto \code{size_range}.
-\code{"range"} puts the smallest weight on \code{size_range[1]} and the
-largest on \code{size_range[2]}, as \code{metafor::forest.rma} does with its
-\code{plim}. \code{"proportional"} keeps the areas proportional to the weights
-and only clamps the smallest points up, as \code{meta::forest.meta} does.
-Weights are scaled jointly across all groups and CI columns so that the areas
-stay comparable between them; scale by hand if per-column control is wanted.
-Rows flagged by \code{is_summary} are held out of the scaling and drawn at
-\code{size_range[2]}, since a pooled total is not comparable with a study
-weight. This follows \code{meta}, whose pooled rows carry no study weight and
-end up the size of the largest study square, and \code{metafor}, which sizes
-its summary polygon from \code{efac} rather than from the weights.}
-
-\item{size_range}{Numeric vector of length 2 giving the smallest and largest
-point size \code{size_method} may produce. Ignored if \code{size_method} is
-\code{"none"}.}
-
-\item{ref_line}{X-axis coordinates of zero line, default is 1. Provide an atomic
-vector if different reference line for each \code{ci_column} is desired.}
-
-\item{vert_line}{Numerical vector, add additional vertical line at given value.
-Provide a list of numerical vector element if different vertical line for each
-\code{ci_column} is desired.}
+\item{ref_line}{X-axis coordinates of the reference line, the value of no
+effect. If \code{NULL} (default), it is 1 if the x-axis is on a log scale
+(see \code{\link{set_xaxis}}) and 0 otherwise. Provide an atomic vector if
+different reference line for each \code{ci_column} is desired.}
 
 \item{ci_column}{Column number of the data the CI will be displayed.}
 
@@ -85,50 +52,6 @@ Provide a list of numerical vector element if different vertical line for each
 which will have a diamond shape for the estimate. With multiple groups the
 diamonds are stacked in the same cell and the summary rows are made taller to
 fit them, so a larger \code{nudge_y} may be wanted.}
-
-\item{xlim}{Limits for the x axis as a vector of length 2, i.e. c(low, high). It
-will take the minimum and maximum of the lower and upper value if not provided.
-This will apply to all CI columns if provided, and will be calculated automatically
-for each column if not provided. This should be a list with the same length of
-\code{ci_column} if different \code{xlim} for different column is desired.}
-
-\item{ticks_at}{Set X-axis tick-mark positions. Applies to all CI columns if
-a single vector is provided, or supply a list of vectors for column-specific
-ticks. When omitted, ticks are computed automatically: \code{\link[base]{pretty}}
-for linear axes and a decade-aware log-pretty helper for \code{x_trans} in
-\code{"log"}, \code{"log2"}, or \code{"log10"} (e.g. \code{0.1, 1, 10, 100}
-for a wide log10 range). The auto-tick output is rarely a perfect substitute
-for a hand-chosen set, so supply this argument when you need exact control.}
-
-\item{ticks_digits}{Number of digits for the x-axis, default is \code{NULL} to calculate
-an integer based on \code{ticks_at} if provided or \code{lower} and \code{upper} if not.
-This should be a numerical vector if different rounding will be applied to different
-column. If an integer is specified, for example \code{1L}, trailing zeros after
-the decimal mark will be dropped. Specify numeric, for example  \code{1}, to keep
-the trailing zero after the decimal mark.}
-
-\item{ticks_minor}{A numeric vector of positions to draw ticks without labels (optional).
-The values provided here can be superset or disjoint sets of \code{ticks_at}.}
-
-\item{arrow_lab}{Labels for the arrows, string vector of length two (left and
-right). The theme of arrow will inherit from the x-axis. This should be a list
-if different arrow labels for each column is desired.}
-
-\item{x_trans}{Change axis scale, Allowed values are one of c("none", "log", "log2",
-"log10"). Default is \code{"none"}, no transformation will be applied.
-The formatted label will be used for \code{scale  = "log2"} or \code{"log10"}, change
-this in \code{x_trans}. Set this to \code{"log"} if x-axis tick marks assume values
-are exponential, e.g. for logistic regression (OR), survival estimates (HR), Poisson
-regression etc.}
-
-\item{xlab}{X-axis labels, it will be put under the x-axis. An atomic vector should
-be provided if different \code{xlab} for different column is desired.}
-
-\item{footnote}{Footnote for the forest plot, will be aligned at left bottom
-of the plot. Please adjust the line length with line break to avoid the overlap
-with the arrow and/or x-axis.}
-
-\item{title}{The text for the title.}
 
 \item{nudge_y}{Vertical adjustment to nudge groups by, must be within 0 to 1.
 Defaults to \code{0}; for grouped forest plots a value of \code{0} is bumped
@@ -154,17 +77,49 @@ the row and column. This should be the name of the arguments that is working
 the same way as \code{est}, \code{lower} and \code{upper}. Check out the
 examples in the \code{\link{make_boxplot}}.}
 
-\item{theme}{Theme of the forest plot, see \code{\link{forest_theme}} for
-details.}
+\item{style}{Style of the forest plot created with
+\code{\link{forest_style}}. A theme created with the superseded
+\code{\link{forest_theme}} is also accepted. The style can also be set or
+changed later with \code{\link{set_style}}.}
 
-\item{...}{Other arguments passed on to the \code{fn_ci} and \code{fn_summary}.}
+\item{...}{Other arguments passed on to the \code{fn_ci} and
+\code{fn_summary}, or named in \code{index_args}. An argument none of them
+takes gives an error, as it would not be used.
+The arguments of earlier versions are also accepted here, with a message the
+first time each of them is used in a session: use \code{\link{set_xaxis}}
+instead of \code{xlim}, \code{ticks_at}, \code{ticks_digits},
+\code{ticks_minor}, \code{x_trans} and \code{vert_line},
+\code{\link{set_labs}} instead of \code{arrow_lab}, \code{xlab},
+\code{title} and \code{footnote}, and \code{style} instead of \code{theme}.}
 }
 \value{
-A \code{\link[gtable]{gtable}} object.
+A forest plot object, a \code{\link[gtable]{gtable}} of class
+\code{forestplot}.
 }
 \description{
 A data frame will be used for the basic layout of the forest plot.
-Graphical parameters can be set using the \code{\link{forest_theme}} function.
+Graphical parameters can be set using the \code{\link{forest_style}}
+function.
+
+\code{forest} draws the table and the confidence intervals. The other parts
+of the plot are added with functions that take the plot as their first
+argument, so they can be chained with the pipe \code{|>}:
+
+\itemize{
+\item \code{\link{set_xaxis}} Limits, tick marks and scale of the x-axis,
+and vertical lines
+\item \code{\link{set_labs}} Title, x-axis labels, footnote, arrow labels
+and legend labels
+\item \code{\link{scale_sizes}} Point sizes scaled by study weights
+\item \code{\link{set_style}} Graphical parameters
+}
+
+These functions build the plot again, so they must be used before the plot
+is edited with \code{\link{edit_plot}}, \code{\link{add_text}},
+\code{\link{insert_text}}, \code{\link{add_border}} or
+\code{\link{add_grob}}. The plot stays a \code{\link[gtable]{gtable}} at
+every step, and can be combined with other plots, e.g. with
+\code{patchwork::wrap_elements}.
 }
 \examples{
 library(grid)
@@ -193,11 +148,12 @@ dt$`HR (95\% CI)` <- ifelse(is.na(dt$se), "",
                              sprintf("\%.2f (\%.2f to \%.2f)",
                                      dt$est, dt$low, dt$hi))
 
-# Define theme
-tm <- forest_theme(base_size = 10,
-                   refline_gp = gpar(col = "red"),
-                   footnote_gp = gpar(col = "#636363", fontface = "italic"))
+# Define a style
+st <- forest_style(base_size = 10,
+                   ref_line = gpar(col = "red"),
+                   footnote = gpar(col = "#636363", fontface = "italic"))
 
+# Draw the plot and add the axis and labels with a pipe
 p <- forest(dt[,c(1:3, 8:9)],
             est = dt$est,
             lower = dt$low,
@@ -205,17 +161,18 @@ p <- forest(dt[,c(1:3, 8:9)],
             sizes = dt$se,
             ci_column = 4,
             ref_line = 1,
-            arrow_lab = c("Placebo Better", "Treatment Better"),
-            xlim = c(0, 4),
-            ticks_at = c(0.5, 1, 2, 3),
-            footnote = "This is the demo data. Please feel free to change\nanything you want.",
-            theme = tm)
+            style = st) |>
+  set_xaxis(xlim = c(0, 4), ticks_at = c(0.5, 1, 2, 3)) |>
+  set_labs(arrow = c("Placebo Better", "Treatment Better"),
+           footnote = "This is the demo data. Please feel free to change\nanything you want.")
 
 # Print plot
 plot(p)
+
 }
 \seealso{
 \code{\link[gtable]{gtable}} \code{\link[gridExtra]{tableGrob}}
-\code{\link{forest_theme}} \code{\link{make_boxplot}}
+\code{\link{forest_style}} \code{\link{set_xaxis}} \code{\link{set_labs}}
+\code{\link{scale_sizes}} \code{\link{set_style}} \code{\link{make_boxplot}}
 \code{\link{makeci}}  \code{\link{make_summary}}
 }
