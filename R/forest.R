@@ -144,12 +144,11 @@ forest <- function(data,
 
   # Anything else in `...` is only used if `fn_ci`, `fn_summary` or
   # `index_args` take it, so a misspelt argument is reported instead of being
-  # dropped silently
+  # dropped silently. It is only a message, as earlier versions ignored these
+  # arguments and existing code may still pass them.
   if(length(dot_args) > 0 && !"..." %in% c(args_ci, args_summary)){
     unknown <- setdiff(names(dot_args), c(args_ci, args_summary, index_args, ""))
-    if(length(unknown) > 0)
-      stop("Unknown arguments: ", paste0("`", unknown, "`", collapse = ", "),
-           ". They are not used by `fn_ci`, `fn_summary` or `index_args`, see ?forest.")
+    signal_unknown(unknown)
   }
 
   check_errors(data = data, est = est, lower = lower, upper = upper, sizes = sizes,
@@ -464,6 +463,22 @@ signal_superseded <- function(args){
     message(paste(args[superseded_args[args] == fn], collapse = ", "),
             " will be deprecated, use ", fn, " instead.")
   }
+
+  for(arg in args)
+    assign(arg, TRUE, envir = superseded_seen)
+
+  invisible()
+}
+
+# Give a message the first time an argument of `forest()` that nothing uses is
+# given in a session. The argument is ignored.
+signal_unknown <- function(args){
+  args <- setdiff(args, ls(superseded_seen))
+  if(length(args) == 0)
+    return(invisible())
+
+  message("Unknown arguments ignored: ", paste0("`", args, "`", collapse = ", "),
+          ". They are not used by `fn_ci`, `fn_summary` or `index_args`, see ?forest.")
 
   for(arg in args)
     assign(arg, TRUE, envir = superseded_seen)

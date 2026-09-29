@@ -18,7 +18,7 @@
 ## Superseded
 
 * The arguments of `forest()` that the functions above replace are still accepted and draw the same plot. Each of them gives a message once per session pointing to its replacement: `xlim`, `ticks_at`, `ticks_digits`, `ticks_minor`, `x_trans` and `vert_line` to `set_xaxis()`, and `arrow_lab`, `xlab`, `title` and `footnote` to `set_labs()`, and `theme` to `style`. They will be removed in 2.0.0.
-* `forest()` now stops on an argument in `...` that neither `fn_ci`, `fn_summary` nor `index_args` takes, instead of dropping it silently.
+* `forest()` now gives a message once per session for an argument in `...` that neither `fn_ci`, `fn_summary` nor `index_args` takes, instead of dropping it silently. The argument is still ignored.
 * The package now requires R >= 4.1.0 for the native pipe used in the examples.
 
 ## Bug fixes

@@ -4,4 +4,4 @@ There were no ERRORs or WARNINGs.
 
 ---
 
-This version includes 3 bugs fix and 4 improvements. 
+This version includes 4 bugs fix and some improvements. Reverse dependencies have been checked.
