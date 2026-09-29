@@ -5,8 +5,12 @@
 ^data-raw$
 ^doc$
 ^Meta$
-^\.github$
 ^cran-comments\.md$
 ^CRAN-RELEASE$
 ^CRAN-SUBMISSION$
 ^codecov\.yml$
+^\..*$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^Rplot.pdf
