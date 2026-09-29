@@ -1,0 +1,61 @@
+url: https://adayim.github.io/forestploter/
+template:
+  bootstrap: 5
+
+reference:
+- title: Create a forest plot
+  desc: >
+    The data gives the layout of the plot, `forest` draws the table and the
+    confidence intervals.
+  contents:
+  - forest
+
+- title: Add to the plot
+  desc: >
+    These take the plot as their first argument, so they can be chained with
+    the pipe. 
+  contents:
+  - set_xaxis
+  - set_labs
+  - scale_sizes
+  - set_style
+  - forest_style
+
+- title: Edit the plot
+  desc: >
+    Change the cells of a plot that is already built, by row and column.
+  contents:
+  - edit_plot
+  - add_text
+  - insert_text
+  - add_border
+  - add_grob
+
+- title: Draw the confidence intervals
+  desc: >
+    The functions given to `fn_ci` and `fn_summary` of `forest`, and an
+    example of writing your own.
+  contents:
+  - makeci
+  - make_summary
+  - make_boxplot
+
+- title: Draw and save
+  contents:
+  - print.forestplot
+  - print.forest_style
+  - get_wh
+
+- title: Superseded
+  desc: >
+    Kept so that code written before version 1.2.0 keeps working, see
+    `?forest_theme` for the settings of `forest_style`.
+  contents:
+  - forest_theme
+
+articles:
+- title: Articles
+  navbar: ~
+  contents:
+  - forestploter-intro
+  - forestploter-post
