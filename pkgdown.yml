@@ -1,0 +1,10 @@
+pandoc: 3.8.3
+pkgdown: 2.2.1
+pkgdown_sha: ~
+articles:
+  forestploter-intro: forestploter-intro.html
+  forestploter-post: forestploter-post.html
+last_built: 2026-09-29T11:44Z
+urls:
+  reference: https://adayim.github.io/forestploter/reference
+  article: https://adayim.github.io/forestploter/articles
