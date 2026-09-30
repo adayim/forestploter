@@ -61,7 +61,7 @@
                         <h4 data-toc-skip class="author">Alimu
 Dayimu</h4>
             
-            <h4 data-toc-skip class="date">2026-09-29</h4>
+            <h4 data-toc-skip class="date">2026-09-30</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/adayim/forestploter/blob/main/vignettes/forestploter-intro.Rmd" class="external-link"><code>vignettes/forestploter-intro.Rmd</code></a></small>
       <div class="d-none name"><code>forestploter-intro.Rmd</code></div>
@@ -677,44 +677,6 @@ you should be able to resolve this by carefully reviewing the examples.
 To widen the CI plot area, increase the number of blank spaces in the
 column where the CI is drawn. Please refer to the first example for a
 demonstration of how to do this.</p>
-<p><strong>Q: Can I modify the width and height of each row and
-column?</strong></p>
-<p><strong>A:</strong> Yes. Although the data’s content determines the
-initial dimensions of the rows and columns, you can modify them after
-plotting. For details, see the discussion <a href="https://github.com/adayim/forestploter/issues/30#issuecomment-1459038988" class="external-link">here</a>.
-You can also add padding to each cell by using
-<code>core = list(padding = unit(c(4, 3), "mm"))</code> in
-<code>forest_style</code>. To let the CI columns and the rows take the
-space the plot is drawn in, use <code>fit</code> of
-<code>forest_style</code>, see <a href="#saving-the-plot">Saving the
-Plot</a>.</p>
-<p><strong>Q: How should I use weights for sizes?</strong></p>
-<p><strong>A:</strong> Pass the weights to <code>sizes</code> and add
-<code><a href="../reference/scale_sizes.html">scale_sizes()</a></code>. The weights are square-rooted first, so that
-the <em>area</em> of each point is proportional to its weight, and then
-mapped onto <code>range</code>:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/forest.html">forest</a></span><span class="op">(</span><span class="va">dt_fig</span>,</span>
-<span>       est <span class="op">=</span> <span class="va">dt</span><span class="op">$</span><span class="va">est</span>,</span>
-<span>       lower <span class="op">=</span> <span class="va">dt</span><span class="op">$</span><span class="va">lb</span>,</span>
-<span>       upper <span class="op">=</span> <span class="va">dt</span><span class="op">$</span><span class="va">ub</span>,</span>
-<span>       sizes <span class="op">=</span> <span class="va">dt</span><span class="op">$</span><span class="va">weights</span>,        <span class="co"># weights, not sizes</span></span>
-<span>       ci_column <span class="op">=</span> <span class="fl">8</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/scale_sizes.html">scale_sizes</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"range"</span>,   <span class="co"># or "proportional"</span></span>
-<span>              range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.2</span>, <span class="fl">0.8</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><code>"range"</code> puts the smallest weight on
-<code>range[1]</code> and the largest on <code>range[2]</code>, the way
-<code>metafor::forest.rma()</code> does with its <code>plim</code>
-argument. <code>"proportional"</code> keeps the areas strictly
-proportional to the weights and only clamps the smallest points up so
-that they do not disappear into the confidence interval line, the way
-<code>meta::forest.meta()</code> does.</p>
-<p>Without <code><a href="../reference/scale_sizes.html">scale_sizes()</a></code> the values in <code>sizes</code>
-are used as they are. In that case remember that <code>sizes</code> is a
-multiple of one line of text, so <code>1</code> draws a point as tall as
-the <code>base_size</code> of the style. Useful values are roughly
-between 0.2 and 1.5, and a warning is given when the plot is drawn if
-they are outside 0.1 to 2.</p>
 <p><strong>Q: Can I combine a forest plot with other plots?</strong></p>
 <p><strong>A:</strong> Yes. The forest plot is a <code>gtable</code>,
 which is a <code>grob</code>, so it can be combined with

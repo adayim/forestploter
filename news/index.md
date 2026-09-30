@@ -74,8 +74,9 @@
   [`set_labs()`](https://adayim.github.io/forestploter/reference/set_labs.md),
   and `theme` to `style`. They will be removed in 2.0.0.
 - [`forest()`](https://adayim.github.io/forestploter/reference/forest.md)
-  now stops on an argument in `...` that neither `fn_ci`, `fn_summary`
-  nor `index_args` takes, instead of dropping it silently.
+  now gives a message once per session for an argument in `...` that
+  neither `fn_ci`, `fn_summary` nor `index_args` takes, instead of
+  dropping it silently. The argument is still ignored.
 - The package now requires R \>= 4.1.0 for the native pipe used in the
   examples.
 

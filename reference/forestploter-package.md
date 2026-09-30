@@ -43,6 +43,8 @@ Useful links:
 
 - <https://github.com/adayim/forestploter>
 
+- <https://adayim.github.io/forestploter/>
+
 - Report bugs at <https://github.com/adayim/forestploter/issues>
 
 ## Author

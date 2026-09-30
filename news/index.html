@@ -59,7 +59,7 @@
 <h3 id="superseded-1-2-0">Superseded<a class="anchor" aria-label="anchor" href="#superseded-1-2-0"></a></h3>
 <ul><li>The arguments of <code><a href="../reference/forest.html">forest()</a></code> that the functions above replace are still accepted and draw the same plot. Each of them gives a message once per session pointing to its replacement: <code>xlim</code>, <code>ticks_at</code>, <code>ticks_digits</code>, <code>ticks_minor</code>, <code>x_trans</code> and <code>vert_line</code> to <code><a href="../reference/set_xaxis.html">set_xaxis()</a></code>, and <code>arrow_lab</code>, <code>xlab</code>, <code>title</code> and <code>footnote</code> to <code><a href="../reference/set_labs.html">set_labs()</a></code>, and <code>theme</code> to <code>style</code>. They will be removed in 2.0.0.</li>
 <li>
-<code><a href="../reference/forest.html">forest()</a></code> now stops on an argument in <code>...</code> that neither <code>fn_ci</code>, <code>fn_summary</code> nor <code>index_args</code> takes, instead of dropping it silently.</li>
+<code><a href="../reference/forest.html">forest()</a></code> now gives a message once per session for an argument in <code>...</code> that neither <code>fn_ci</code>, <code>fn_summary</code> nor <code>index_args</code> takes, instead of dropping it silently. The argument is still ignored.</li>
 <li>The package now requires R &gt;= 4.1.0 for the native pipe used in the examples.</li>
 </ul></div>
 <div class="section level3">
