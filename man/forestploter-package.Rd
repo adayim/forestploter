@@ -35,6 +35,7 @@ The vignettes \code{vignette("forestploter-intro")} and
 Useful links:
 \itemize{
   \item \url{https://github.com/adayim/forestploter}
+  \item \url{https://adayim.github.io/forestploter/}
   \item Report bugs at \url{https://github.com/adayim/forestploter/issues}
 }
 

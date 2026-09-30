@@ -380,13 +380,18 @@ test_that("Old arguments of forest() still work with a message", {
 
 test_that("Arguments that would be dropped are reported", {
 
-  expect_error(one_col(xlims = c(0, 4)),
-               "Unknown arguments: `xlims`. They are not used by `fn_ci`")
-  expect_error(one_col(vertline = 2, foo = 1), "`vertline`, `foo`")
+  rm(list = ls(superseded_seen), envir = superseded_seen)
+
+  # They are ignored, with a message the first time in a session
+  expect_message(p <- one_col(xlims = c(0, 4)),
+                 "Unknown arguments ignored: `xlims`. They are not used by `fn_ci`")
+  expect_s3_class(p, "forestplot")
+  expect_message(one_col(vertline = 2, foo = 1), "`vertline`, `foo`")
+  expect_no_message(one_col(xlims = c(0, 4), foo = 1))
 
   # Arguments of the drawing functions and of `index_args` are kept
-  expect_no_error(one_col(gp = gpar(lwd = 2)))
-  expect_no_error(forest(dt[, c(1:3, 19)],
+  expect_no_message(one_col(gp = gpar(lwd = 2)))
+  expect_no_message(forest(dt[, c(1:3, 19)],
                          est = dt$est,
                          lower = dt$low,
                          upper = dt$hi,
