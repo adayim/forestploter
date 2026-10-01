@@ -27,9 +27,13 @@ add_grob <- function(plot,
                      gb_fn,
                      ...){
   
+  # Only the arguments `gb_fn` takes are passed on, unless it takes `...`
   dots <- list(...)
-  arg <- match(names(formals(gb_fn)), names(dots))
-  dots <- dots[arg[!is.na(arg)]]
+  fn_args <- names(formals(gb_fn))
+  if(!"..." %in% fn_args){
+    arg <- match(fn_args, names(dots))
+    dots <- dots[arg[!is.na(arg)]]
+  }
 
   if(length(row) != 1 && !all(diff(row) == 1))
     stop("row must be scalar value or a consecutive vector.")
