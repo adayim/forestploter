@@ -100,7 +100,7 @@ head(dt)
 
 The data prepared above will serve as the basic layout of the forest plot. The example below demonstrates how to draw a simple forest plot, with a footnote added for demonstration.
 
-```{r simple-plot, out.width="80%", fig.width = 8, fig.height = 6}
+```{r simple-plot, fig.width = 8.5, fig.height = 6}
 p <- forest(dt[, c(1:3, 8:9)],
             est = dt$est,
             lower = dt$low,
@@ -120,7 +120,7 @@ plot(p)
 
 We will now use the same data as above but add a summary point. Additionally, we will change the graphical parameters for the confidence interval and other parts of the plot. The style of the forest plot is set with the `forest_style` function, which takes a `gpar()` for each part of the plot. Only the settings given are changed, everything else keeps its default. A style can be passed to the `style` argument of `forest()`, or applied later with `set_style()`. Refer to the manual for more details.
 
-```{r simple-plot-theme, out.width="80%", fig.width = 7, fig.height = 3.3}
+```{r simple-plot-theme, fig.width = 7, fig.height = 3.3}
 dt_tmp <- rbind(dt[-1, ], dt[1, ])
 dt_tmp[nrow(dt_tmp), 1] <- "Overall"
 dt_tmp <- dt_tmp[1:11, ]
@@ -168,7 +168,7 @@ The background color of the body is set with the `fill` of `body`, for example `
 
 Provide a single value for uniform justification across all cells or a vector for varied justification. As shown in the second example, text is justified by row using the provided vector, which will be recycled as needed.
 
-```{r text-justification, out.width="80%", fig.width = 7, fig.height = 2}
+```{r text-justification, fig.width = 7.5, fig.height = 2}
 dt <- dt[1:4, ]
 
 # Header center and content right
@@ -210,7 +210,7 @@ plot(p)
 
 Similar to text justification, you can parse text in any cell. However, parsing all text will remove blanks from the data, which will also affect the blank columns used for drawing the whiskers.
 
-```{r text-parsing, out.width="80%", fig.width = 7, fig.height = 2, fig.keep = "last"}
+```{r text-parsing, fig.width = 7, fig.height = 2, fig.keep = "last"}
 # Check out the `plotmath` function for math expression.
 dt <- data.frame(
   Study = c("Study ~1^a", "Study ~2^b", "NO[2]"),
@@ -254,7 +254,7 @@ add_grob(p,
          order = "background",
          gb_fn = gridmicrotex::markdown_grob,
          md = txt,
-         gp = gpar(fontsize = 8),
+         gp = gpar(fontsize = 10),
          hjust = 0, vjust = 1,
          x = unit(0, "npc"), y = unit(1, "npc"))
 ```
@@ -267,7 +267,7 @@ In an example with multiple groups, two or more CIs can be displayed in one cell
 
 This is an example of multiple CI columns and groups:
 
-```{r multiple-group, out.width="80%", fig.width = 8, fig.height = 5}
+```{r multiple-group, fig.width = 8.5, fig.height = 5}
 dt <- read.csv(system.file("extdata", "example_data.csv", package = "forestploter"))
 dt <- dt[1:7, ]
 # Indent the subgroup if there is a number in the placebo column
@@ -336,7 +336,7 @@ The legend title and labels are set with `set_labs()`, and its position (`"right
 
 When a forest plot has multiple columns, you may want to apply different settings to each one. For example, different CI columns can have distinct `xlim`, x-axis ticks, x-axis labels, `x_trans` transformations, reference lines, vertical lines, or arrow labels. This can be easily achieved by providing a list or a vector. Use an atomic vector for `ref_line` in `forest()`. In `set_xaxis()`, use a list for `xlim`, `ticks_at` and `vline`, and an atomic vector for `x_trans`. In `set_labs()`, use a list for `arrow` and an atomic vector for `xlab`. See the example below for a demonstration.
 
-```{r multiple-param, out.width="70%", fig.width = 10, fig.height = 6.5}
+```{r multiple-param, fig.width = 10, fig.height = 6.5}
 dt$`HR (95% CI)` <- ifelse(is.na(dt$est_gp1), "",
                              sprintf("%.2f (%.2f to %.2f)",
                                      dt$est_gp1, dt$low_gp1, dt$hi_gp1))
@@ -370,7 +370,7 @@ plot(p)
 
 It is possible to pass a custom CI drawing function to `forest`. The `fn_ci` argument accepts a CI drawing function for normal confidence intervals, while `fn_summary` is used for summary CIs. Other parameters for these functions can be passed via `forest`. If you need to pass row values such as `est` and `lower` to these functions, you must define the names of the parameters you have passed in `index_args`. This is an advanced technique, and this vignette does not cover how to create a CI drawing function. However, you can find tutorials [here](https://www.stat.auckland.ac.nz/~paul/RG3e/chapter8.html) if you are interested. Below is an example of how to use a box plot CI with the built-in `make_boxplot` function.
 
-```{r custom-ci, out.width="70%", fig.width = 3, fig.height = 3}
+```{r custom-ci, out.width="70%", fig.width = 3, fig.height = 2}
 # Function to calculate Box plot values
 box_func <- function(x){
   iqr <- IQR(x)
