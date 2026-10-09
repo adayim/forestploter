@@ -93,3 +93,32 @@ test_that("Add grob", {
 
 })
 
+test_that("Arguments reach a grob function that takes `...`", {
+
+  dt <- read.csv(system.file("extdata", "example_data.csv", package = "forestploter"))
+  dt <- dt[1:3, ]
+  dt$se <- (log(dt$hi) - log(dt$est)) / 1.96
+  dt$` ` <- paste(rep(" ", 20), collapse = " ")
+
+  p <- forest(dt[, c(1, 8)],
+              est = dt$est,
+              lower = dt$low,
+              upper = dt$hi,
+              sizes = dt$se,
+              ci_column = 2)
+
+  # `md` is the only argument named by the function, the rest goes in `...`
+  fn <- function(md, ...) textGrob(md, ...)
+
+  g <- add_grob(p, row = 1, col = 1, gb_fn = fn,
+                md = "text", gp = gpar(fontsize = 4), hjust = 0)
+  grob <- g$grobs[[length(g$grobs)]]
+  expect_equal(grob$gp$fontsize, 4)
+  expect_equal(grob$hjust, 0)
+
+  # Arguments a function does not take are still left out
+  fn2 <- function(md) textGrob(md)
+  expect_no_error(add_grob(p, row = 1, col = 1, gb_fn = fn2,
+                           md = "text", gp = gpar(fontsize = 4)))
+})
+

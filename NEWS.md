@@ -1,3 +1,8 @@
+# forestploter 1.2.1
+
+* Fix `add_grob()` dropping the arguments of a grob function that takes them through `...`, such as `gridmicrotex::markdown_grob()`, where `gp` and `hjust` had no effect.
+
+
 # forestploter 1.2.0
 
 ## Breaking changes
