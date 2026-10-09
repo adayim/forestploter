@@ -337,25 +337,26 @@ The legend title and labels are set with `set_labs()`, and its position (`"right
 When a forest plot has multiple columns, you may want to apply different settings to each one. For example, different CI columns can have distinct `xlim`, x-axis ticks, x-axis labels, `x_trans` transformations, reference lines, vertical lines, or arrow labels. This can be easily achieved by providing a list or a vector. Use an atomic vector for `ref_line` in `forest()`. In `set_xaxis()`, use a list for `xlim`, `ticks_at` and `vline`, and an atomic vector for `x_trans`. In `set_labs()`, use a list for `arrow` and an atomic vector for `xlab`. See the example below for a demonstration.
 
 ```{r multiple-param, fig.width = 10, fig.height = 6.5}
-dt$`HR (95% CI)` <- ifelse(is.na(dt$est_gp1), "",
-                             sprintf("%.2f (%.2f to %.2f)",
-                                     dt$est_gp1, dt$low_gp1, dt$hi_gp1))
-dt$`Beta (95% CI)` <- ifelse(is.na(dt$est_gp2), "",
-                             sprintf("%.2f (%.2f to %.2f)",
-                                     dt$est_gp2, dt$low_gp2, dt$hi_gp2))
-
 p <- forest(dt[, c(1, 21, 23, 22, 24)],
             est = list(dt$est_gp1,
-                       dt$est_gp2),
+                       dt$est_gp2,
+                       dt$est_gp3,
+                       dt$est_gp4),
             lower = list(dt$low_gp1,
-                         dt$low_gp2),
+                         dt$low_gp2,
+                         dt$low_gp3,
+                         dt$low_gp4),
             upper = list(dt$hi_gp1,
-                         dt$hi_gp2),
+                         dt$hi_gp2,
+                         dt$hi_gp3,
+                         dt$hi_gp4),
             ci_column = c(2, 4),
             ref_line = c(1, 0),
-            nudge_y = 0.2,
+            nudge_y = 0.4,
             style = forest_style(arrow_type = "closed",
-                                 arrow_label_just = "end")) |>
+                                 arrow_label_just = "end",
+                                 legend_position = "top",
+                                 legend_ncol = 2)) |>
   set_xaxis(x_trans = c("log", "none"),
             xlim = list(c(0, 3), c(-1, 3)),
             ticks_at = list(c(0.1, 0.5, 1, 2.5), c(-1, 0, 2)),
